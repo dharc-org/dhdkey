@@ -1,0 +1,97 @@
+<html>
+    <head>
+            <meta name="viewport" content="width=device-width">
+            <link rel="icon" href="{{ url_for('static', filename='css/favicon.ico') }}" />
+        {% if title %}
+            <title>{{ title }} - DHDKey!
+            </title>
+        {% else %}
+            <title>Welcome to DHDKey!</title>
+        {% endif %}
+        
+        <!--Bootstrap-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+        <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+        <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+    </head>
+    <body class="d-flex flex-column" style="height:100%">
+                <div style="flex: 1 0 auto;">
+                    <div class="head">
+                            <nav class="navbar navbar-expand-lg navbar-light">
+                                    <a class="navbar-brand" style="font-size: 20pt !important; font-weight:200 !important" href="{{ url_for('index') }}">DHDK<b>ey!</b></a>
+                                    {% if title != "Confirmation" %}
+                                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="navbar-toggler-icon"></span>
+                                    </button>
+                                
+                                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                    <ul class="navbar-nav mr-auto">
+                                        <li class="nav-item {% if title == 'Home' %}active{% endif %}">
+                                            <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                                        </li>
+                                        <li class="nav-item {% if title == 'Projects' %}active{% endif %}">
+                                                <a class="nav-link" href="{{ url_for('projects') }}">Projects</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link {% if title == 'Upload' %}active{% endif %}" href="{{ url_for('upload') }}">Upload</a>
+                                        </li>
+                                        <li class="nav-item">
+                                        <a class="nav-link {% if title == 'Info' %}active{% endif %}" href="{{ url_for('info') }}">Info</a>
+                                        </li>
+                                    </ul>
+                                    </div>
+                                    {% endif %}
+                                </nav>
+                    </div>
+                    <div class="mainbody container-fluid">
+                            <div class="row">
+                                {% block content %}{% endblock %}
+                            </div>
+                    </div>
+                </div>
+    <footer class="footer bg-dark text-light" style="margin-bottom: 0px;margin-top: 100px; padding: 20px; flex-shrink: none;">
+        <div class="container">
+            <div class="row" style="margin-top:60px; margin-bottom:40px">
+                <div class="col-md-5">
+                    <h3 style="font-weight:300 !important">DHDK<b>ey!</b></h3>
+                    <h5 style="font-weight:300 !important"><a href="{{ url_for('info') }}" class="text-secondary">Info</a></h5>
+                    <h5 style="font-weight:300 !important"><a href="{{ url_for('privacy') }}" class="text-secondary">Privacy Policy</a></h5>
+                    <h5 style="font-weight:300 !important"><a href="https://github.com/" class="text-secondary" target="_blank">Documentation <i class="fas fa-external-link-alt fa-xs"></i></a></h5>
+                </div>
+                <div class="col-md-7">
+                    <h4 style="font-weight:300 !important">/DH.Arc - Digital Humanities Advanced Research Centre</h4>
+                    <h5 style="font-weight:300 !important"><a href="https://centri.unibo.it/dharc/en" class="text-secondary" target="_blank">/DH.Arc - Website <i class="fas fa-external-link-alt fa-xs"></i></a></h5>
+                    <h5 style="font-weight:300 !important"><a href="https://centri.unibo.it/dharc/en/contacts" class="text-secondary" target="_blank">/DH.Arc - Contacts <i class="fas fa-external-link-alt fa-xs"></i></a></h5>                
+                </div>
+            </div>
+         </footer>
+
+         <footer class="footer bg-secondary text-white py-2" style="margin-bottom: 0px;margin-top: 0px; padding-right: 20px; padding-left: 20px; flex-shrink: none;">
+                <div class="container">
+            <div class="row">
+                    <div class="col-md-8">
+                        ©2020  DHDKey! - Digital Humanities & Digital Knowledge Educational Yearbook
+                    </div>
+
+            {% if title != "Confirmation" %}
+                <div class="col-md-4 text-right text-dark">
+                    {% if current_user.is_authenticated %}
+                        <a class="text-dark" href="{{ url_for('logout') }}">Admin Logout</a>
+                    {%else%}
+                        <a class="text-dark" href="{{ url_for('admin') }}">Admin Login</a>
+                    {% endif %}
+                    {% if current_user.is_authenticated %}
+                        - <a class="text-dark" href="{{ url_for('AdminConfirm') }}">Data Manager</a>
+                    {%endif%}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+</body>
+</html>
+

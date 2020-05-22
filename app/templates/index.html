@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+   <!-- e9ecef-->
+
+    <div class="row py-5 alert-dark">
+        <div class="col-sm-10 py-3 font-weight-light pb-3 mx-auto">
+            <h1 class="display-4">DHDK<b>ey!</b></h1>
+            <h4 class="lead" style="font-variant: small-caps">Digital Humanities & Digital Knowledge Educational Yearbook</h4>
+            <hr class="my-4">
+            <p class="lead">Explore students' projects from the <a class="text-danger" href="https://corsi.unibo.it/2cycle/DigitalHumanitiesKnowledge">Digital Humanities & Digital Knowledge course at the University of Bologna</a>.</p>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-10 mx-auto">
+            <div class="row text-center mt-n5">
+                <div class="col-sm pb-2">
+                    <div class="card h-100 shadow">
+                        <div class="card-body d-flex flex-column align-items-center">
+                            <i class="fas fa-book-open fa-5x bg-info text-white icon-circular shadow"></i>
+                            <a href="{{ url_for('projects') }}" class="btn btn-info mt-3">Browse Projects</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm pb-2">
+                    <div class="card h-100 shadow">
+                        <div class="card-body d-flex flex-column align-items-center">
+                            <i class="fas fa-arrow-up fa-5x bg-info text-white icon-circular shadow"></i>
+                            <a href="{{ url_for('upload') }}" class="btn btn-info mt-3">Upload New Project</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm pb-2">
+                    <div class="card h-100 shadow">
+                        <div class="card-body d-flex flex-column align-items-center">
+                            <i class="fas fa-info fa-5x bg-info text-white icon-circular shadow"></i>
+                            <a href="{{ url_for('info') }}" class="btn btn-info mt-3">Info</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    {% with messages = get_flashed_messages(with_categories=True) %}
+      {% if messages %}
+          {% for category, message in messages %}
+              {% if message == "confirmed" %}
+                  <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content bg-transparent">
+                          <div class="modal-header bg-success justify-content-center">
+                                  <i class="fas fa-cloud-upload-alt fa-5x text-light"></i>
+                          </div>
+                          <div class="modal-body bg-light">
+                                  <h4 class="text-center">Project Uploaded!</h4>
+                            <p>Thank you for your contribution!</p>
+                          </div>
+                          <div class="modal-footer bg-light  justify-content-center">
+                            <button type="button" class="btn btn-secondary btn-success" data-dismiss="modal">OK</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <script>
+                        $("#upload-modal").modal("show")
+                    </script>
+
+
+              {% elif message == "expired" %}
+                  <div class="modal fade" id="fail-modal" tabindex="-1" role="dialog">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content bg-transparent">
+                          <div class="modal-header bg-danger justify-content-center">
+                                  <i class="fas fa-exclamation-triangle fa-5x text-light"></i>
+                          </div>
+                          <div class="modal-body bg-light">
+                                  <h4 class="text-center">Expired</h4>
+                            <p>Your confirmation token expired. If you haven't confirmed the project already, you need to submit the project data again.</p>
+                          </div>
+                          <div class="modal-footer bg-light  justify-content-center">
+                            <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">OK</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <script>
+                        $("#fail-modal").modal("show")
+                  </script>
+
+                    {% elif message == "fail" %}
+                    <div class="modal fade" id="fail-modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content bg-transparent">
+                            <div class="modal-header bg-danger justify-content-center">
+                                    <i class="fas fa-exclamation-triangle fa-5x text-light"></i>
+                            </div>
+                            <div class="modal-body bg-light">
+                                    <h4 class="text-center">Failed</h4>
+                            <p>Wrong Confirmation Token.</p>
+                            </div>
+                            <div class="modal-footer bg-light  justify-content-center">
+                            <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        $("#fail-modal").modal("show")
+                    </script>
+
+
+              {% elif message == "already" %}
+              <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content bg-transparent">
+                          <div class="modal-header bg-success justify-content-center">
+                                  <i class="fas fa-check-circle fa-5x text-light"></i>
+                          </div>
+                          <div class="modal-body bg-light">
+                                  <h4 class="text-center">Project Already Confirmed</h4>
+                            <p>Thank you for your contribution!</p>
+                          </div>
+                          <div class="modal-footer bg-light  justify-content-center">
+                            <button type="button" class="btn btn-secondary btn-success" data-dismiss="modal">OK</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <script>
+                        $("#upload-modal").modal("show")
+                    </script>
+
+
+              {% elif category == "sended" %}
+              <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content bg-transparent">
+                          <div class="modal-header bg-warning justify-content-center">
+                                  <i class="fas fa-envelope fa-5x text-light"></i>
+                          </div>
+                          <div class="modal-body bg-light">
+                                  <h4 class="text-center">Awaiting Confirmation</h4>
+                            <p>Thank you for your contribution! A confirmation email has been sent to the address: {{message}}<br>
+                              You have 24 hours to confirm your project data.</p>
+                          </div>
+                          <div class="modal-footer bg-light  justify-content-center">
+                            <button type="button" class="btn btn-secondary btn-warning" data-dismiss="modal">OK</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <script>
+                        $("#upload-modal").modal("show")
+                    </script>
+
+              {% elif message == "login" %}
+              <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog">
+                      <div class="modal-dialog" role="document">
+                      <div class="modal-content bg-transparent">
+                          <div class="modal-header bg-secondary justify-content-center">
+                                  <i class="fas fa-ban fa-5x text-light"></i>
+                          </div>
+                          <div class="modal-body bg-light">
+                                  <h4 class="text-center">Login Required</h4>
+                          </div>
+                          <div class="modal-footer bg-light  justify-content-center">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+                          </div>
+                      </div>
+                      </div>
+                  </div>
+
+                  <script>
+                      $("#upload-modal").modal("show")
+                  </script>
+
+              {% endif %}                                
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+{% endblock %}

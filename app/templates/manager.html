@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link {% if active == 'confirm' %}active{% endif %}" href="{{ url_for('AdminConfirm') }}">Confirm Project</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if active == 'edit' %}active{% endif %}" href="{{ url_for('AdminEdit') }}">Edit Projects</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if active == 'courses' %}active{% endif %}" href="{{ url_for('AdminCourses') }}">Upload Courses CSV</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if active == 'editauthor' %}active{% endif %}" href="{{ url_for('AdminAuthorEdit') }}">Rename Author</a>
+              </li>
+          </ul>
+          {% if active == 'courses' %}
+          {% block course %}
+            {% endblock %}
+        {% elif active == 'edit' %}
+            {% block edit %}
+            {% endblock %}
+        {% elif active == 'confirm' %}
+            {% block confirm %}
+            {% endblock %}
+        {% elif active == 'editauthor' %}
+            {% block editauthor %}
+            {% endblock %}
+        {% endif %}
+    </div>
+    {% endblock %}

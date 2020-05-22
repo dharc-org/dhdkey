@@ -1,0 +1,58 @@
+{% extends "manager.html" %}
+
+{% block course %}
+<h5 class="mt-3">Courses Data CSV Example</h5>
+          <p><b>BE CAREFUL:</b> Comma Separated Values ONLY. CoursePage URL must redirect to <b>ENGLISH VERSION</b> of the course page.</p>
+          
+<pre><code>AcademicYear,CourseTitle,CoursePage
+2017/2018,"Digital Text In The Humanities: Theories, Methodologies And Applications",https://www.unibo.it/en/teaching/course-unit-catalogue?codiceMateria=85448&annoAccademico=2017&codiceCorso=9224&single=True&search=True
+2017/2018,Information Modelling And Web Technologies,https://www.unibo.it/en/teaching/course-unit-catalogue?codiceMateria=85445&annoAccademico=2017&codiceCorso=9224&single=True&search=True
+2017/2018,Knowledge Representation And Extraction,https://www.unibo.it/en/teaching/course-unit-catalogue?codiceMateria=85446&annoAccademico=2017&codiceCorso=9224&single=True&search=True
+2017/2018,"Intangible Artifacts, Cultural Heritage And Multimedia",https://www.unibo.it/en/teaching/course-unit-catalogue?codiceMateria=85447&annoAccademico=2017&codiceCorso=9224&single=True&search=True
+2017/2018,Knowledge Organization And Digital Methods In The Cultural Heritage Domain,https://www.unibo.it/en/teaching/course-unit-catalogue?codiceMateria=85452&annoAccademico=2017&codiceCorso=9224&single=True&search=True
+2017/2018,"Museology, Museography And Virtual Environments",https://www.unibo.it/en/teaching/course-unit-catalogue?codiceMateria=85453&annoAccademico=2017&codiceCorso=9224&single=True&search=True
+2017/2018,Computational Thinking And Programming,https://www.unibo.it/en/teaching/course-unit-catalogue?codiceMateria=85442&annoAccademico=2017&codiceCorso=9224&single=True&search=True
+2017/2018,Data Modelling And Multimedia Databases,https://www.unibo.it/en/teaching/course-unit-catalogue?codiceMateria=85443&annoAccademico=2017&codiceCorso=9224&single=True&search=True
+2017/2018,Scholarly Editing And Digital Approaches,https://www.unibo.it/en/teaching/course-unit-catalogue?codiceMateria=85449&annoAccademico=2017&codiceCorso=9224&single=True&search=True
+2017/2018,"Text Retrieval, Analysis And Mining",https://www.unibo.it/en/teaching/course-unit-catalogue?codiceMateria=85450&annoAccademico=2017&codiceCorso=9224&single=True&search=True
+        </code></pre>
+
+        <h5 class="mt-3">Courses Data CSV Upload</h5>
+          <form action="{{ url_for('AdminCourses') }}" method="POST" enctype=multipart/form-data>
+            <div class="form-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="file" name="file" accept=".csv" required>
+                    <label class="custom-file-label text-left" for="file">Choose CSV file</label>
+                </div>
+                <small id="remove-container" class="form-text text-muted text-left d-none">
+                        <button type="button" id="remove-file" class="btn btn-danger btn-sm">Remove File</button>
+                    </small>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload CSV</button>
+        </form>
+
+    <script>
+    $('#file').on('change',function(){
+        //get the file name
+        var fileName = $(this).val();
+        //replace the "Choose a file" label
+        if (fileName){
+            $('.custom-file-label').html(fileName);
+            $("#remove-container").removeClass("d-none")
+        }
+        else{
+            $('.custom-file-label').html("Choose image (.png or .jpg only)");
+            $("#remove-container").addClass("d-none")
+        }
+    })
+    $("#remove-file").click(function(){
+        $('#file').replaceWith($('#file').val('').clone(true));
+        $('.custom-file-label').html("Choose image (.png or .jpg only)");
+        $("#remove-container").addClass("d-none")
+    });
+    </script>
+
+
+
+
+{% endblock %}

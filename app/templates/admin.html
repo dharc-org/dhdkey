@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="col-md-3 col-xl-4" >
+    </div>
+    <div class= "col-md-6 col-xl-4" style="margin-top: 35px; text-align: center; min-height:100%">
+            <h1>Admin Reserved Area</h1>
+            <form id="projform" autocomplete="off" action="/admin" method="POST">
+                <div class="form-label-group">
+                    <label for="inputEmail">Admin Username</label>
+                    <input type="text" id="inputEmail" class="form-control" name="username" placeholder="Username" required autofocus>
+                  </div>
+    
+                  <div class="form-label-group">
+                    <label for="inputPassword">Password</label>
+                    <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+                  </div>
+
+                  <button class="btn btn-primary mt-3" type="submit">Sign in</button>
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-danger alert-dismissible mt-3" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <strong>{{ message }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+            </form>
+    </div>
+    <div class="col-md-3 col-xl-4" >
+    </div>
+        
+{% endblock %}

@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class= "col-md-8 col-xl-5 text-center mx-auto" style="margin-top: 35px"> 
+        <h2 style="margin-bottom: 30px">Upload New Project!</h2>
+        <form id="projform" autocomplete="off" action="/upload" method="POST">
+            
+            <!--TITLE-->
+            <div class="form-group">
+                <label for="Title">Project Title</label>
+                <input type="text" class="form-control" id="Title" name="Title" required="true" placeholder="Enter Project&#39;s Title">
+              </div>
+
+
+            <!--REPOSITORY LINK-->
+            <div class="form-group">
+                <label for="Repository">Project Github DH.arc Repository</label>
+                <input type="url" class="form-control" id="Repository" name="Repository" placeholder="www.example.com" required="true">
+              </div>
+            
+            <!--WEBSITE LINK-->
+            <div class="form-group">
+                    <label for="Homepage">Project Website (optional)</label>
+                    <input type="url" class="form-control" id="Homepage" name="Homepage" placeholder="www.example.com">
+                  </div>
+
+            
+            <!--AUTHORS-->
+            <div class="card p-3 mb-3">
+                    <label>Authors</label>
+                <div id="author-container"> 
+                        <div class="form-group author-fields card bg-light p-3 author-item" id="item-0">
+                            <div class="row">
+                                <div class="col-12 authorname">
+                                    <div class="row">
+                                        <label for="Aut[0][Name]" class="col-4 col-form-label pl-0 pr-0">Author Name</label>
+                                        <div class="col-8">
+                                                <input type="text" class="form-control" id="Aut[0][Name]"  name="Aut[0][Name]"  required="true" placeholder="Enter Author&#39;s Name">
+                                            </div>
+                                    </div>
+                                    <div class="row">
+                                            <label for="Aut[0][Surname]"  class="col-4 col-form-label pl-0 pr-0">Author Surname</label>
+                                            <div class="col-8">
+                                                    <input type="text" class="form-control" id="Aut[0][Surname]"  name="Aut[0][Surname]"  required="true" placeholder="Enter Author&#39;s Surname">
+                                                </div>
+                                        </div>
+                                    <div class="row">
+                                            <label for="Aut[0][Mail]"  class="col-4 col-form-label pl-0 pr-0">UniboMail</label>
+                                            <div class="col-8">
+                                                <input type="mail" class="form-control" id="Aut[0][Mail]" name="Aut[0][Mail]" pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(unibo|studio.unibo)\.it$" placeholder="Enter Author&#39;s Unibo Mail" title="Only Unibo Mail accepted (@unibo.it or @studio.unibo.it)" required="true">
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="col-0 pr-0 authordisable">
+                                    <button type="button" class="btn btn-danger delete d-none" for="item-0">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <button id="add-more" name="add-more" type="button" class="btn btn-success">Add More</button>
+            </div>
+
+            <!--YEAR-->
+            <div class="form-group">
+                <label for="Year">Course's Academic Year</label>
+                <select class="form-control" id="Year" name="Year" required="true">
+                    <option value="" selected>Choose...</option>
+                </select>
+              </div>
+
+            <!--COURSE-->
+            <div class="form-group">
+            <label for="Course">Course Title</label>
+            <select class="form-control" id="Course" name="Course" disabled required="true">
+                    <option value="" selected>Choose...</option>
+            </select>
+            </div>
+            
+
+            <!--DESCRIPTION-->
+            <div class="form-group">
+            <label for="Description">Project Description (<span id="charcount">500</span> characters left)</label>
+            <textarea class="form-control" id="Description" name="Description" maxlength = "500" rows="5" required="true"></textarea>
+            </div>
+
+            <!--RESPONSIBLE MAIL-->
+            <div class="form-group">
+                <label class="mb-0" for="Responsible">Confirmation Mail</label>
+                <small id="ResponsibleHelp" class="form-text text-muted mb-1 mt-0">Email address to which data confirmation form will be sent (24h to confirm)</small>
+                <input type="mail" class="form-control" id="Responsible" name="Responsible" pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(unibo|studio.unibo)\.it$" placeholder="Enter Unibo Mail" title="Only Unibo Mail accepted (@unibo.it or @studio.unibo.it)" required="true">
+                </div>
+
+            <!--privacy-->
+            <div class="form-group custom-checkbox my-5">
+                    <input type="checkbox" class="custom-control-input" id="privacy" required>
+                    <label class="custom-control-label" for="privacy">I agree to the <a target="_blank" href="{{ url_for('privacy') }}">Privacy Policy & Terms of Service</a>
+                    </label>
+                  </div>
+
+            <!--Captcha-->
+             <!--<div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="TODO at https://www.google.com/recaptcha/intro/v3.html" data-callback="verifyRecaptchaCallback" data-expired-callback="expiredRecaptchaCallback"></div>
+                    <input class="form-control d-none" data-recaptcha="true" required data-error="Please complete the Captcha">
+                    <div class="help-block with-errors"></div>
+                </div>-->
+
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+        </form>
+    </div>
+
+<script>
+
+
+$(document).ready(function () {
+    var next = 0;
+    var len = 1
+
+    var courses_data = JSON.parse('{{ courses_data | tojson | safe}}');
+    for (var i = 0; i < courses_data.length; i++) {
+        $("#Year").append('<option value="'+ courses_data[i].year +'">'+ courses_data[i].year + '</option>')
+        }
+
+    $("#add-more").click(function(e){
+        e.preventDefault();
+        next = next + 1;
+        $(".delete").removeClass("d-none")
+        $(".authordisable").addClass("col-2")
+        $(".authordisable").removeClass("col-0")
+        $(".authorname").addClass("col-10")
+        $(".authorname").removeClass("col-12")
+        var template = ' <div class="form-group author-fields card bg-light p-3 author-item" id="item-' + next + '">\
+                <div class="row">\
+                    <div class="col-10 authorname">\
+                        <div class="row">\
+                            <label for="Aut[' + next + '][Name]" class="col-4 col-form-label pl-0 pr-0">Author Name</label>\
+                            <div class="col-8">\
+                                    <input type="text" class="form-control" id="Aut[' + next + '][Name]" name="Aut[' + next + '][Name]" required="true" placeholder="Enter Author&#39;s Name">\
+                                </div>\
+                        </div>\
+                        <div class="row">\
+                                <label for="Aut[' + next + '][Surname]" class="col-4 col-form-label pl-0 pr-0">Author Surname</label>\
+                                <div class="col-8">\
+                                        <input type="text" class="form-control" id="Aut[' + next + '][Surname]" name="Aut[' + next + '][Surname]" required="true" placeholder="Enter Author&#39;s Surname">\
+                                    </div>\
+                            </div>\
+                        <div class="row">\
+                                <label for="Aut[' + next + '][Mail]" class="col-4 col-form-label pl-0 pr-0">UniboMail</label>\
+                                <div class="col-8">\
+                                    <input type="mail" class="form-control" id="Aut[' + next + '][Mail]" name="Aut[' + next + '][Mail]" pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(unibo|studio.unibo)\.it$" placeholder="Enter Author&#39;s Unibo Mail" title="Only Unibo Mail accepted (@unibo.it or @studio.unibo.it)" required="true">\
+                                </div>\
+                            </div>\
+                    </div>\
+                    <div class="col-2 pr-0 authordisable">\
+                        <button type="button" class="btn btn-danger delete" for="item-' + next + '">\
+                            <span aria-hidden="true">&times;</span>\
+                        </button>\
+                    </div>\
+                </div>\
+            </div>'
+
+        $('#author-container').append(template);
+        len = $('.author-item').length;            
+
+        $(".delete").click(function(){
+            var target = $(this).attr('for');
+            $('#'+ target).remove()
+            len = $('.author-item').length;
+            if (len === 1){
+                $(".delete").addClass("d-none")
+                $(".authordisable").removeClass("col-2")
+                $(".authordisable").addClass("col-0")
+                $(".authorname").removeClass("col-10")
+                $(".authorname").addClass("col-12")
+            }
+        });
+    });
+
+
+    $('#Year').change(function() {
+            yearselected = $(this).val()
+            if(yearselected===""){ 
+                $('#Course').prop( "disabled", true );
+            }
+            else{
+                $('#Course').prop( "disabled", false );
+                $('#Course').empty();
+                courses_year = (courses_data.find(x => x.year === yearselected)).courses
+                for (var i = 0; i < courses_year.length; i++) {
+                        $("#Course").append('<option value="'+ courses_year[i] +'">'+ cut(courses_year[i]) + '</option>')
+                }
+            }
+        });
+    $("#Description").on('input propertychange paste',function(event){
+        $("#charcount").html(500 - this.value.length);
+        });
+
+});
+
+function cut(str){
+    if (str.length  > 55){
+        str = str.substring(0, 55) + "..."
+    }
+    return str
+
+
+}
+</script>
+<script src='https://www.google.com/recaptcha/api.js'></script>
+
+
+{% endblock %}
+
+
+
+
+<!--- HTML IMAGES
+                <div class="form-group">
+                        <label>Project's Logo (optional)</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="Logo" name="Logo" accept=".png, .jpg">
+                            <label class="custom-file-label text-left" for="Logo">Choose image (.png or .jpg only)</label>
+                        </div>
+                        <small id="remove-container" class="form-text text-muted text-left d-none">
+                                <button type="button" id="remove-file" class="btn btn-danger btn-sm">Remove File</button>
+                            </small>
+                    </div>-->
+<!--- JS IMAGES
+
+    $('#Logo').on('change',function(){
+            //get the file name
+            var fileName = $(this).val();
+            //replace the "Choose a file" label
+            if (fileName){
+                $('.custom-file-label').html(fileName);
+                $("#remove-container").removeClass("d-none")
+            }
+            else{
+                $('.custom-file-label').html("Choose image (.png or .jpg only)");
+                $("#remove-container").addClass("d-none")
+            }
+        })
+    $("#remove-file").click(function(){
+            $('#Logo').replaceWith($('#Logo').val('').clone(true));
+            $('.custom-file-label').html("Choose image (.png or .jpg only)");
+            $("#remove-container").addClass("d-none")
+        });
+
+
+-->
+
