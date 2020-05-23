@@ -19,7 +19,7 @@
 #this files contains different URL actions implemented
 from app import app, scheduler
 from app.support import data_support, mail_support, admin_support, SPARQL_support, rdf_support, routine_support
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, Response
 from datetime import datetime
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -140,7 +140,7 @@ def AdminConfirmProject():
     if request.method == 'POST':
         if request.form["action"] == "CONFIRM":
             SPARQL_support.change_status("ONLINE", id)
-            #TODO UPDATE NAMES
+            SPARQL_support.change_all_author(id)
         elif request.form["action"] == "REJECT":
             SPARQL_support.delete_graph(id)
     return redirect(url_for('AdminConfirm'))
@@ -173,8 +173,6 @@ def AdminCourses():
         data_support.update_courses(file, app.config["CSV_PATH"])
     return render_template('admin/AdminCourse.html', active="courses", title='Manager')
 
-
-
 @app.route('/manager/edit_author', methods=['GET', 'POST'])
 @login_required
 def AdminAuthorEdit():
@@ -185,6 +183,35 @@ def AdminAuthorEdit():
         id = mail.split("@")[0].replace(".", "_")
         SPARQL_support.RenameAuthor(name, surname, id)
     return render_template('admin/AdminAuthorEdit.html', active="editauthor", title='Manager')
+
+@app.route('/manager/download', methods=['GET', 'POST'])
+@login_required
+def AdminDownload():
+    return render_template('admin/AdminDownload.html', active="download", title='Manager')
+
+
+@app.route('/manager/download/dump', methods=['GET', 'POST'])
+@login_required
+def DumpDownload():
+    SPARQL_support.dump()
+    with open("dump/dump.nq") as fp:
+            nt = fp.read()
+            return Response(
+                nt,
+                mimetype="text",
+                headers={"Content-disposition":
+                             "attachment; filename=DHDKey_Dump.nq"})
+
+@app.route('/manager/download/csv', methods=['GET', 'POST'])
+@login_required
+def CSVDownload():
+    with open("courses/courses.csv") as fp:
+            csv = fp.read()
+            return Response(
+                csv,
+                mimetype="text/csv",
+                headers={"Content-disposition":
+                             "attachment; filename=courses.csv"})
 
 @app.errorhandler(401)
 def custom_401(error):

@@ -26,6 +26,8 @@ The DHDKey! platform includes an area dedicated to platform administrators (stud
 
 - **Rename Author:** In this simple form it is possible, through an email address (used as an identifier), to edit the name and surname of an author.
 
+- **Download Dump:** This area is dedicated to downloading the RDF dump file and the courses CSV. In particular, **these operations are recommended before any maintenance of the website**.
+
 
 
 ## Back-End

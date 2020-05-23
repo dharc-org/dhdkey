@@ -15,6 +15,9 @@
             <li class="nav-item">
                 <a class="nav-link {% if active == 'editauthor' %}active{% endif %}" href="{{ url_for('AdminAuthorEdit') }}">Rename Author</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link {% if active == 'download' %}active{% endif %}" href="{{ url_for('AdminDownload') }}">Download Data</a>
+              </li>
           </ul>
           {% if active == 'courses' %}
           {% block course %}
@@ -27,6 +30,9 @@
             {% endblock %}
         {% elif active == 'editauthor' %}
             {% block editauthor %}
+            {% endblock %}
+        {% elif active == 'download' %}
+            {% block download %}
             {% endblock %}
         {% endif %}
     </div>
