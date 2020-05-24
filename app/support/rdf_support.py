@@ -19,6 +19,7 @@ from rdflib import ConjunctiveGraph, URIRef, Literal, Namespace
 from rdflib.namespace import RDF, XSD, DCTERMS, FOAF, RDFS
 from .data_support import process_data
 from app import app
+from urllib import parse
 import string
 
 def ProjectRdf(data):
@@ -35,7 +36,7 @@ def ProjectRdf(data):
 
     #authors
     for aut in data["Aut"]:
-        aut_uri = URIRef(app.config["BASE_URI"] + "person/" + data["Aut"][aut]["Mail"].split("@")[0].replace(".", "_"))
+        aut_uri = URIRef(app.config["BASE_URI"] + "person/" + parse.quote(data["Aut"][aut]["Mail"].split("@")[0].replace(".", "_"), safe=""))
         g.addN([(proj, DCTERMS.creator, aut_uri, graph)])
         g.addN([(aut_uri, RDF.type, FOAF.Person, graph)])
         g.addN([(aut_uri, FOAF.givenName, Literal(data["Aut"][aut]["Name"]), graph)])
@@ -43,7 +44,7 @@ def ProjectRdf(data):
         g.addN([(aut_uri, FOAF.mbox, Literal(data["Aut"][aut]["Mail"]), graph)])
 
     #course
-    course_id = data["Course"].replace(" ", "").replace(string.punctuation, "")[:30]
+    course_id = parse.quote(data["Course"].replace(" ", "").replace(string.punctuation, ""), safe="")[:30]
     course_uri = URIRef(app.config["BASE_URI"] + "course/" + data["Year"].replace("-","_") + "/" + course_id)
     g.addN([(proj, DCTERMS.subject, course_uri, graph)])
     g.addN([(course_uri, RDF.type, DCTERMS.MethodOfInstruction, graph)])

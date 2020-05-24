@@ -128,7 +128,7 @@ def clean_title(title):
 def project_id(data, time):
     main_text = re.sub('[^A-Za-z0-9]+', '', data["Title"].replace(" ", "").lower())[:70]
     proj_id = main_text + time.strftime('%Y%m%d%H%M%S')
-    return parse.quote(proj_id)
+    return parse.quote(proj_id, safe="")
 
 def process_data(source_csv_file_path):
     with open(source_csv_file_path, 'r', encoding='utf-8') as csvfile:
