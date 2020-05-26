@@ -1,6 +1,6 @@
 # DHDKey!
 
-DHDKey! (Digital Humanitites and Digital Knowledge at the University of Bologna Educational Yearbook) is an online database devoted to the collection and publication of metadata of all projects developed by students of the master course of [Digital Humanitites and Digital Knowledge at the University of Bologna](https://corsi.unibo.it/2cycle/DigitalHumanitiesKnowledge). DHDKey! is a platform developed and managed by students for students. 
+DHDKey! (Digital Humanitites and Digital Knowledge Educational Yearbook) is an online database devoted to the collection and publication of metadata of all projects developed by students of the master course of [Digital Humanitites and Digital Knowledge at the University of Bologna](https://corsi.unibo.it/2cycle/DigitalHumanitiesKnowledge). DHDKey! is a platform developed and managed by students for students. 
 
 ## Overview
 
