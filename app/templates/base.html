@@ -1,7 +1,7 @@
 <html>
     <head>
             <meta name="viewport" content="width=device-width">
-            <link rel="icon" href="{{ url_for('static', filename='css/favicon.ico') }}" />
+            <link rel="icon" href="./static/css/favicon.ico" />
         {% if title %}
             <title>{{ title }} - DHDKey!
             </title>
@@ -15,7 +15,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
-        <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+        <link  href="{{ url_for('static', filename='/css/style.css') }}"  "./static/css/style.css" rel="stylesheet">
 
     </head>
     <body class="d-flex flex-column" style="height:100%">
@@ -62,7 +62,7 @@
                     <h5 style="font-weight:300 !important"><a href="{{ url_for('privacy') }}" class="text-secondary">Privacy Policy</a></h5>
                     <h5 style="font-weight:300 !important"><a href="https://github.com/dharc-org/dhdkey/blob/master/README.md" class="text-secondary" target="_blank">Documentation <i class="fas fa-external-link-alt fa-xs"></i></a></h5>
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-7 mt-5 mt-md-0">
                     <h4 style="font-weight:300 !important">/DH.Arc - Digital Humanities Advanced Research Centre</h4>
                     <h5 style="font-weight:300 !important"><a href="https://centri.unibo.it/dharc/en" class="text-secondary" target="_blank">/DH.Arc - Website <i class="fas fa-external-link-alt fa-xs"></i></a></h5>
                     <h5 style="font-weight:300 !important"><a href="https://centri.unibo.it/dharc/en/contacts" class="text-secondary" target="_blank">/DH.Arc - Contacts <i class="fas fa-external-link-alt fa-xs"></i></a></h5>                
@@ -93,5 +93,15 @@
         </div>
 
 </body>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-167767963-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-167767963-1');
+</script>
+
 </html>
 

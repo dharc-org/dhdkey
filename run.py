@@ -16,6 +16,8 @@
 #OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 from app import app
+from waitress import serve
+
 
 if __name__ == '__main__':
-  app.run ()
+  serve(app, host='0.0.0.0', port=80, url_prefix='/dhdkey')

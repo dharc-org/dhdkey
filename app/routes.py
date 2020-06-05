@@ -45,7 +45,6 @@ def documentation():
 def privacy():
     return render_template('documents/privacy.html', title="Privacy Policy & Terms of Service")
 
-
 @app.route('/projects')
 def projects():
     try:
@@ -117,13 +116,11 @@ def admin():
         password = request.form["password"]
         if admin_support.verify_password(username, password):
             user = admin_support.load_user(username)
-            login_user(user, remember=False)
-            return redirect(url_for('AdminConfirm'))
+            login_user(user)
+            return redirect(url_for('index'))
         else:
             flash('Invalid username or password')
-            return redirect(url_for('admin'))
     return render_template('admin.html', title='Admin Access')
-
 
 
 @app.route('/manager/confirm', methods=['GET','POST'])
@@ -131,7 +128,6 @@ def admin():
 def AdminConfirm():
     data = SPARQL_support.get_suspended()
     return render_template('admin/AdminConfirm.html', data=data, active="confirm", title='Manager')
-
 
 @app.route('/manager/confirm/project/', methods=['POST'])
 @login_required
@@ -189,7 +185,6 @@ def AdminAuthorEdit():
 def AdminDownload():
     return render_template('admin/AdminDownload.html', active="download", title='Manager')
 
-
 @app.route('/manager/download/dump', methods=['GET', 'POST'])
 @login_required
 def DumpDownload():
@@ -201,6 +196,7 @@ def DumpDownload():
                 mimetype="text",
                 headers={"Content-disposition":
                              "attachment; filename=DHDKey_Dump.nq"})
+
 
 @app.route('/manager/download/csv', methods=['GET', 'POST'])
 @login_required
@@ -222,4 +218,7 @@ def custom_401(error):
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+
+
 

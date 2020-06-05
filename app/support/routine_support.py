@@ -32,5 +32,5 @@ def expires():
         oldtime = datetime.strptime(date, '%Y%m%d%H%M%S')
         nowtime = datetime.now()
         diff = nowtime - oldtime
-        if diff.days > 1:
+        if diff.days >= 1:
             data_support.remove_json(name)

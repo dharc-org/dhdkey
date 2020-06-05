@@ -126,12 +126,9 @@
            <div class="col-md-9">
              <div class="breadcrumbs"></div>
              <div class="clearfix"></div>
-             <table class="table table-striped">
-               <tbody>
-               <tr v-for="item of searchResult.data.items">
-                 <td></td>
-                 <td>
-                   <h3 class="mt-3">[[ item.title ]]</h3>
+             <div>
+               <div class="proj-item" v-for="item of searchResult.data.items">
+                   <h3 class="mt-3" style="word-wrap: break-word;">[[ item.title ]]</h3>
                    <div class="mb-3">
                     <h5><a class="badge badge-info mr-2 mt-2" v-for="(aut, index) in item.authors" v-bind:href= "'{{ url_for('projects', id="") }}' + [[getId(index,item.ids)]]">[[ aut ]]</a></h5>
                    </div>
@@ -146,16 +143,13 @@
                    </div>
                    <div class="mb-3">
                      <div   v-if="item.homepage">
-                    <a v-bind:href="item.homepage" target="_blank"><i class="fas fa-arrow-alt-circle-right text-primary"></i> [[ item.homepage ]] <i class="fas fa-external-link-alt fa-xs"></i></a>
+                    <a v-bind:href="item.homepage" target="_blank"><i class="fas fa-arrow-alt-circle-right"></i> [[ item.homepage ]] <i class="fas fa-external-link-alt fa-xs"></i></a>
                      </div>
-                    <a v-bind:href="item.repository" target="_blank"><i class="fab fa-github text-primary"></i> Github DH.arc Repository <i class="fas fa-external-link-alt fa-xs"></i></a>
+                    <a v-bind:href="item.repository" target="_blank"><i class="fab fa-github"></i> Github DH.arc Repository <i class="fas fa-external-link-alt fa-xs"></i></a>
                    </div>
-                 </td>
-                 <td>
-                 </td>
-               </tr>
-               </tbody>
-             </table>
+
+                  </div>
+                </div>
              <div class="clearfix"></div>
            </div>
      
@@ -189,7 +183,7 @@ $(document).ready(function() {
       return aut.text;
     }
     var $aut = $(
-      '<span>' + aut.text + ' </span> <span class= "text-secondary pl-3"> ' + aut.id + '</span>'
+      '<span>' + aut.text + ' </span> <span class="text-secondary pl-3 d-none d-md-inline"> ' + aut.id + '</span>'
     );
     return $aut;
   };

@@ -6,9 +6,9 @@
         <div class="border-bottom border-top" style="text-align: left; margin-top: 30px; margin-bottom: 30px;">
             <ul>
                 <li><b>Title:</b> {{ data["Title"]}}</li>
+                <li><b>Authors:</b>
                 {% for a in data["Aut"] %}
-                <li><b>Author #{{ a|int + 1}}:</b>
-                    <ul>
+                    <ul class="my-3">
                         <li><b>Name:</b> {{ data["Aut"][a]["Name"] }}</li>
                         <li><b>Surname:</b> {{ data["Aut"][a]["Surname"] }}</li>
                         <li><b>Mail:</b> {{ data["Aut"][a]["Mail"] }}</li>

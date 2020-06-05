@@ -2,12 +2,12 @@
 Thank you for your contribution!</p>
 <p>
     To confirm project "{{ title }}" submission
-    <a href="{{ url_for('confirmation', token=token, _external=True) }}">
+    <a href="https://projects.dharc.unibo.it/dhdkey/confirmation/{{token}}">
         click here
     </a>.
 </p>
 <p>Alternatively, you can paste the following link in your browser's address bar:</p>
-<p>{{ url_for('confirmation', token=token, _external=True) }}</p>
+<p>https://projects.dharc.unibo.it/dhdkey/confirmation/{{token}}</p>
 <p>If you have not submitted any project simply ignore this message.</p>
 <p>Sincerely,
     <br>
@@ -16,4 +16,4 @@ The DHDKey! Team</p>
     <br>
     <br>
 <p>** THIS IS AN AUTOMATED MESSAGE - PLEASE DO NOT REPLY DIRECTLY TO THIS EMAIL **</p>
-<p>More Info at <a href="{{ url_for('index', _external=True)}}">{{ url_for('index', _external=True)}}</a></p>
+<p>More Info at <a href="https://projects.dharc.unibo.it/dhdkey/">https://projects.dharc.unibo.it/dhdkey/</a></p>
