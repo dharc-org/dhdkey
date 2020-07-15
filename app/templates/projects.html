@@ -50,6 +50,7 @@
          <!-- div for pagination block -->
                <div class="pagination-bar  float-right">
                  <paginate
+                            v-model="page"
                            :page-count="Math.ceil(searchResult.pagination.total / searchResult.pagination.per_page)"
                            :page-range="3"
                            :click-handler="goToPage"
@@ -110,7 +111,7 @@
                  <li v-for="bucket in facet.buckets">
                  <div class="checkbox block" style="margin-top: 0; margin-bottom: 0;">
                    <label>
-                     <input class="checkbox" type="checkbox" v-model="filters[facet.name]" v-bind:value="bucket.key">
+                     <input class="checkbox" @click="goToPage(1)" type="checkbox" v-model="filters[facet.name]" v-bind:value="bucket.key">
                      [[ bucket.key ]] ([[ bucket.doc_count ]]) 
                    </label>
                  </div>
@@ -145,7 +146,7 @@
                      <div   v-if="item.homepage">
                     <a v-bind:href="item.homepage" target="_blank"><i class="fas fa-arrow-alt-circle-right"></i> [[ item.homepage ]] <i class="fas fa-external-link-alt fa-xs"></i></a>
                      </div>
-                    <a v-bind:href="item.repository" target="_blank"><i class="fab fa-github"></i> Github DH.arc Repository <i class="fas fa-external-link-alt fa-xs"></i></a>
+                    <a v-bind:href="item.repository" target="_blank"><i class="fab fa-github"></i> Github<!-- DH.arc--> Repository <i class="fas fa-external-link-alt fa-xs"></i></a>
                    </div>
 
                   </div>
@@ -167,9 +168,9 @@
     
     <script>
 
-rows = JSON.parse('{{ data | tojson | safe}}');
+rows = {{ data | tojson | safe}};
 $(document).ready(function() {
-    var author_select_dta = JSON.parse('{{ autdata | tojson | safe}}');
+    var author_select_dta = {{ autdata | tojson | safe}};
 
     $('#author_selector').select2({
         data:author_select_dta,
@@ -228,7 +229,7 @@ var vm = new Vue({
    
    // adding pagination variables
    var page = this.page || 1;
-   var per_page = this.per_page || 5;
+   var per_page = this.per_page || 6;
 
    return {
      query: '',
@@ -269,7 +270,7 @@ var vm = new Vue({
      var result = itemsjs.search({
        query: this.query,
        page: this.page,
-       per_page: 5,
+       per_page: 6,
        filters: this.filters
      })
      return result
