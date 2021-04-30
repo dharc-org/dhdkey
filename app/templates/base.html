@@ -68,42 +68,72 @@
                     <h4 style="font-weight:300 !important">/DH.Arc - Digital Humanities Advanced Research Centre</h4>
                     <h5 style="font-weight:300 !important"><a href="https://centri.unibo.it/dharc/en" class="text-secondary" target="_blank">/DH.Arc - Website <i class="fas fa-external-link-alt fa-xs"></i></a></h5>
                     <h5 style="font-weight:300 !important"><a href="https://centri.unibo.it/dharc/en/contacts" class="text-secondary" target="_blank">/DH.Arc - Contacts <i class="fas fa-external-link-alt fa-xs"></i></a></h5>                
+               
                 </div>
             </div>
          </footer>
 
          <footer class="footer bg-secondary text-white py-2" style="margin-bottom: 0px;margin-top: 0px; padding-right: 20px; padding-left: 20px; flex-shrink: none;">
                 <div class="container">
-            <div class="row">
-                    <div class="col-md-8">
-                        ©2020  DHDKey! - Digital Humanities & Digital Knowledge Educational Yearbook
-                    </div>
+                    <div class="row">
+                            <div class="col-md-8">
+                                ©2020  DHDKey! - Digital Humanities & Digital Knowledge Educational Yearbook
+                            </div>
 
-            {% if title != "Confirmation" %}
-                <div class="col-md-4 text-right text-dark">
-                    {% if current_user.is_authenticated %}
-                        <a class="text-dark" href="{{ url_for('logout') }}">Admin Logout</a>
-                    {%else%}
-                        <a class="text-dark" href="{{ url_for('admin') }}">Admin Login</a>
+                    {% if title != "Confirmation" %}
+                        <div class="col-md-4 text-right text-dark">
+                            {% if current_user.is_authenticated %}
+                                <a class="text-dark" href="{{ url_for('logout') }}">Admin Logout</a>
+                            {%else%}
+                                <a class="text-dark" href="{{ url_for('admin') }}">Admin Login</a>
+                            {% endif %}
+                            {% if current_user.is_authenticated %}
+                                - <a class="text-dark" href="{{ url_for('AdminConfirm') }}">Data Manager</a>
+                            {%endif%}
+                        </div>
+                    </div>
                     {% endif %}
-                    {% if current_user.is_authenticated %}
-                        - <a class="text-dark" href="{{ url_for('AdminConfirm') }}">Data Manager</a>
-                    {%endif%}
+                </div>
+        </footer>
+        
+        
+
+        {% if cookies_check() %}
+        {% else %}
+
+        <div class="fixed-bottom  alert-info p-4" id="cookie-consent-container">
+            <div class="container">
+                <div class="notice row small d-none d-md-flex">
+                    <div class="cookie-text col-9">This website uses third-party cookies for security reasons. By continuing to browse the site, or by clicking on "I accept", you consent to the use of cookies. 
+                         For more information see our <a href="{{ url_for('privacy') }}">Privacy Policy</a>.
+                    </div>
+                    <div class="buttons col-3 text-center align-self-center">
+                            <button class="btn btn-success btn-sm cookie-consent" data-accept="cookiebar">I accept</button>
+                    </div>
+                </div>
+                <div class="notice row small d-block d-md-none">
+                    <div class="cookie-text">This website uses third-party cookies for security reasons. By continuing to browse the site, or by clicking on "I accept", you consent to the use of cookies. 
+                         For more information see our <a href="{{ url_for('privacy') }}">Privacy Policy</a>.
+                    </div>
+                    <div class="buttons text-center py-3">
+                            <button class="btn btn-success btn-sm cookie-consent" data-accept="cookiebar">I accept</button>
+                    </div>
                 </div>
             </div>
-            {% endif %}
         </div>
+           
+            <script>
+            
+                $('.cookie-consent').click(function() {
+                    document.cookie = "cookie_consent=true";
+                    document.getElementById('cookie-consent-container').hidden = true;
+                })
+            </script>
+        {% endif %}
+
 
 </body>
-<!-- Global site tag (gtag.js) - Google Analytics 
-<script async src=^^^^^^^^^^></script>></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', '^^^^^^^^^^');
-</script>-->
 
 </html>
 

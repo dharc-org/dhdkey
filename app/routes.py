@@ -26,6 +26,16 @@ from flask_login import current_user, login_user, logout_user, login_required
 #dump everyday at 3 A.M. (italian time zone)
 scheduler.add_job(routine_support.routine, 'cron', hour='3')
 
+@app.context_processor
+def inject_template_scope():
+    injections = dict()
+
+    def cookies_check():
+        value = request.cookies.get('cookie_consent')
+        return value == 'true'
+    injections.update(cookies_check=cookies_check)
+
+    return injections
 
 #Index route
 @app.route('/')
@@ -63,6 +73,22 @@ def projects():
         return render_template('projects.html', title='Projects', data=data, name=None, autdata=autdata, author=False)
 
 
+#NO CONFIRMATION MAIL
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'POST':
+        data = request.form
+        time = datetime.now()
+        jsondata = data_support.parse_form(data, time)
+        rdf_data = rdf_support.ProjectRdf(jsondata)
+        SPARQL_support.add_data(rdf_data, quad=True)
+        flash("confirmed")
+        return redirect(url_for('index'))
+    else:
+        courses_data = data_support.prepare_data(app.config['CSV_PATH'])
+        return render_template('upload.html', title='Upload', courses_data=courses_data)
+
+'''
 #upload route
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -104,7 +130,7 @@ def confirmation(token):
             data_support.remove_json(id)
         return redirect(url_for('index'))
     return render_template('confirmation_form.html', title='Confirmation', token=token, data=data)
-
+'''
 
 #Admin route
 @app.route('/admin', methods=['GET', 'POST'])
