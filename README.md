@@ -60,7 +60,7 @@ All data published by DHDKey! are in RDF format with N-Quads serialization. The 
 
 As mentioned above, rdf data is serialized in N-Quads since the metadata of each project is stored in a corresponding graph. Each graph conforms to the following data model described by a [Graffoo](https://essepuntato.it/graffoo/) diagram:
 
-![DHDKey! data model diagram](TODO ADD IMAGE URL)
+![DHDKey! data model diagram](https://github.com/dharc-org/dhdkey/blob/master/DHDM.jpg)
 
 In particular, the following ontologies are reused:
 - DCMI metadata terms (dct, http://purl.org/dc/terms)
