@@ -1,0 +1,11 @@
+{% extends "manager.html" %}
+
+{% block download %}
+<div class="text-center">
+<a class="btn btn-info mt-5" role="button" href="{{ url_for('DumpDownload')}}">Download RDF Dump</a>
+<br>
+<a class="btn btn-info mt-5" role="button" href="{{ url_for('CSVDownload')}}">Download Courses CSV</a>
+</div>
+
+
+{% endblock %}

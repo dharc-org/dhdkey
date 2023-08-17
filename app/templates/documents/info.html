@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container text-center" style="margin-top: 35px">
+    <h2 class="mb-5">DHDKey! Info</h2>
+
+    <div class="mb-4">
+            <p>DHDKey is part of <a href="https://centri.unibo.it/dharc/en" target="_blank">/DH.Arc</a> research activity</p>
+    </div>
+    <div class="mb-4">
+            <p><span class="text-secondary">Created by</span><br>
+            <a href="{{ url_for('projects', id='fabio_mariani6') }}">Fabio Mariani</a></p>
+    </div>
+    <div class="mb-4">
+            <span class="text-secondary"span>Supervised by</span>
+            <p><a href="https://www.unibo.it/sitoweb/silvio.peroni" target="_blank">Silvio Peroni</a> and <a href="https://www.unibo.it/sitoweb/francesca.tomasi" target="_blank">Francesca Tomasi</a></p>
+    </div>
+    <div class="mb-4">
+            <span class="text-secondary">Date</span>
+            <p>2020</p>
+    </div>
+    <div class="mb-4">
+            <p>
+            <span class="text-secondary">Website License</span>
+            <br>
+                <a rel="license" target="_blank" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" />
+         <br>       
+        Creative Commons Attribution 4.0 International License</a>.
+                </p>
+    </div>
+    <div class="mb-4">
+        <p>
+        <span class="text-secondary">Projects Data and Metadata License</span>
+        <br>
+            <a rel="license" target="_blank" href="http://creativecommons.org/licenses/zero/1.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/zero/1.0/88x31.png" />
+     <br>       
+    Creative Commons Zero 1.0 International License</a>.
+            </p>
+    </div>
+    <div class="mb-4">
+            <p><span class="text-secondary">Github Repository</span>
+            <br>
+                <a rel="license" target="_blank" href="https://github.com/dharc-org/dhdkey"><i class="fab fa-sm fa-github"></i>
+                        https://github.com/dharc-org/dhdkey</a>
+                </p>
+    </div>
+    <div class="mb-4">
+            <span class="text-secondary">Contacts</span>
+            <br>
+            <span>
+                <a target="_blank" href="mailto:dharc@live.unibo.it"><i class="far fa-envelope"></i>
+                dharc@live.unibo.it</a>
+                <br>
+                <span><i class="fas fa-map-marker-alt"></i> Department of Classical Philology and Italian Studies (FICLIT), via Zamboni 32, 40126, Bologna</span>
+            </span>
+    </div>
+    <div class="mb-4">
+        <span class="text-secondary">Cite as:</span>
+        <p>DHDKey!, curated by \DH.Arc, version 1.0, 2020</p>
+</div>
+</div>
+
+{% endblock %}

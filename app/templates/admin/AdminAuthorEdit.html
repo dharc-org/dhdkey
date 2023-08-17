@@ -1,0 +1,21 @@
+{% extends "manager.html" %}
+
+{% block editauthor %}
+
+<h5 class="mt-3">Rename an Author</h5>
+
+<form action="{{ url_for('AdminAuthorEdit')}}" method="POST">
+
+
+        <label for="Mail"  class="col-4 col-form-label pl-0 pr-0">Author UniboMail</label>
+        <input type="mail" class="form-control" id="Mail" name="Mail" pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(unibo|studio.unibo)\.it$" placeholder="Enter Author&#39;s Unibo Mail" title="Only Unibo Mail accepted (@unibo.it or @studio.unibo.it)" required="true">
+
+            <label for="Name" class="col-4 col-form-label pl-0 pr-0">New Author Name</label>
+            <input type="text" class="form-control" id="Name"  name="Name"  required="true" placeholder="Enter New Author&#39;s Name">
+
+            <label for="Surname"  class="col-4 col-form-label pl-0 pr-0">New Author Surname</label>
+            <input type="text" class="form-control" id="Surname"  name="Surname"  required="true" placeholder="Enter New Author&#39;s Surname">
+
+        <button type="submit" class="btn btn-warning mt-3">Rename Author</button>
+</form>
+{% endblock %}

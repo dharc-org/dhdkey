@@ -1,0 +1,17 @@
+Dear Student,
+Thank you for your contribution!
+
+To confirm project "{{ title }}" submission click on the following link:
+
+https://projects.dharc.unibo.it/dhdkey/confirmation/{{token}}
+
+If you have not submitted any project simply ignore this message.
+
+Sincerely,
+
+
+The DHDKey! Team
+
+
+** THIS IS AN AUTOMATED MESSAGE - PLEASE DO NOT REPLY DIRECTLY TO THIS EMAIL **
+More Info at https://projects.dharc.unibo.it/dhdkey/

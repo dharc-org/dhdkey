@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class= "container" style="margin-top: 40px; text-align: center;">
+            <h2>Uploaded Data Summary</h2>
+        <div class="border-bottom border-top" style="text-align: left; margin-top: 30px; margin-bottom: 30px;">
+            <ul>
+                <li><b>Title:</b> {{ data["Title"]}}</li>
+                <li><b>Authors:</b>
+                {% for a in data["Aut"] %}
+                    <ul class="my-3">
+                        <li><b>Name:</b> {{ data["Aut"][a]["Name"] }}</li>
+                        <li><b>Surname:</b> {{ data["Aut"][a]["Surname"] }}</li>
+                        <li><b>Mail:</b> {{ data["Aut"][a]["Mail"] }}</li>
+                    </ul>
+                </li>
+                {% endfor %}
+                <li><b>Description:</b> {{ data["Description"]}}</li>
+                <li><b>Github<!-- DH.arc--> Repository:</b> <a target="_blank" href='{{ data["Repository"]}}'>{{ data["Repository"]}} <i class="fas fa-external-link-alt fa-xs"></i></a></li>
+                {% if data["Homepage"] %}<li><b>Homepage:</b> <a target="_blank" href='{{ data["Homepage"]}}'>{{ data["Homepage"]}} <i class="fas fa-external-link-alt fa-xs"></i></a></li>{% endif %}
+                <li><b>Course:</b> <a target="_blank" href='{{ data["Course_url"]}}'>{{ data["Course"]}} <i class="fas fa-external-link-alt fa-xs"></i></a></li>
+                <li><b>Course's Academic Year:</b> {{ data["Year"]}}</li>
+            </ul>
+        </div>
+        <form action="{{ url_for('confirmation', token=token) }}" method="POST">
+            <button class="btn btn-success mr-3" name="selection" type="submit" value="confirm" onclick="return confirm('Are you sure to confirm?')">Confirm</button>
+            <button class="btn btn-danger" name="selection" type="submit" value="reject" onclick="return confirm('Are you sure to reject?')">reject</button>
+        </form>
+    </div>
+        
+
+            
+
+
+{% endblock %}

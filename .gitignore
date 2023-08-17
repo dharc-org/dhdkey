@@ -1,0 +1,9 @@
+env/
+instance/
+temp/
+dump/
+courses/
+blazegraph-orig.jar
+blazegraph.jar
+blazegraph.jnl
+DHDM.graphml

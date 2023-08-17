@@ -1,0 +1,244 @@
+{% extends "manager.html" %}
+
+{% block confirm %}
+  <div class="container">
+      <div id="el" v-cloak style="margin-top: 30px;">
+       
+           <button type="button" class="btn-block btn btn-primary d-block d-sm-block d-md-none text-left"  data-toggle="modal" data-target="#modal_filter">
+               <i class="fas fa-tasks"> </i> <span>Refine Search</span>
+                 </button>
+                 
+         <div class="row" style="margin-top: 20px;">
+             <div class="col-6">
+               <p>[[ searchResult.pagination.total ]] Items Found</p>
+             </div>
+         
+             <div class="col-6">
+         <!-- div for pagination block -->
+               <div class="pagination-bar  float-right">
+                 <paginate
+                          v-model="page"
+                           :page-count="Math.ceil(searchResult.pagination.total / searchResult.pagination.per_page)"
+                           :page-range="3"
+                           :click-handler="goToPage"
+                           :prev-text="'Prev'"
+                           :next-text="'Next'"
+                           :container-class="'pagination'"
+                           :page-class="'page-item'"
+                           :page-link-class="'page-link'"
+                           :prev-class="'page-item'"
+                           :next-class="'page-item'"
+                           :prev-link-class="'page-link'"
+                           :next-link-class="'page-link'"
+                           :active-class="'active'">
+                 </paginate>
+               </div>
+             </div>
+         </div>
+     
+         <div class="row">
+             <div class="modal" id="modal_filter" tabindex="-1" role="dialog" data-backdrop="static">
+                 <div class="modal-dialog" role="document">
+                     <div class="modal-content">
+                       <div class="modal-header">
+                         <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-tasks"></i> Refine Search</h5>
+                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                           <span aria-hidden="true">&times;</span>
+                         </button>
+                       </div>
+                         <div class="modal-body">
+                   <div v-for="facet in searchResult.data.aggregations">
+                     <h5 style="margin-bottom: 5px;"><strong style="color: #337ab7;">[[ facet.title ]]</strong></h5>
+           
+                     <ul class="browse-list list-unstyled long-list" style="margin-bottom: 0;">
+                       <li v-for="bucket in facet.buckets">
+                       <div class="checkbox block" style="margin-top: 0; margin-bottom: 0;">
+                         <label>
+                           <input class="checkbox"  @click="goToPage(1)" type="checkbox" v-model="filters[facet.name]" v-bind:value="bucket.key">
+                           [[ bucket.key ]] ([[ bucket.doc_count ]]) 
+                 </label>
+               </div>
+               </li>
+             </ul>
+           </div>
+         </div>
+         <div class="modal-footer">
+             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+           </div>
+       </div></div></div>
+
+
+
+           <div class="col-3">
+           <div class="d-none d-sm-none d-md-block">
+           <div v-for="facet in searchResult.data.aggregations">
+               <h5 style="margin-bottom: 5px;"><strong style="color: #337ab7;">[[ facet.title ]]</strong></h5>
+     
+               <ul class="browse-list list-unstyled long-list" style="margin-bottom: 0;">
+                 <li v-for="bucket in facet.buckets">
+                 <div class="checkbox block" style="margin-top: 0; margin-bottom: 0;">
+                   <label>
+                     <input @click="goToPage(1)" class="checkbox" type="checkbox" v-model="filters[facet.name]" v-bind:value="bucket.key">
+                     [[ bucket.key ]] ([[ bucket.doc_count ]]) 
+                   </label>
+                 </div>
+                 </li>
+               </ul>
+             </div>
+           
+           
+           </div>
+
+           </div>
+     
+           <div class="col-md-9">
+             <div class="breadcrumbs"></div>
+             <div class="clearfix"></div>
+             <table class="table table-striped">
+               <tbody>
+                  <tr v-for="item of searchResult.data.items">
+                      <td></td>
+                      <td>
+                        <h3>[[ item.title ]]</h3>
+                        <div>
+                         <h5><span class="badge badge-primary mr-1" v-for="(aut, index) in item.authors">[[ aut ]]</span></h5>
+                        </div>
+                        <div>
+                            <b>Published By:</b> [[item.publisher]]
+                        </div>
+                        <div>
+                         <b>Academic Year:</b> [[ item.year ]]
+                       </div>
+                       <div>
+                        <b>Course:</b>  <a v-bind:href="item.courseurl" target="_blank">[[ item.course ]] <i class="fas fa-external-link-alt fa-xs"></i></a>
+                      </div>
+                      <div class="mt-3 mb-3">
+                       [[ item.description ]]
+                      </div>
+                      <div class="mb-3">
+                        <div   v-if="item.homepage">
+                       <a v-bind:href="item.homepage" target="_blank"><i class="fas fa-arrow-alt-circle-right text-primary"></i> Project Homepage <i class="fas fa-external-link-alt fa-xs"></i></a>
+                        </div>
+                       <a v-bind:href="item.repository" target="_blank"><i class="fab fa-github text-primary"></i> Github<!-- DH.arc--> Repository <i class="fas fa-external-link-alt fa-xs"></i></a>
+                      </div>
+                      </td>
+                      <td>
+                          <form  v-bind:action="'{{ url_for('AdminConfirmProject', id="") }}' + [[item.graph]]" method="POST">
+                              <input type="submit" class="btn btn-success mb-3" style="width:100%" name="action" value="CONFIRM" onclick="return confirm('Are you sure to confirm?')">
+                              <input type="submit" class="btn btn-danger" style="width:100%" name="action" value="REJECT" onclick="return confirm('Are you sure to reject?')">
+                            </form>  
+                      </td>
+                    </tr>
+               </tbody>
+             </table>
+             <div class="clearfix"></div>
+           </div>
+     
+           <div class="clearfix" style="margin-bottom: 100px;"></div>
+         </div>
+     </div>
+    </div>
+     
+
+    <script src="https://unpkg.com/itemsjs@1.0.37/dist/itemsjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="https://unpkg.com/vuejs-paginate@2.1.0/dist/index.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    
+    <script>
+
+$( document ).ready(function() {
+
+rows = {{ data | tojson | safe}};
+
+
+ var configuration = {
+ //searchableFields: ['title', 'authors'],
+ sortings: { name_asc: {field: 'title', order: 'asc'}},
+ aggregations: {
+   year: {
+     title: 'Academic Year',
+     size: 10
+   },
+   course: {
+     title: 'Course',
+     size: 10
+   },
+   /*authors: {
+     title: "Authors",
+     size: 10
+   }*/
+ }
+}
+
+itemsjs = itemsjs(rows, configuration);
+// add vue component for pagination
+Vue.component('paginate', VuejsPaginate)
+
+var vm = new Vue({
+ el: '#el',
+ delimiters: ['[[', ']]'],
+ data: function () {
+
+   // making it more generic
+   var filters = {};
+   Object.keys(configuration.aggregations).map(function(v) {
+     filters[v] = [];
+   })
+   
+   // adding pagination variables
+   var page = this.page || 1;
+   var per_page = this.per_page || 8;
+
+   return {
+     query: '',
+     // initializing filters with empty arrays
+     filters: filters,
+     // setting pagination variables
+     page: page,
+     per_page: per_page,
+   }
+ },
+ methods: {
+    getId: function (index, array) {
+      return array[index]
+    },
+   reset: function () {
+     var filters = {};
+     Object.keys(configuration.aggregations).map(function(v) {
+       filters[v] = [];
+     })
+
+     this.filters = filters;
+     this.page = 1;
+     this.query = '';
+   },
+   goToPage: function (page) {
+     this.page = page;
+     return page;
+   },
+ },
+ watch: {
+     query: function () {
+      this.page = 1;
+    }
+ },
+ computed: {
+   searchResult: function () {
+
+     var result = itemsjs.search({
+       query: this.query,
+       page: this.page,
+       per_page: 8,
+       filters: this.filters
+     })
+     return result
+   }
+ }
+});
+});
+     </script>
+
+{% endblock %}
+
