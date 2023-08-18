@@ -1,35 +1,51 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container d-flex flex-column d-flex justify-content-center" style="height: 100%;">
+<div class="container d-flex flex-column d-flex justify-content-start" style="height: 100%;">
   <!-- <div class="container d-flex flex-column justify-content-start py-5 my-5" style="background-color: red;"> -->
     <!-- e9ecef-->
 
-      <div class="row">
-          <div class="col-sm-10 pt-5 font-weight-light mb-5 mx-auto">
-              <h1 class="display-4">DHDKey</h1>
-              <h4 class="lead" style="font-variant: small-caps">Digital Humanities & Digital Knowledge Educational Yearbook</h4>
+      <div class="row mt-5">
+          <div class="col-sm-8 font-weight-light mx-auto mt-5">
+              <h1 class="display-4 mb-0">DHDKey</h1>
+              <h4 class="lead mt-0" style="font-variant: small-caps;">Digital Humanities & Digital Knowledge Educational Yearbook</h4>
               <!-- <hr class="my-4"> -->
               <!-- <p class="lead">Explore students' projects from the <b><a class="text-white" href="https://corsi.unibo.it/2cycle/DigitalHumanitiesKnowledge">Digital Humanities & Digital Knowledge course at the University of Bologna</a></b>.</p>  -->
 
+
+              
           </div>
+          
       </div>
-      <div class="row">
-          <div class="col-sm-10 mx-auto">
-              <div class="row text-center mt-n5">
+      <div class="row mt-4">
+          <div class="col-sm-8 mx-auto">
+            <form>
+              <div class="form-group row">
+                <div class="col-10 pr-0">
+                  <select id="author_selector1" class="form-control form-control-lg" name="id" required style="width:100%; height:100%;">
+                          <option value=""></option>
+                  </select>
+                </div>
+                <div class="col-2 pl-0">
+                        <button type="submit" class="btn btn-primary" style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important"><i class="fas fa-search"></i></button>
+                </div>
+              </div>
+            </form>
+              <div class="row text-center d-flex flex-row justify-content-between align-items-stretch flex-wrap">
                   <div class="col-sm pb-2">
                       <div class="card shadow-sm">
                           <div class="card-body d-flex flex-column align-items-center">
                               <i class="fa fa-book-open fa-7x bg-white text-dark icon"></i>
-                              <a href="{{ url_for('projects') }}" class="btn btn-outline-dark mt-3">Browse projects</a>
+                              <a href="{{ url_for('projects') }}" class="btn btn-outline-dark mt-3 text-nowrap">Browse all projects</a>
                           </div>
                       </div>
+                      
                   </div>
-                  <div class="col-sm pb-2">
+                  <div class="col-sm pb-2" >
                       <div class="card shadow-sm">
                           <div class="card-body d-flex flex-column align-items-center">
                               <i class="far fa-arrow-alt-circle-up fa-7x bg-white text-dark icon "></i>
-                              <a href="{{ url_for('upload') }}" class="btn btn-outline-dark mt-3">Upload new project</a>
+                              <a href="{{ url_for('upload') }}" class="btn btn-outline-dark mt-3 text-nowrap">Upload new project</a>
                           </div>
                       </div>
                   </div>
@@ -37,15 +53,15 @@
                       <div class="card shadow-sm">
                           <div class="card-body d-flex flex-column align-items-center">
                               <i class="far fa-question-circle fa-7x bg-white text-dark icon "></i>
-                              <a href="{{ url_for('info') }}" class="btn btn-outline-dark mt-3">User guide</a>
+                              <a href="{{ url_for('info') }}" class="btn btn-outline-dark mt-3 text-nowrap">User guide</a>
                           </div>
                       </div>
                   </div>
               </div>
           </div>
       </div>
-      <div style="height: 10rem;">
-      </div>
+      <!-- <div style="height: 10rem;"> -->
+      <!-- </div> -->
   <!-- </div> -->
 </div>
     {% with messages = get_flashed_messages(with_categories=True) %}
@@ -205,13 +221,147 @@
                       </div>
                   </div>
 
-                  <script>
-                      $("#upload-modal").modal("show")
-                  </script>
+                  <script> $("#upload-modal").modal("show") </script>
 
               {% endif %}                                
             {% endfor %}
         {% endif %}
     {% endwith %}
+
+
+    <script src="https://unpkg.com/itemsjs@1.0.37/dist/itemsjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="https://unpkg.com/vuejs-paginate@2.1.0/dist/index.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    
+    <script>
+       
+
+
+        
+
+rows = {{ data | tojson | safe}};
+$(document).ready(function() {
+var author_select_dta = {{ autdata | tojson | safe}};
+
+$('#author_selector1').select2({
+data: author_select_dta,
+placeholder: "Search for a project by name",
+allowClear: true,
+templateResult: formatAut
+});
+
+function formatAut (aut) {
+if (!aut.id) {
+return aut.text;
+}
+var $aut = $(
+'<span>' + aut.text + ' </span> <span class="text-secondary pl-3 d-none d-md-inline"> ' + aut.id + '</span>'
+);
+return $aut;
+};
+
+$('#author_selector1').on('select2:select', function (e) {
+$(this).parents('form').submit();
+});
+
+});
+
+
+
+var configuration = {
+sortings: { name_asc: {field: 'title', order: 'asc'}},
+aggregations: {
+year: {
+title: 'Academic Year',
+size: 10
+},
+course: {
+title: 'Course',
+size: 10
+},
+}
+}
+
+
+itemsjs = itemsjs(rows, configuration);
+// add vue component for pagination
+Vue.component('paginate', VuejsPaginate)
+
+var vm = new Vue({
+el: '#el',
+delimiters: ['[[', ']]'],
+data: function () {
+
+// making it more generic
+var filters = {};
+Object.keys(configuration.aggregations).map(function(v) {
+filters[v] = [];
+})
+
+// adding pagination variables
+var page = this.page || 1;
+var per_page = this.per_page || 6;
+
+return {
+query: '',
+// initializing filters with empty arrays
+filters: filters,
+// setting pagination variables
+page: page,
+per_page: per_page,
+}
+},
+methods: {
+getId: function (index, array) {
+return array[index]
+},
+reset: function () {
+var filters = {};
+Object.keys(configuration.aggregations).map(function(v) {
+filters[v] = [];
+})
+
+this.filters = filters;
+this.page = 1;
+this.query = '';
+},
+goToPage: function (page) {
+this.page = page;
+return page;
+},
+},
+watch: {
+query: function () {
+this.page = 1;
+}
+},
+computed: {
+searchResult: function () {
+
+var result = itemsjs.search({
+query: this.query,
+page: this.page,
+per_page: 6,
+filters: this.filters
+})
+return result
+}
+}
+});
+
+    </script>
+    <style>
+      
+     
+    .select2-selection{
+        box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+        border: 1px solid rgba(0,0,0,.125) !important;
+        border-radius: 0.25rem !important;
+    }
+
+    </style>
+
 
 {% endblock %}

@@ -41,7 +41,20 @@ def inject_template_scope():
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html', title="Home")
+    try:
+        id = request.args['id']
+        data, autname, autmail = SPARQL_support.by_author(id)
+        autdata = SPARQL_support.find_all_authors()
+        name = id
+        mail = None
+        if data:
+            name = autname
+            mail = autmail
+        return render_template('projects.html', title=name, data=data, name=name, mail= mail, autdata=autdata, author=True)
+    except:
+        data = SPARQL_support.get_all("ONLINE")
+        autdata = SPARQL_support.find_all_authors()
+        return render_template('index.html', title="Home", data=data, autdata=autdata)
 
 @app.route('/info')
 def info():

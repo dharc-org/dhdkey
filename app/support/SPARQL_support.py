@@ -359,7 +359,7 @@ def dump():
 
 
 #Ancillary functions
-def post_query (query):
+def post_query(query):
     ts.setMethod('POST')
     ts.setQuery(query)
     ts.query()
