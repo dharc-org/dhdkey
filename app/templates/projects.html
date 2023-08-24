@@ -26,6 +26,9 @@
                                 <select id="author_selector" class="form-control form-control-lg" name="id" required style="width:100%; height:100%">
                                         <option value=""></option>
                                 </select>
+
+
+                                
                             </div>
                             <div class="col-2 pl-0">
                                     <button type="submit" class="btn btn-primary" style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important"><i class="fas fa-search"></i></button>
@@ -33,6 +36,19 @@
                             </div>
                         </div>
                         </form>
+
+                        <div id="navbar">
+                          <form class="navbar-form navbar-left">
+                            <div class="form-group row">
+                              <div class="col-10 pr-0">
+                                <input id="search-input" type="text" v-model="query" class="form-control" placeholder="Search">
+                              </div>
+                              <div class="col-2 pl-0">
+                                <button type="submit" class="btn btn-primary" style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important"><i class="fas fa-search"></i></button>
+                              </div>
+                            </div>
+                          </form>
+                        </div><!--/.nav-collapse -->
               {% endif %}
             </div>
               <div class="col-lg-6">    </div>
@@ -196,16 +212,27 @@
     
     <script>
 
-rows = {{ data | tojson | safe}};
-$(document).ready(function() {
-    var author_select_dta = {{ autdata | tojson | safe}};
 
-    $('#author_selector').select2({
-        data:author_select_dta,
-    placeholder: "Select an Author",
-    allowClear: true,
-    templateResult: formatAut
-});
+
+
+rows = {{ data | tojson | safe}};
+search_input = '{{ search | safe }}';
+
+$(document).ready(function() {
+
+
+  document.getElementById("search-input").value = search_input
+
+  console.log(search_input)
+
+  var author_select_dta = {{ autdata | tojson | safe}};
+
+  $('#author_selector').select2({
+      data:author_select_dta,
+      placeholder: "Select an Author",
+      allowClear: true,
+      templateResult: formatAut
+  });
 
   function formatAut (aut) {
     if (!aut.id) {
@@ -226,20 +253,21 @@ $(document).ready(function() {
 
 
  var configuration = {
- sortings: { name_asc: {field: 'title', order: 'asc'}},
- aggregations: {
-   year: {
-     title: 'Academic Year',
-     size: 10
-   },
-   course: {
-     title: 'Course',
-     size: 10
-   },
- }
+  searchableFields: ['title', 'description', 'authors'],
+  sortings: { name_asc: {field: 'title', order: 'asc'}},
+  aggregations: {
+    year: {
+      title: 'Academic Year',
+      size: 10
+    },
+    course: {
+      title: 'Course',
+      size: 10
+    },
+  }
 }
 
-
+console.log(rows)
 itemsjs = itemsjs(rows, configuration);
 // add vue component for pagination
 Vue.component('paginate', VuejsPaginate)
@@ -260,7 +288,7 @@ var vm = new Vue({
    var per_page = this.per_page || 6;
 
    return {
-     query: '',
+     query: search_input,
      // initializing filters with empty arrays
      filters: filters,
      // setting pagination variables

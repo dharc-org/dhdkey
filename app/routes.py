@@ -43,6 +43,7 @@ def inject_template_scope():
 def index():
     try:
         id = request.args['id']
+        search = request.args['search']
         data, autname, autmail = SPARQL_support.by_author(id)
         autdata = SPARQL_support.find_all_authors()
         name = id
@@ -50,7 +51,7 @@ def index():
         if data:
             name = autname
             mail = autmail
-        return render_template('projects.html', title=name, data=data, name=name, mail= mail, autdata=autdata, author=True)
+        return render_template('projects.html', title=name, data=data, name=name, mail=mail, autdata=autdata, author=True, search=search)
     except:
         data = SPARQL_support.get_all("ONLINE")
         autdata = SPARQL_support.find_all_authors()
@@ -76,14 +77,18 @@ def projects():
         autdata = SPARQL_support.find_all_authors()
         name = id
         mail = None
+        search = request.args['search']
         if data:
             name = autname
             mail = autmail
-        return render_template('projects.html', title=name, data=data, name=name, mail= mail, autdata=autdata, author=True)
+        return render_template('projects.html', title=name, data=data, name=name, mail= mail, autdata=autdata, author=True, search=search)
     except:
         data = SPARQL_support.get_all("ONLINE")
         autdata = SPARQL_support.find_all_authors()
-        return render_template('projects.html', title='Projects', data=data, name=None, autdata=autdata, author=False)
+        search=''
+        if 'search' in request.args.keys():
+            search = request.args['search']
+        return render_template('projects.html', title='Projects', data=data, name=None, autdata=autdata, author=False, search=search)
 
 
 #NO CONFIRMATION MAIL

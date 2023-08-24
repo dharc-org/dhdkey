@@ -18,19 +18,34 @@
           
       </div>
       <div class="row mt-4">
-          <div class="col-sm-8 mx-auto">
-            <form>
-              <div class="form-group row">
-                <div class="col-10 pr-0">
-                  <select id="author_selector1" class="form-control form-control-lg" name="id" required style="width:100%; height:100%;">
-                          <option value=""></option>
-                  </select>
+
+        
+          
+
+          <div id="el"  class="col-sm-8 mx-auto">
+            
+            <form  action="{{ url_for('projects') }}"  class="navbar-form navbar-left" autocomplete="off">
+              <div class="row">
+                <div class="col-10">
+                  <input type="text" v-model="query" onkeypress="preventSubmitting(event)" onfocus="showOptions()"  oninput="showOptions()"  class="form-control search-input" id="search-input" placeholder="Search for a project by name">
                 </div>
-                <div class="col-2 pl-0">
-                        <button type="submit" class="btn btn-primary" style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important"><i class="fas fa-search"></i></button>
+                <div class="col-2">
+                  <a class="btn btn-primary" style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important" v-bind:href= "'{{ url_for('projects', search="") }}' + [[ query ]]">
+                    <i class="fas fa-search"></i>
+                  </a>
+                </div>
+              </div>
+              
+              <div id="search-options-list"  class="search-options-list col-10 pr-0 card shadow-sm w-50 hidden" style="position: absolute; z-index: 10; overflow-y: scroll; max-height: 20rem;">
+                <div class="proj-item search-option" v-for="item of searchResult.data.items">
+                    <p class="mt-3" style="word-wrap: break-word;">
+                      <a class="text-dark mr-2 mt-2" v-bind:href= "'{{ url_for('projects', search="") }}' + [[item.title]]">[[ item.title ]]</a>
+                    </p>
+                    <a class="badge mr-2 mt-2" v-for="(aut, index) in item.authors" v-bind:href= "'{{ url_for('projects', id="") }}' + [[getId(index,item.ids)]]">[[ aut ]]</a>
                 </div>
               </div>
             </form>
+            
               <div class="row text-center d-flex flex-row justify-content-between align-items-stretch flex-wrap">
                   <div class="col-sm pb-2">
                       <div class="card shadow-sm">
@@ -235,121 +250,151 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
     
+
     <script>
-       
 
 
+    function showOptions() {
+      if (document.getElementById("search-input").value !== "") {
+        $('#search-options-list').removeClass('hidden')
+      }
+    }
+
+    function preventSubmitting(e) {
+      if (e.keyCode === 13){
+        e.preventDefault()
+      }
+    }
+
+    $(window).click(function() {
+      if (event.target.parentElement.classList.contains('search-option') === false 
+      && event.target.classList.contains('search-option') === false
+      && event.target.classList.contains('search-input') === false
+      ) {
         
+          $('#search-options-list').addClass('hidden')
+      }
+    });
 
-rows = {{ data | tojson | safe}};
-$(document).ready(function() {
-var author_select_dta = {{ autdata | tojson | safe}};
+    $('#search-options-list').click(function(event){
+      event.stopPropagation();
+    });
+    
+       
+    rows = {{ data | tojson | safe}};
 
-$('#author_selector1').select2({
-data: author_select_dta,
-placeholder: "Search for a project by name",
-allowClear: true,
-templateResult: formatAut
-});
+    $(document).ready(function() {
+      var author_select_dta = {{ autdata | tojson | safe}};
 
-function formatAut (aut) {
-if (!aut.id) {
-return aut.text;
-}
-var $aut = $(
-'<span>' + aut.text + ' </span> <span class="text-secondary pl-3 d-none d-md-inline"> ' + aut.id + '</span>'
-);
-return $aut;
-};
+      $('#author_selector1').select2({
+        data: author_select_dta,
+        placeholder: "Search for a project by name",
+        allowClear: true,
+        templateResult: formatAut
+      });
 
-$('#author_selector1').on('select2:select', function (e) {
-$(this).parents('form').submit();
-});
+      function formatAut (aut) {
+        if (!aut.id) {
+          return aut.text;
+        }
+        var $aut = $(
+          '<span>' + aut.text + ' </span> <span class="text-secondary pl-3 d-none d-md-inline"> ' + aut.id + '</span>'
+        );
+        return $aut;
+      };
 
-});
+      $('#author_selector1').on('select2:select', function (e) {
+        $(this).parents('form').submit();
+      });
 
-
-
-var configuration = {
-sortings: { name_asc: {field: 'title', order: 'asc'}},
-aggregations: {
-year: {
-title: 'Academic Year',
-size: 10
-},
-course: {
-title: 'Course',
-size: 10
-},
-}
-}
+    });
 
 
-itemsjs = itemsjs(rows, configuration);
-// add vue component for pagination
-Vue.component('paginate', VuejsPaginate)
 
-var vm = new Vue({
-el: '#el',
-delimiters: ['[[', ']]'],
-data: function () {
+    var configuration = {
+      searchableFields: ['title', 'authors'],
+      sortings: { name_asc: {field: 'title', order: 'asc'}},
+      aggregations: {
+        year: {
+          title: 'Academic Year',
+          size: 10
+        },
+        course: {
+          title: 'Course',
+          size: 10
+        },
+      }
+    }
 
-// making it more generic
-var filters = {};
-Object.keys(configuration.aggregations).map(function(v) {
-filters[v] = [];
-})
+    console.log(rows)
+    itemsjs = itemsjs(rows, configuration);
 
-// adding pagination variables
-var page = this.page || 1;
-var per_page = this.per_page || 6;
+    // add vue component for pagination
+    Vue.component('paginate', VuejsPaginate)
 
-return {
-query: '',
-// initializing filters with empty arrays
-filters: filters,
-// setting pagination variables
-page: page,
-per_page: per_page,
-}
-},
-methods: {
-getId: function (index, array) {
-return array[index]
-},
-reset: function () {
-var filters = {};
-Object.keys(configuration.aggregations).map(function(v) {
-filters[v] = [];
-})
+    var vm = new Vue({
+      el: '#el',
+      delimiters: ['[[', ']]'],
+      data: function () {
+        // making it more generic
+        var filters = {};
+        Object.keys(configuration.aggregations).map(function(v) {
+          filters[v] = [];
+        })
 
-this.filters = filters;
-this.page = 1;
-this.query = '';
-},
-goToPage: function (page) {
-this.page = page;
-return page;
-},
-},
-watch: {
-query: function () {
-this.page = 1;
-}
-},
-computed: {
-searchResult: function () {
+        // adding pagination variables
+        var page = this.page || 1;
+        var per_page = this.per_page || 6;
 
-var result = itemsjs.search({
-query: this.query,
-page: this.page,
-per_page: 6,
-filters: this.filters
-})
-return result
-}
-}
-});
+        return {
+          query: '',
+            // initializing filters with empty arrays
+            filters: filters,
+            // setting pagination variables
+            page: page,
+            per_page: per_page,
+          }
+      },
+      methods: {
+        getId: function (index, array) {
+          return array[index]
+        },
+        reset: function () {
+          var filters = {};
+          Object.keys(configuration.aggregations).map(function(v) {
+            filters[v] = [];
+            })
+          this.filters = filters;
+          this.page = 1;
+          this.query = '';
+        },
+        goToPage: function (page) {
+          this.page = page;
+          return page;
+        },
+      },
+      watch: {
+        query: function () {
+          this.page = 1;
+        }
+      },
+      computed: {
+        searchResult: function () {
+          var result = itemsjs.search({
+            query: this.query,
+            page: this.page,
+            per_page: 100,
+            filters: this.filters
+          })
+        return result
+        }
+      }
+    });
+
+
+
+
+
 
     </script>
     <style>
@@ -359,6 +404,10 @@ return result
         box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
         border: 1px solid rgba(0,0,0,.125) !important;
         border-radius: 0.25rem !important;
+    }
+
+    .hidden {
+      display: none;
     }
 
     </style>
