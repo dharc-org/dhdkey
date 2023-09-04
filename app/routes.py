@@ -74,10 +74,14 @@ def projects():
     try:
         id = request.args['id']
         data, autname, autmail = SPARQL_support.by_author(id)
+        print('here')
         autdata = SPARQL_support.find_all_authors()
         name = id
         mail = None
-        search = request.args['search']
+        search = None
+        if 'search' in request.args.keys():
+            search = request.args['search']
+        print('here')
         if data:
             name = autname
             mail = autmail

@@ -217,13 +217,18 @@
 
 rows = {{ data | tojson | safe}};
 search_input = '{{ search | safe }}';
+if (search_input === 'None') {
+  search_input = null
+}
 
 $(document).ready(function() {
 
+  
+  if ((search_input !== null) && (search_input !== NaN) && (search_input !== 'None')  && (search_input !== '')) {
+    document.getElementById("search-input").value = search_input
+  }
 
-  document.getElementById("search-input").value = search_input
-
-  console.log(search_input)
+  
 
   var author_select_dta = {{ autdata | tojson | safe}};
 
