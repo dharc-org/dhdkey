@@ -260,6 +260,7 @@ $(document).ready(function() {
 
 });
 
+rows = rows.sort((x, y) => x.title > y.title)
 for (let i = 0; i < rows.length; i++) {
   rows[i].id = i+1 ;
 }
@@ -352,8 +353,10 @@ var vm = new Vue({
 
     // TODO: revisit this function
     if (this.query && this.query.length) {
-      search_results = miniSearch.search(this.query, {prefix: true, boost: { title: 2 }, fuzzy: 0.2}).map(v => v.id)
-      rowsUpdated = rows.filter(v => search_results.includes(v.id));
+      search_results = miniSearch.search(this.query, {prefix: true, boost: { title: 5 }, fuzzy: 0.2})
+      console.log(search_results)
+      rowsUpdated = rows.filter(v => search_results.map(v => v.id).includes(v.id));
+      rowsUpdated = rowsUpdated.sort((x,y) => search_results.map(v => v.id).indexOf(x.id) > search_results.map(v => v.id).indexOf(y.id))
       itemsjs.reindex(rowsUpdated)
     } else {
       itemsjs.reindex(rows)
@@ -362,7 +365,7 @@ var vm = new Vue({
     
      var result = itemsjs.search({
       //  query: this.query,
-       id: search_results,
+       ids: search_results.map(v => v.id),
        page: this.page,
        per_page: 6,
        filters: this.filters
