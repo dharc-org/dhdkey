@@ -347,11 +347,12 @@ var vm = new Vue({
  },
  computed: {
    searchResult: function () {
-    var search_results = miniSearch.search(this.query, {prefix: true, boost: { title: 2 }, fuzzy: 0.2}).map(v => v.id)
+    var search_results = []
 
 
     // TODO: revisit this function
-    if (this.query.length) {
+    if (this.query && this.query.length) {
+      search_results = miniSearch.search(this.query, {prefix: true, boost: { title: 2 }, fuzzy: 0.2}).map(v => v.id)
       rowsUpdated = rows.filter(v => search_results.includes(v.id));
       itemsjs.reindex(rowsUpdated)
     } else {
