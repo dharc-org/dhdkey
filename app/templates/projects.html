@@ -209,17 +209,22 @@
     <script src="https://unpkg.com/vuejs-paginate@2.1.0/dist/index.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/minisearch@6.1.0/dist/umd/index.min.js"></script>
     <script>
 
 
 
 
 rows = {{ data | tojson | safe}};
+
 search_input = '{{ search | safe }}';
 if (search_input === 'None') {
   search_input = null
 }
+
+
+
+
 
 $(document).ready(function() {
 
@@ -233,7 +238,7 @@ $(document).ready(function() {
   var author_select_dta = {{ autdata | tojson | safe}};
 
   $('#author_selector').select2({
-      data:author_select_dta,
+      data: author_select_dta,
       placeholder: "Select an Author",
       allowClear: true,
       templateResult: formatAut
@@ -255,25 +260,40 @@ $(document).ready(function() {
 
 });
 
+for (let i = 0; i < rows.length; i++) {
+  rows[i].id = i+1 ;
+}
+// console.log(rows)
+let miniSearch = new MiniSearch({
+  fields: ['title', 'description', 'authors']
+})
 
+console.log(rows)
+miniSearch.addAll(rows);
 
- var configuration = {
-  searchableFields: ['title', 'description', 'authors'],
-  sortings: { name_asc: {field: 'title', order: 'asc'}},
+var configuration = {
+  // searchableFields: ['title', 'description', 'authors'],
+  // sortings: { name_asc: {field: 'title', order: 'asc'}},
+  native_search_enabled: false,
+  custom_id_field: 'id',
   aggregations: {
     year: {
       title: 'Academic Year',
-      size: 10
+      size: 10,
+      conjunction: false
     },
     course: {
       title: 'Course',
-      size: 10
+      size: 10,
+      conjunction: false
     },
   }
 }
 
-console.log(rows)
 itemsjs = itemsjs(rows, configuration);
+
+
+
 // add vue component for pagination
 Vue.component('paginate', VuejsPaginate)
 
@@ -327,13 +347,28 @@ var vm = new Vue({
  },
  computed: {
    searchResult: function () {
+    var search_results = miniSearch.search(this.query, {prefix: true, boost: { title: 2 }, fuzzy: 0.2}).map(v => v.id)
 
+
+    // TODO: revisit this function
+    if (this.query.length) {
+      rowsUpdated = rows.filter(v => search_results.includes(v.id));
+      itemsjs.reindex(rowsUpdated)
+    } else {
+      itemsjs.reindex(rows)
+    }
+
+    
      var result = itemsjs.search({
-       query: this.query,
+      //  query: this.query,
+       id: search_results,
        page: this.page,
        per_page: 6,
        filters: this.filters
      })
+    //  console.log(search_results)
+    //  console.log(result)
+
      return result
    }
  }
