@@ -1,216 +1,254 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="container">
+<div class="container">
 
-{% if author %}
-      <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item {% if not author %} active  {% endif %}"><a href="{{ url_for('projects') }}">Projects</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ name }}</li>
-          </ol>
- {% endif %} 
+  {% if author %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item {% if not author %} active  {% endif %}"><a
+          href="{{ url_for('projects') }}">Projects</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ name }}</li>
+    </ol>
+    {% endif %}
 
-        
     <div id="el" v-cloak style="margin-top: 30px;">
-    <div class="row mt-5">
+      <div class="row mt-5">
         <div class="col-lg-6">
-          {% if author %} 
-          <h2>{{ name }}</h2> 
-          <h5  class="d-none d-md-block" style="word-break:break-all;"><a href="mailto:{{ mail }}"  style="word-break:break-all;">{{ mail }}</a></h5>
-          <h6  class="d-block d-md-none"style="word-break:break-all;"><a href="mailto:{{ mail }}"  style="word-break:break-all;">{{ mail }}</a></h6>
-            {% else %}
-                        <form>
-                                <div class="form-group row">
-                                        <div class="col-10 pr-0">
-                                <select id="author_selector" class="form-control form-control-lg" name="id" required style="width:100%; height:100%">
-                                        <option value=""></option>
-                                </select>
+          {% if author %}
+          <h2>{{ name }}</h2>
+          <h5 class="d-none d-md-block" style="word-break:break-all;"><a
+              href="mailto:{{ mail }}" style="word-break:break-all;">{{ mail }}</a></h5>
+          <h6 class="d-block d-md-none" style="word-break:break-all;"><a
+              href="mailto:{{ mail }}" style="word-break:break-all;">{{ mail }}</a></h6>
+          {% else %}
+          <form>
+            <div class="form-group row">
+              <div class="col-10 pr-0">
+                <select id="author_selector"
+                  class="form-control form-control-lg" name="id" required
+                  style="width:100%; height:100%">
+                  <option value></option>
+                </select>
 
+              </div>
+              <div class="col-2 pl-0">
+                <button type="submit" class="btn btn-primary"
+                  style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important"><i
+                    class="fas fa-search"></i></button>
 
-                                
-                            </div>
-                            <div class="col-2 pl-0">
-                                    <button type="submit" class="btn btn-primary" style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important"><i class="fas fa-search"></i></button>
-
-                            </div>
-                        </div>
-                        </form>
-
-                        <div id="navbar">
-                          <form class="navbar-form navbar-left">
-                            <div class="form-group row">
-                              <div class="col-10 pr-0">
-                                <input id="search-input" type="text" v-model="query" class="form-control" placeholder="Search">
-                              </div>
-                              <div class="col-2 pl-0">
-                                <button type="submit" class="btn btn-primary" style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important"><i class="fas fa-search"></i></button>
-                              </div>
-                            </div>
-                          </form>
-                        </div><!--/.nav-collapse -->
-              {% endif %}
+              </div>
             </div>
-              <div class="col-lg-6">    </div>
-    </div>
+          </form>
 
-           <button type="button" class="btn-block btn btn-secondary d-block d-sm-block d-md-none text-left mt-3"  data-toggle="modal" data-target="#modal_filter">
-               Refine Search<i class="pt-1 float-right fas fa-tasks"></i>
-                 </button>
-        
-          <div class="d-block d-md-none"  style="margin-top: 20px;">
-            <h5>[[ searchResult.pagination.total ]] Item<span v-if="searchResult.pagination.total != 1">s</span> Found</h5>
-          </div>      
-          
-         <div class="row" style="margin-top: 20px;">
-             <div class="col-6">
-               <h5 class="d-none d-md-block">[[ searchResult.pagination.total ]] Item<span v-if="searchResult.pagination.total != 1">s</span> Found</h5>
-             </div>
-
-         
-             <div class="col-6">
-         <!-- div for pagination block -->
-               <div class="pagination-bar  float-right">
-                 <paginate
-                            v-model="page"
-                           :page-count="Math.ceil(searchResult.pagination.total / searchResult.pagination.per_page)"
-                           :page-range="3"
-                           :click-handler="goToPage"
-                           :prev-text="'Prev'"
-                           :next-text="'Next'"
-                           :container-class="'pagination'"
-                           :page-class="'page-item'"
-                           :page-link-class="'page-link'"
-                           :prev-class="'page-item'"
-                           :next-class="'page-item'"
-                           :prev-link-class="'page-link'"
-                           :next-link-class="'page-link'"
-                           :active-class="'active'">
-                 </paginate>
-               </div>
-             </div>
-         </div>
-     
-         <div class="row">
-             <div class="modal" id="modal_filter" tabindex="-1" role="dialog" data-backdrop="static">
-                 <div class="modal-dialog" role="document">
-                     <div class="modal-content">
-                       <div class="modal-header">
-                         <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-tasks"></i> Refine Search</h5>
-                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                           <span aria-hidden="true">&times;</span>
-                         </button>
-                       </div>
-                         <div class="modal-body">
-                   <div v-for="facet in searchResult.data.aggregations">
-                     <h5 style="margin-bottom: 5px;"><strong style="color: #337ab7;">[[ facet.title ]]</strong></h5>
-           
-                     <ul class="browse-list list-unstyled long-list" style="margin-bottom: 0;">
-                       <li v-for="bucket in facet.buckets">
-                       <div class="checkbox block" style="margin-top: 0; margin-bottom: 0;">
-                         <label>
-                           <input class="checkbox"  @click="goToPage(1)" type="checkbox" v-model="filters[facet.name]" v-bind:value="bucket.key">
-                           [[ bucket.key ]] ([[ bucket.doc_count ]]) 
-                 </label>
-               </div>
-               </li>
-             </ul>
-           </div>
-         </div>
-         <div class="modal-footer">
-             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-           </div>
-       </div></div></div>
-
-
-
-           <div class="col-3">
-           <div class="d-none d-sm-none d-md-block">
-           <div v-for="facet in searchResult.data.aggregations">
-               <h5 style="margin-bottom: 5px;"><strong style="color: #337ab7;">[[ facet.title ]]</strong></h5>
-     
-               <ul class="browse-list list-unstyled long-list" style="margin-bottom: 0;">
-                 <li v-for="bucket in facet.buckets">
-                 <div class="checkbox block" style="margin-top: 0; margin-bottom: 0;">
-                   <label>
-                     <input class="checkbox" @click="goToPage(1)" type="checkbox" v-model="filters[facet.name]" v-bind:value="bucket.key">
-                     [[ bucket.key ]] ([[ bucket.doc_count ]]) 
-                   </label>
-                 </div>
-                 </li>
-               </ul>
-             </div>
-           
-           
-           </div>
-
-           </div>
-     
-           <div class="col-md-9">
-             <div class="breadcrumbs"></div>
-             <div class="clearfix"></div>
-             <div>
-               <div class="proj-item" v-for="item of searchResult.data.items">
-                   <h3 class="mt-3" style="word-wrap: break-word;">[[ item.title ]]</h3>
-                   <div class="mb-3">
-                    <h5><a class="badge badge-info mr-2 mt-2" v-for="(aut, index) in item.authors" v-bind:href= "'{{ url_for('projects', id="") }}' + [[getId(index,item.ids)]]">[[ aut ]]</a></h5>
-                   </div>
-                   <div>
-                    <b>Academic Year:</b> [[ item.year ]]
-                  </div>
-                   <div>
-                     <b>Course:</b>  <a v-bind:href="item.courseurl" target="_blank">[[ item.course ]] <i class="fas fa-external-link-alt fa-xs"></i></a>
-                   </div>
-                   <div class="mt-3 mb-3">
-                    [[ item.description ]]
-                   </div>
-                   <div class="mb-3">
-                     <div   v-if="item.homepage">
-                    <a v-bind:href="item.homepage" target="_blank"><i class="fas fa-arrow-alt-circle-right"></i> Project Website <i class="fas fa-external-link-alt fa-xs"></i></a>
-                     </div>
-                    <a v-bind:href="item.repository" target="_blank"><i class="fab fa-github"></i> Github<!-- DH.arc--> Repository <i class="fas fa-external-link-alt fa-xs"></i></a>
-                   </div>
-
-                  </div>
+          <div id="navbar">
+            <form class="navbar-form navbar-left">
+              <div class="form-group row">
+                <div class="col-10 pr-0">
+                  <input id="search-input" type="text" v-model="query" oninput="updateChartData()"
+                    class="form-control" placeholder="Search">
                 </div>
-             <div class="clearfix"></div>
-           </div>
-     
-           <div class="clearfix" style="margin-bottom: 100px;"></div>
-         </div>
+                <div class="col-2 pl-0">
+                  <button type="submit" class="btn btn-primary"
+                    style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important"><i
+                      class="fas fa-search"></i></button>
+                </div>
+              </div>
+            </form>
+          </div><!--/.nav-collapse -->
+          {% endif %}
+        </div>
+        <!-- <div class="col-lg-6">    
 
+            </div> -->
+      </div>
 
-         <div class="pagination-bar  float-right mt-5">
-          <paginate
-                     v-model="page"
-                    :page-count="Math.ceil(searchResult.pagination.total / searchResult.pagination.per_page)"
-                    :page-range="3"
-                    :click-handler="goToPage"
-                    :prev-text="'Prev'"
-                    :next-text="'Next'"
-                    :container-class="'pagination'"
-                    :page-class="'page-item'"
-                    :page-link-class="'page-link'"
-                    :prev-class="'page-item'"
-                    :next-class="'page-item'"
-                    :prev-link-class="'page-link'"
-                    :next-link-class="'page-link'"
-                    :active-class="'active'">
-          </paginate>
+      <button type="button"
+        class="btn-block btn btn-secondary d-block d-sm-block d-md-none text-left mt-3"
+        data-toggle="modal" data-target="#modal_filter">
+        Refine Search<i class="pt-1 float-right fas fa-tasks"></i>
+      </button>
+
+      <div class="d-block d-md-none" style="margin-top: 20px;">
+        <h5>[[ searchResult.pagination.total ]] Item<span
+            v-if="searchResult.pagination.total != 1">s</span> Found</h5>
+      </div>
+
+      <div class="row" style="margin-top: 20px;">
+        <div class="col-6">
+          <h5 class="d-none d-md-block">[[ searchResult.pagination.total ]] Item<span
+              v-if="searchResult.pagination.total != 1">s</span> Found</h5>
+        </div>
+
+        <div class="col-6">
+          <!-- div for pagination block -->
+          <div class="pagination-bar  float-right">
+            <paginate
+              v-model="page"
+              :page-count="Math.ceil(searchResult.pagination.total / searchResult.pagination.per_page)"
+              :page-range="3"
+              :click-handler="goToPage"
+              :prev-text="'Prev'"
+              :next-text="'Next'"
+              :container-class="'pagination'"
+              :page-class="'page-item'"
+              :page-link-class="'page-link'"
+              :prev-class="'page-item'"
+              :next-class="'page-item'"
+              :prev-link-class="'page-link'"
+              :next-link-class="'page-link'"
+              :active-class="'active'">
+            </paginate>
+          </div>
         </div>
 
 
-     </div>
+      </div>
+
+      <div class="row">
+        <div class="modal" id="modal_filter" tabindex="-1" role="dialog"
+          data-backdrop="static">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><i
+                    class="fas fa-tasks"></i> Refine Search</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                  aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div v-for="facet in searchResult.data.aggregations">
+                  <h5 style="margin-bottom: 5px;"><strong
+                      style="color: #337ab7;">[[ facet.title ]]</strong></h5>
+                  <ul class="browse-list list-unstyled long-list"
+                    style="margin-bottom: 0;">
+                    <li v-for="bucket in facet.buckets">
+                      <div class="checkbox block"
+                        style="margin-top: 0; margin-bottom: 0;">
+                        <label>
+                          <input class="checkbox" @click="goToPage(1)"
+                            type="checkbox" v-model="filters[facet.name]"
+                            v-bind:value="bucket.key">
+                          [[ bucket.key ]] ([[ bucket.doc_count ]])
+                        </label>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                  data-dismiss="modal">Close</button>
+              </div>
+            </div></div></div>
+
+        <div class="col-3">
+          <div class="d-none d-sm-none d-md-block">
+            <div v-for="facet in searchResult.data.aggregations">
+              <h5 style="margin-bottom: 5px;"><strong style="color: #337ab7;">[[
+                  facet.title ]]</strong></h5>
+
+              <ul class="browse-list list-unstyled long-list"
+                style="margin-bottom: 0;">
+                <li v-for="bucket in facet.buckets">
+                  <div class="checkbox block"
+                    style="margin-top: 0; margin-bottom: 0;">
+                    <label>
+                      <input class="checkbox" @click="goToPage(1)"
+                        type="checkbox" v-model="filters[facet.name]"
+                        v-bind:value="bucket.key">
+                      [[ bucket.key ]] ([[ bucket.doc_count ]])
+                    </label>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="breadcrumbs"></div>
+          <div class="clearfix"></div>
+          <div>
+            <div class="proj-item" v-for="item of searchResult.data.items">
+              <h3 class="mt-3" style="word-wrap: break-word;">[[ item.title ]]</h3>
+              <div class="mb-3">
+                <h5><a class="badge badge-info mr-2 mt-2"
+                    v-for="(aut, index) in item.authors"
+                    v-bind:href="'{{ url_for('projects', id="") }}' + [[getId(index,item.ids)]]">[[
+                    aut ]]</a></h5>
+              </div>
+              <div>
+                <b>Academic Year:</b> [[ item.year ]]
+              </div>
+              <div>
+                <b>Course:</b> <a v-bind:href="item.courseurl" target="_blank">[[
+                  item.course ]] <i class="fas fa-external-link-alt fa-xs"></i></a>
+              </div>
+              <div class="mt-3 mb-3">
+                [[ item.description ]]
+              </div>
+              <div class="mb-3">
+                <div v-if="item.homepage">
+                  <a v-bind:href="item.homepage" target="_blank"><i
+                      class="fas fa-arrow-alt-circle-right"></i> Project Website
+                    <i class="fas fa-external-link-alt fa-xs"></i></a>
+                </div>
+                <a v-bind:href="item.repository" target="_blank"><i
+                    class="fab fa-github"></i> Github<!-- DH.arc--> Repository
+                  <i class="fas fa-external-link-alt fa-xs"></i></a>
+              </div>
+
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+
+        <div class="col-3">
+          <div>
+            <canvas id="myChart"></canvas>
+          </div>
+        </div>
+
+        <div class="clearfix" style="margin-bottom: 100px;"></div>
+      </div>
+
+      <div class="pagination-bar  float-right mt-5">
+        <paginate
+          v-model="page"
+          :page-count="Math.ceil(searchResult.pagination.total / searchResult.pagination.per_page)"
+          :page-range="3"
+          :click-handler="goToPage"
+          :prev-text="'Prev'"
+          :next-text="'Next'"
+          :container-class="'pagination'"
+          :page-class="'page-item'"
+          :page-link-class="'page-link'"
+          :prev-class="'page-item'"
+          :next-class="'page-item'"
+          :prev-link-class="'page-link'"
+          :next-link-class="'page-link'"
+          :active-class="'active'">
+        </paginate>
+      </div>
+
     </div>
+  </div>
 
-
-     <script src="https://unpkg.com/itemsjs@1.0.37/dist/itemsjs.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
-    <script src="https://unpkg.com/vuejs-paginate@2.1.0/dist/index.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/minisearch@6.1.0/dist/umd/index.min.js"></script>
-    <script>
+  <script src="https://unpkg.com/itemsjs@1.0.37/dist/itemsjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+  <script src="https://unpkg.com/vuejs-paginate@2.1.0/dist/index.js"></script>
+  <link
+    href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"
+    rel="stylesheet" />
+  <script
+    src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/minisearch@6.1.0/dist/umd/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>
 
 
 
@@ -226,9 +264,15 @@ if (search_input === 'None') {
 
 
 
+
 $(document).ready(function() {
 
-  
+
+
+
+
+
+
   if ((search_input !== null) && (search_input !== NaN) && (search_input !== 'None')  && (search_input !== '')) {
     document.getElementById("search-input").value = search_input
   }
@@ -259,6 +303,8 @@ $(document).ready(function() {
   });
 
 });
+
+
 
 rows = rows.sort((x, y) => x.title > y.title)
 for (let i = 0; i < rows.length; i++) {
@@ -292,6 +338,8 @@ var configuration = {
 }
 
 itemsjs = itemsjs(rows, configuration);
+
+var searchResultData = []
 
 
 
@@ -344,7 +392,8 @@ var vm = new Vue({
  watch: {
      query: function () {
       this.page = 1;
-    }
+    },
+    
  },
  computed: {
    searchResult: function () {
@@ -354,12 +403,15 @@ var vm = new Vue({
     // TODO: revisit this function
     if (this.query && this.query.length) {
       search_results = miniSearch.search(this.query, {prefix: true, boost: { title: 5 }, fuzzy: 0.2})
-      console.log(search_results)
+      // console.log(search_results)
       rowsUpdated = rows.filter(v => search_results.map(v => v.id).includes(v.id));
       rowsUpdated = rowsUpdated.sort((x,y) => search_results.map(v => v.id).indexOf(x.id) > search_results.map(v => v.id).indexOf(y.id))
       itemsjs.reindex(rowsUpdated)
+      rowsData = rowsUpdated
+      
     } else {
       itemsjs.reindex(rows)
+      rowsData = rows
     }
 
     
@@ -372,13 +424,60 @@ var vm = new Vue({
      })
     //  console.log(search_results)
     //  console.log(result)
-
+    searchResultData = itemsjs.search({
+      //  query: this.query,
+       ids: search_results.map(v => v.id),
+       filters: this.filters
+     })     
+     
+     console.log(searchResultData)
      return result
    }
  }
 });
 
+
+const ctx = document.getElementById('myChart');
+     // console.log(searchResultData)
+      var chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          // labels: ['1','2','3'],
+          labels: searchResultData.data.aggregations.course.buckets.map(v => v.key),
+          datasets: [{
+            label: 'Number of projects',
+            data: searchResultData.data.aggregations.course.buckets.map(v => v.doc_count),
+            // data: [1,2,3],
+            backgroundColor: [
+              'rgb(255, 99, 132)',
+              'rgb(54, 162, 235)',
+              'rgb(255, 205, 86)'
+            ],
+            hoverOffset: 4
+          }]
+        }
+      });
+
+      function updateChartData() {
+        
+        console.log(searchResultData)
+        setTimeout(function() {
+          chart.data.labels = searchResultData.data.aggregations.course.buckets.map(v => v.key);
+          chart.data.datasets.forEach((dataset) => {
+              dataset.data = searchResultData.data.aggregations.course.buckets.map(v => v.doc_count)
+          });
+          chart.update()
+        }, 10);
+        
+      }
+
+      $(document).click(function() {
+           updateChartData()
+      });
+   
+
+
+
      </script>
 
-{% endblock %}
-
+  {% endblock %}
