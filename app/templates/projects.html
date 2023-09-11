@@ -45,7 +45,7 @@
             <form class="navbar-form navbar-left">
               <div class="form-group row">
                 <div class="col-10 pr-0">
-                  <input id="search-input" type="text" v-model="query" oninput="updateChartData()"
+                  <input id="search-input" type="text" v-model="query" oninput="processChange()"
                     class="form-control" placeholder="Search">
                 </div>
                 <div class="col-2 pl-0">
@@ -206,9 +206,16 @@
           <div class="clearfix"></div>
         </div>
 
-        <div class="col-3">
+        <div class="col-3 d-flex flex-column justify-content-start align-items-center">
           <div>
             <canvas id="myChart"></canvas>
+          </div>
+          
+          <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked onclick="updateChartAggregations('course')">
+            <label class="btn btn-outline-primary" for="btnradio1">Course</label>
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" onclick="updateChartAggregations('year')">
+            <label class="btn btn-outline-primary" for="btnradio2">Year</label>
           </div>
         </div>
 
@@ -430,7 +437,7 @@ var vm = new Vue({
        filters: this.filters
      })     
      
-     console.log(searchResultData)
+    //  console.log(searchResultData)
      return result
    }
  }
@@ -438,16 +445,14 @@ var vm = new Vue({
 
 
 const ctx = document.getElementById('myChart');
-     // console.log(searchResultData)
+    //  console.log(searchResultData)
       var chart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-          // labels: ['1','2','3'],
           labels: searchResultData.data.aggregations.course.buckets.map(v => v.key),
           datasets: [{
             label: 'Number of projects',
             data: searchResultData.data.aggregations.course.buckets.map(v => v.doc_count),
-            // data: [1,2,3],
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',
@@ -458,23 +463,54 @@ const ctx = document.getElementById('myChart');
         }
       });
 
-      function updateChartData() {
-        
-        console.log(searchResultData)
-        setTimeout(function() {
-          chart.data.labels = searchResultData.data.aggregations.course.buckets.map(v => v.key);
-          chart.data.datasets.forEach((dataset) => {
-              dataset.data = searchResultData.data.aggregations.course.buckets.map(v => v.doc_count)
-          });
-          chart.update()
-        }, 10);
-        
+      var chartAggregation = 'course'
+
+      function updateChartAggregations(aggregationName) {
+        if (aggregationName === 'course') {
+          chartAggregation = 'course'
+        } else if (aggregationName === 'year') {
+          chartAggregation = 'year'
+        }
       }
 
+      // function updateChartData() {
+      //   setTimeout(function() {
+
+      //     chart.data.labels = searchResultData.data.aggregations[chartAggregation].buckets.map(v => v.key);
+      //     chart.data.datasets.forEach((dataset) => {
+      //         dataset.data = searchResultData.data.aggregations[chartAggregation].buckets.filter(v => searchResultData.data.items.map(e => e[chartAggregation]).includes(v.key)).map(v => v.doc_count)
+      //     });
+      //     chart.update()
+      //   console.log(searchResultData)
+      //   }, 10);
+      // }
+
+      function updateChartData() {
+        setTimeout(function() {
+
+          chart.data.labels = searchResultData.data.aggregations[chartAggregation].buckets.map(v => v.key);
+          chart.data.datasets.forEach((dataset) => {
+              dataset.data = searchResultData.data.aggregations[chartAggregation].buckets.filter(v => searchResultData.data.items.map(e => e[chartAggregation]).includes(v.key)).map(v => v.doc_count)
+          });
+          chart.update()
+        console.log(searchResultData)
+        }, 10);
+      }
+
+      function debounce(func, timeout = 100){
+        let timer;
+        return (...args) => {
+          clearTimeout(timer);
+          timer = setTimeout(() => { func.apply(this, args); }, timeout);
+        };
+      }
+      const processChange = debounce(() => updateChartData());
+
       $(document).click(function() {
-           updateChartData()
+        processChange()
       });
    
+
 
 
 
