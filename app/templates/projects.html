@@ -322,7 +322,7 @@ let miniSearch = new MiniSearch({
   fields: ['title', 'description', 'authors']
 })
 
-console.log(rows)
+// console.log(rows)
 miniSearch.addAll(rows);
 
 var configuration = {
@@ -410,7 +410,6 @@ var vm = new Vue({
     // TODO: revisit this function
     if (this.query && this.query.length) {
       search_results = miniSearch.search(this.query, {prefix: true, boost: { title: 5 }, fuzzy: 0.2})
-      // console.log(search_results)
       rowsUpdated = rows.filter(v => search_results.map(v => v.id).includes(v.id));
       rowsUpdated = rowsUpdated.sort((x,y) => search_results.map(v => v.id).indexOf(x.id) > search_results.map(v => v.id).indexOf(y.id))
       itemsjs.reindex(rowsUpdated)
@@ -429,15 +428,11 @@ var vm = new Vue({
        per_page: 6,
        filters: this.filters
      })
-    //  console.log(search_results)
-    //  console.log(result)
     searchResultData = itemsjs.search({
       //  query: this.query,
        ids: search_results.map(v => v.id),
        filters: this.filters
      })     
-     
-    //  console.log(searchResultData)
      return result
    }
  }
@@ -445,14 +440,14 @@ var vm = new Vue({
 
 
 const ctx = document.getElementById('myChart');
-    //  console.log(searchResultData)
+     console.log(searchResultData)
       var chart = new Chart(ctx, {
         type: 'doughnut',
         data: {
           labels: searchResultData.data.aggregations.course.buckets.map(v => v.key),
           datasets: [{
             label: 'Number of projects',
-            data: searchResultData.data.aggregations.course.buckets.map(v => v.doc_count),
+            data: searchResultData.data.aggregations.course.buckets/*.filter(v => searchResultData.data.items.map(e => e.course).includes(v.key))*/.map(v => v.doc_count),
             backgroundColor: [
               'rgb(255, 99, 132)',
               'rgb(54, 162, 235)',
@@ -473,27 +468,20 @@ const ctx = document.getElementById('myChart');
         }
       }
 
-      // function updateChartData() {
-      //   setTimeout(function() {
-
-      //     chart.data.labels = searchResultData.data.aggregations[chartAggregation].buckets.map(v => v.key);
-      //     chart.data.datasets.forEach((dataset) => {
-      //         dataset.data = searchResultData.data.aggregations[chartAggregation].buckets.filter(v => searchResultData.data.items.map(e => e[chartAggregation]).includes(v.key)).map(v => v.doc_count)
-      //     });
-      //     chart.update()
-      //   console.log(searchResultData)
-      //   }, 10);
-      // }
-
       function updateChartData() {
         setTimeout(function() {
 
+          // console.log(searchResultData.data.items.map(e => e[chartAggregation]))
+          // console.log(searchResultData.data.aggregations[chartAggregation].buckets.map(v => v.key))
+          // console.log(searchResultData.data.aggregations[chartAggregation].buckets.filter(v => searchResultData.data.items.map(e => e[chartAggregation]).includes(v.key) === false))
+
           chart.data.labels = searchResultData.data.aggregations[chartAggregation].buckets.map(v => v.key);
           chart.data.datasets.forEach((dataset) => {
-              dataset.data = searchResultData.data.aggregations[chartAggregation].buckets.filter(v => searchResultData.data.items.map(e => e[chartAggregation]).includes(v.key)).map(v => v.doc_count)
+              dataset.data = searchResultData.data.aggregations[chartAggregation].buckets/*.filter(v => searchResultData.data.items.map(e => e[chartAggregation]).includes(v.key))*/.map(v => v.doc_count)
           });
+
           chart.update()
-        console.log(searchResultData)
+        // console.log(searchResultData)
         }, 10);
       }
 
