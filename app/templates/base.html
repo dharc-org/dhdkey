@@ -5,7 +5,7 @@
         {% if title == 'Home' %}
             <title>Welcome to DHDKey!</title>
         {% elif title %}
-            <title>{{ title }} - DHDKey
+            <title>{{ title }} - DHDKey!
             </title>
         {% else %}
             <title>Welcome to DHDKey!</title>
@@ -26,15 +26,15 @@
     </head>
     <body class="d-flex flex-column">
                 <div style="min-height: 100vh">
-                    <div class="head">
+                    <div class="head sticky-top bg-white">
                             <nav class="navbar navbar-expand navbar-light shadow-sm px-sm-5 px-0">
-                                    <a class="navbar-brand" style="font-size: 20pt !important; font-weight:200 !important" href="{{ url_for('index') }}">DHDKey</a>
+                                    <a class="navbar-brand" style="font-size: 1.65rem !important; font-weight:200 !important;" href="{{ url_for('index') }}">DHDKey!</a>
                                     {% if title != "Confirmation" %}
                                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                     <span class="navbar-toggler-icon"></span>
                                     </button>
                                 
-                                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                    <div class="collapse navbar-collapse pt-1" id="navbarSupportedContent">
                                     <ul class="navbar-nav mr-auto">
                                         <li class="nav-item {% if title == 'Home' %}active{% endif %}">
                                             <a class="text-nowrap nav-link" href="{{ url_for('index') }}">Home</a>
@@ -46,7 +46,7 @@
                                             <a class="text-nowrap nav-link {% if title == 'Upload' %}active{% endif %}" href="{{ url_for('upload') }}">Upload</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="text-nowrap nav-link {% if title == 'Info' %}active{% endif %}" href="{{ url_for('info') }}">User guide</a>
+                                            <a class="text-nowrap nav-link {% if title == 'Info' %}active{% endif %}" href="{{ url_for('info') }}">Info</a>
                                         </li>
                                     </ul>
                                     </div>
@@ -63,7 +63,7 @@
         <div class="container">
             <div class="row d-flex justify-content-left flex-wrap my-1">
                 <div class="col-6 d-flex flex-column align-items-start justify-content-around mx-0 my-1" style="min-width: fit-content;">
-                    <div class="mx-0 w-100" style="min-width: fit-content;"><h4 class="fw-lighter mb-0 w-100">DHDKey</h4></div>
+                    <div class="mx-0 w-100" style="min-width: fit-content;"><h4 class="fw-lighter mb-0 w-100">DHDKey!</h4></div>
                     <div class="d-inline-flex justify-content-start w-100 gap-2 align-items-baseline flex-nowrap">
                         <a href="{{ url_for('info') }}" class="text-secondary text-nowrap fw-light">Info</a>
                         <a href="{{ url_for('privacy') }}" class="text-secondary text-nowrap fw-light">Privacy Policy</a>
@@ -86,7 +86,7 @@
                             <div class="my-1" style="min-width: fit-content;">
                                 <div class="fw-light mb-0 w-100;">
                                     <span class="text-nowrap">
-                                        ©2020–2023  DHDKey - Digital Humanities & Digital Knowledge
+                                        ©2020–2023  DHDKey! - Digital Humanities & Digital Knowledge
                                     </span>
                                     <span class="text-nowrap">
                                         Educational Yearbook
