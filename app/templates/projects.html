@@ -5,11 +5,46 @@
 
   
 
-    <div id="el" v-cloak class="mt-3" >
-      <div class="row fixed-top bg-white py-0 mb-0" style="margin-top: 9vh;">
-        <nav class="navbar navbar-expand navbar-light shadow-sm px-sm-5 px-0 py-0">
+    <div id="el" v-cloak >
+      <div class="head fixed-top bg-white">
+        <nav class="navbar navbar-expand navbar-light shadow-sm px-sm-5 px-0">
+                <a class="navbar-brand" style="font-size: 1.65rem !important; font-weight:200 !important;" href="{{ url_for('index') }}">DHDKey!</a>
+                {% if title != "Confirmation" %}
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+            
+                <div class="collapse navbar-collapse pt-1  px-0" id="navbarSupportedContent">
+                  <ul class="navbar-nav mr-auto ">
+                      <li class="nav-item {% if title == 'Home' %}active{% endif %}">
+                          <a class="text-nowrap nav-link" href="{{ url_for('index') }}">Home</a>
+                      </li>
+                      <li class="nav-item {% if title == 'Projects' %}active{% endif %}">
+                          <a class="text-nowrap nav-link" href="{{ url_for('projects') }}">Projects</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="text-nowrap nav-link {% if title == 'Upload' %}active{% endif %}" href="{{ url_for('upload') }}">Upload</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="text-nowrap nav-link {% if title == 'Info' %}active{% endif %}" href="{{ url_for('info') }}">Info</a>
+                      </li>
+                  </ul>
 
-          <div class="col-3">
+                  <div class="my-0 mx-3 col-6">
+                            <input id="search-input" type="text" v-model="query" oninput="processChange()"
+                              class="form-control" placeholder="Search">
+                  </div>
+                </div>
+
+                
+                {% endif %}
+                
+            </nav>
+      </div>
+      <div class="d-none shadow-sm py-1" style="top: 4rem; background-color: rgba(255, 255, 255, 0.9);">
+        <nav class="row my-0 mx-5">
+
+          <div class="col-3 py-0">
             
             {% if author %}
             <nav aria-label="breadcrumb">
@@ -37,22 +72,22 @@
             
           </div>
 
-          <div class="col-6 mb-0">
-            <div id="navbar" >
-              <form class="navbar-form navbar-left">
+          <div class="col-6 my-0">
+            <!-- <div id="navbar" > -->
+              <!-- <form class="navbar-form navbar-left">
                 <div class="form-group row">
-                  <div class="col-12">
+                  <div class="col-12"> -->
                     <input id="search-input" type="text" v-model="query" oninput="processChange()"
                       class="form-control" placeholder="Search">
-                  </div>
+                  <!-- </div> -->
                   <!-- <div class="col-2 pl-0">
                     <button type="submit" class="btn btn-primary"
                       style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important"><i
                         class="fas fa-search"></i></button>
                   </div> -->
-                </div>
+                <!-- </div>
               </form>
-            </div>
+            </div> -->
           </div>
 
           <!-- <div class="col-3">
@@ -76,6 +111,7 @@
             </div>
           </div> -->
         </nav>
+        
       </div>
 
       <!-- <button type="button"
@@ -86,7 +122,7 @@
 
       
 
-      <div class="row"  style="margin-top: 9vh;">
+      <div class="row mt-5 pt-3">
         <div class="modal" id="modal_filter" tabindex="-1" role="dialog"
           data-backdrop="static">
           <div class="modal-dialog" role="document">
@@ -126,16 +162,13 @@
             </div></div></div>
 
         <div class="col-3">
-          <div class="col-10">
             <form>
-              <div class="form-group row">
-                <div class="col-12 pr-0">
+              <div class="form-group px-0 ">
                   <select id="author_selector"
-                    class="form-control form-control-lg" name="id" required 
-                    style="width:100%; height:100%">
+                    class="form-control form-control-lg rounded" name="id" required 
+                    style="width:100%; height:100%;">
                     <option value></option>
                   </select>
-                </div>
                 <!-- <div class="col-2 pl-0">
                   <button type="submit" class="btn btn-primary"
                     style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important"><i
@@ -165,7 +198,6 @@
                 </ul>
               </div>
             </div>
-          </div>
         </div>
 
         <div class="col-md-6">

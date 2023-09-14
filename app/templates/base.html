@@ -26,7 +26,7 @@
     </head>
     <body class="d-flex flex-column">
                 <div style="min-height: 100vh">
-                    <div class="head sticky-top bg-white">
+                    <div class="head fixed-top bg-white">
                             <nav class="navbar navbar-expand navbar-light shadow-sm px-sm-5 px-0">
                                     <a class="navbar-brand" style="font-size: 1.65rem !important; font-weight:200 !important;" href="{{ url_for('index') }}">DHDKey!</a>
                                     {% if title != "Confirmation" %}
@@ -51,10 +51,11 @@
                                     </ul>
                                     </div>
                                     {% endif %}
+                                    
                                 </nav>
                     </div>
                     <div class="container-lg" style="height: 100%;">
-                            <div class="row" style="height: 100%;">
+                            <div class="row mt-5" style="height: 100%;">
                                 {% block content %}{% endblock %}
                             </div>
                     </div>
