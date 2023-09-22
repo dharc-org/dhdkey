@@ -30,10 +30,17 @@
                       </li>
                   </ul>
 
-                  <div class="my-0 mx-3 col-6">
+                  <div class="my-0 mx-3 col-6 reverse d-none">
                             <input id="search-input" type="text" v-model="query" oninput="processChange()"
                               class="form-control" placeholder="Search">
                   </div>
+                  <div class="col-3">
+                    <a href="#" data-bs-target="#sidebar-left" data-bs-toggle="collapse"  class="btn btn-secondary rounded-3 reverse d-none"><i class="fas fa-filter text-light"></i></a>
+                    <a href="#" data-bs-target="#sidebar-right" data-bs-toggle="collapse" class="btn btn-warning rounded-3 reverse d-none"><i class="fas fa-chart-pie text-black-50"></i></a>
+                   
+       
+                 </div>
+
                 </div>
 
                 
@@ -41,8 +48,9 @@
                 
             </nav>
       </div>
-      <div class="d-none shadow-sm py-1" style="top: 4rem; background-color: rgba(255, 255, 255, 0.9);">
-        <nav class="row my-0 mx-5">
+      <!-- <div class="shadow-sm py-2 mt-5" style="background-color: rgba(255, 255, 255, 0.9);"> -->
+      <div class="mt-4 mb-1">
+        <nav class="row my-0 mx-0 navbar navbar-expand navbar-light">
 
           <div class="col-3 py-0">
             
@@ -72,14 +80,14 @@
             
           </div>
 
-          <div class="col-6 my-0">
+          <div class="col-6 my-0 px-0">
             <!-- <div id="navbar" > -->
               <!-- <form class="navbar-form navbar-left">
-                <div class="form-group row">
-                  <div class="col-12"> -->
+                <div class="form-group row"> -->
+                  
                     <input id="search-input" type="text" v-model="query" oninput="processChange()"
                       class="form-control" placeholder="Search">
-                  <!-- </div> -->
+                  
                   <!-- <div class="col-2 pl-0">
                     <button type="submit" class="btn btn-primary"
                       style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important"><i
@@ -90,8 +98,10 @@
             </div> -->
           </div>
 
-          <!-- <div class="col-3">
-            <div class="pagination-bar float-right">
+          <div class="col-3">
+             <a href="#" data-bs-target="#sidebar-left" data-bs-toggle="collapse"  class="btn btn-secondary rounded-3"><i class="fas fa-filter text-light"></i></a>
+             <a href="#" data-bs-target="#sidebar-right" data-bs-toggle="collapse"  class="btn btn-warning rounded-3"><i class="fas fa-chart-pie text-black-50"></i></a>
+            <!-- <div class="pagination-bar float-right">
               <paginate
                 v-model="page"
                 :page-count="Math.ceil(searchResult.pagination.total / searchResult.pagination.per_page)"
@@ -108,8 +118,9 @@
                 :next-link-class="'page-link'"
                 :active-class="'active'">
               </paginate>
-            </div>
-          </div> -->
+            </div> -->
+
+          </div>
         </nav>
         
       </div>
@@ -120,10 +131,12 @@
         Refine Search<i class="pt-1 float-right fas fa-tasks"></i>
       </button> -->
 
-      
+     
 
-      <div class="row mt-5">
-        <div class="modal" id="modal_filter" tabindex="-1" role="dialog"
+      <div class="projects-page-main-content row d-flex justify-content-center mb-3">
+
+
+        <!-- <div class="modal" id="modal_filter" tabindex="-1" role="dialog"
           data-backdrop="static">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -159,9 +172,9 @@
                 <button type="button" class="btn btn-secondary"
                   data-dismiss="modal">Close</button>
               </div>
-            </div></div></div>
+            </div></div></div> -->
 
-        <div class="col-3">
+        <div id="sidebar-left"  class="col-3 border-end ml-0 collapse collapse-horizontal ">
             <form>
               <div class="form-group px-0 ">
                   <select id="author_selector"
@@ -200,17 +213,17 @@
             </div>
         </div>
 
-        <div class="col-md-6">
-          <div class="breadcrumbs"></div>
+        <div class="col-md-6 main-projects-section">
+          <!-- <div class="breadcrumbs"></div> -->
           <div class="clearfix"></div>
           <div>
             <div class="proj-item" v-for="item of searchResult.data.items">
               <h3 class="mt-3" style="word-wrap: break-word;">[[ item.title ]]</h3>
-              <div class="mb-3">
-                <h5><a class="badge badge-info mr-2 mt-2"
+              <div class="mb-3 ">
+                <p class="d-flex gap-3"><a class=" text-dark fw-light"
                     v-for="(aut, index) in item.authors"
                     v-bind:href="'{{ url_for('projects', id="") }}' + [[getId(index,item.ids)]]">[[
-                    aut ]]</a></h5>
+                    aut ]]</a></p>
               </div>
               <div>
                 <b>Academic Year:</b> [[ item.year ]]
@@ -236,79 +249,86 @@
             </div>
           </div>
           <div class="clearfix"></div>
+
+          <div class="pagination-bar float-right mt-5">
+            <paginate
+              v-model="page"
+              :page-count="Math.ceil(searchResult.pagination.total / searchResult.pagination.per_page)"
+              :page-range="3"
+              :click-handler="goToPage"
+              :prev-text="'Prev'"
+              :next-text="'Next'"
+              :container-class="'pagination'"
+              :page-class="'page-item'"
+              :page-link-class="'page-link'"
+              :prev-class="'page-item'"
+              :next-class="'page-item'"
+              :prev-link-class="'page-link'"
+              :next-link-class="'page-link'"
+              :active-class="'active'">
+            </paginate>
+          </div>
         </div>
 
-        <div class="col-3 d-flex flex-column justify-content-start align-items-center">
-          <div>
-            <canvas id="myChart"></canvas>
-          </div>
-          
-          <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked onclick="updateChartAggregations('course')">
-            <label class="btn btn-outline-primary" for="btnradio1">Course</label>
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" onclick="updateChartAggregations('year')">
-            <label class="btn btn-outline-primary" for="btnradio2">Year</label>
+        <div id="sidebar-right" class="col-3 collapse collapse-horizontal show border-start px-0">
+          <div class="d-flex flex-column justify-content-start align-items-center gap-3 " >
+
+            <div>
+              <canvas id="myChart"></canvas>
+            </div>
+            
+            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+              <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked onclick="updateChartAggregations('course')">
+              <label class="btn btn-outline-primary" for="btnradio1">Course</label>
+              <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" onclick="updateChartAggregations('year')">
+              <label class="btn btn-outline-primary" for="btnradio2">Year</label>
+            </div>
+
           </div>
         </div>
 
-        <div class="clearfix" style="margin-bottom: 100px;"></div>
+        <div class="clearfix"></div>
       </div>
 
-      <div class="pagination-bar  float-right mt-5">
-        <paginate
-          v-model="page"
-          :page-count="Math.ceil(searchResult.pagination.total / searchResult.pagination.per_page)"
-          :page-range="3"
-          :click-handler="goToPage"
-          :prev-text="'Prev'"
-          :next-text="'Next'"
-          :container-class="'pagination'"
-          :page-class="'page-item'"
-          :page-link-class="'page-link'"
-          :prev-class="'page-item'"
-          :next-class="'page-item'"
-          :prev-link-class="'page-link'"
-          :next-link-class="'page-link'"
-          :active-class="'active'">
-        </paginate>
-      </div>
+      
 
     </div>
 
 
     <!-- <div class="container-fluid">
-      <div class="row flex-nowrap">
-          <div class="col-auto px-0">
-              <div id="sidebar" class="collapse collapse-horizontal show border-end">
-                  <div id="sidebar-nav" style="width: 160px;" class="list-group border-0 rounded-0 text-sm-start min-vh-100">
-                      <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-bootstrap"></i> <span>Item</span> </a>
-                      <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-film"></i> <span>Item</span></a>
-                      <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-heart"></i> <span>Item</span></a>
-                      <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-bricks"></i> <span>Item</span></a>
-                      <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-clock"></i> <span>Item</span></a>
-                      <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-archive"></i> <span>Item</span></a>
-                      <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-gear"></i> <span>Item</span></a>
-                      <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-calendar"></i> <span>Item</span></a>
-                      <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-envelope"></i> <span>Item</span></a>
-                  </div>
-              </div>
-          </div>
-          <main class="col ps-md-2 pt-2">
-              <a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse" class="border rounded-3 p-1 text-decoration-none"><i class="bi bi-list bi-lg py-2 p-1"></i> Menu</a>
-              <div class="page-header pt-3">
-                  <h2>Bootstrap 5 Sidebar Menu - Simple</h2>
-              </div>
-              <p class="lead">A offcanvas "push" vertical nav menu example.</p>
-              <hr>
-              <div class="row">
-                  <div class="col-12">
-                      <p>This is a simple collapsing sidebar menu for Bootstrap 5. Unlike the Offcanvas component that overlays the content, this sidebar will "push" the content. Sriracha biodiesel taxidermy organic post-ironic, Intelligentsia salvia mustache 90's code editing brunch. Butcher polaroid VHS art party, hashtag Brooklyn deep v PBR narwhal sustainable mixtape swag wolf squid tote bag. Tote bag cronut semiotics, raw denim deep v taxidermy messenger bag. Tofu YOLO Etsy, direct trade ethical Odd Future jean shorts paleo. Forage Shoreditch tousled aesthetic irony, street art organic Bushwick artisan cliche semiotics ugh synth chillwave meditation. Shabby chic lomo plaid vinyl chambray Vice. Vice sustainable cardigan, Williamsburg master cleanse hella DIY 90's blog.</p>
-                      <p>Ethical Kickstarter PBR asymmetrical lo-fi. Dreamcatcher street art Carles, stumptown gluten-free Kickstarter artisan Wes Anderson wolf pug. Godard sustainable you probably haven't heard of them, vegan farm-to-table Williamsburg slow-carb readymade disrupt deep v. Meggings seitan Wes Anderson semiotics, cliche American Apparel whatever. Helvetica cray plaid, vegan brunch Banksy leggings +1 direct trade. Wayfarers codeply PBR selfies. Banh mi McSweeney's Shoreditch selfies, forage fingerstache food truck occupy YOLO Pitchfork fixie iPhone fanny pack art party Portland.</p>
-                  </div>
-              </div>
-          </main>
-      </div>
-  </div> -->
+        <div class="row flex-nowrap">
+            <div class="col-auto px-0">
+                <div id="sidebar" class="collapse collapse-horizontal show border-end">
+                    <div id="sidebar-nav" style="width: 160px;" class="list-group border-0 rounded-0 text-sm-start min-vh-100">
+                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-bootstrap"></i> <span>Item</span> </a>
+                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-film"></i> <span>Item</span></a>
+                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-heart"></i> <span>Item</span></a>
+                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-bricks"></i> <span>Item</span></a>
+                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-clock"></i> <span>Item</span></a>
+                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-archive"></i> <span>Item</span></a>
+                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-gear"></i> <span>Item</span></a>
+                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-calendar"></i> <span>Item</span></a>
+                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-envelope"></i> <span>Item</span></a>
+                    </div>
+                </div>
+            </div>
+            <main class="col ps-md-2 pt-2">
+                <a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse" class="border rounded-3 p-1 text-decoration-none"><i class="bi bi-list bi-lg py-2 p-1"></i> Menu</a>
+                <div class="page-header pt-3">
+                    <h2>Bootstrap 5 Sidebar Menu - Simple</h2>
+                </div>
+                <p class="lead">A offcanvas "push" vertical nav menu example.</p>
+                <hr>
+                <div class="row">
+                    <div class="col-12">
+                        <p>This is a simple collapsing sidebar menu for Bootstrap 5. Unlike the Offcanvas component that overlays the content, this sidebar will "push" the content. Sriracha biodiesel taxidermy organic post-ironic, Intelligentsia salvia mustache 90's code editing brunch. Butcher polaroid VHS art party, hashtag Brooklyn deep v PBR narwhal sustainable mixtape swag wolf squid tote bag. Tote bag cronut semiotics, raw denim deep v taxidermy messenger bag. Tofu YOLO Etsy, direct trade ethical Odd Future jean shorts paleo. Forage Shoreditch tousled aesthetic irony, street art organic Bushwick artisan cliche semiotics ugh synth chillwave meditation. Shabby chic lomo plaid vinyl chambray Vice. Vice sustainable cardigan, Williamsburg master cleanse hella DIY 90's blog.</p>
+                        <p>Ethical Kickstarter PBR asymmetrical lo-fi. Dreamcatcher street art Carles, stumptown gluten-free Kickstarter artisan Wes Anderson wolf pug. Godard sustainable you probably haven't heard of them, vegan farm-to-table Williamsburg slow-carb readymade disrupt deep v. Meggings seitan Wes Anderson semiotics, cliche American Apparel whatever. Helvetica cray plaid, vegan brunch Banksy leggings +1 direct trade. Wayfarers codeply PBR selfies. Banh mi McSweeney's Shoreditch selfies, forage fingerstache food truck occupy YOLO Pitchfork fixie iPhone fanny pack art party Portland.</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div> -->
+
   </div>
 
   <script src="https://unpkg.com/itemsjs@1.0.37/dist/itemsjs.min.js"></script>
@@ -329,6 +349,29 @@ if (search_input === 'None') {
 
 
 $(document).ready(function() {
+  var body = document.body,
+    html = document.documentElement;
+  var height = Math.max( body.scrollHeight, body.offsetHeight, 
+                       html.clientHeight, html.scrollHeight, html.offsetHeight );
+
+  $(window).scroll(function(){
+      $('.reverse').removeClass('d-none')
+      $('.reverse').css('transform', 'translate3d(0,' + (Math.min(0, -100 + $(this).scrollTop()*2)) + 'px, 0)'); 
+      
+
+      // console.log($(this).scrollTop())
+      // if ($(this).scrollTop() <= 0) {
+      //   $('.charts-container').css('transform', 'translateY('+($(this).scrollTop())+ 'px)'); 
+      // }
+
+      
+      // if (($(this).scrollTop() > 0) && $(this).scrollTop() < height) { 
+      //   $('.charts-container').addClass('fixed')
+      // } else {
+      // }
+    }).scroll();
+
+
 
   if ((search_input !== null) && (search_input !== NaN) && (search_input !== 'None')  && (search_input !== '')) {
     document.getElementById("search-input").value = search_input
@@ -358,6 +401,45 @@ $(document).ready(function() {
   });
 
 });
+
+
+
+
+function toggleFilterButton() {
+  
+
+  
+  $('.projects-page-main-content').toggleClass('justify-content-center')
+  $('.projects-page-main-content').toggleClass('justify-content-start')
+
+  if ($('.main-projects-section').hasClass('col-md-6')) {
+    $('.main-projects-section').removeClass('col-md-6')
+    $('.main-projects-section').addClass('col-md-7')
+  }else if ($('.main-projects-section').hasClass('col-md-7') && $('.projects-page-main-content').hasClass('justify-content-start')) {
+    $('.main-projects-section').removeClass('col-md-7')
+    $('.main-projects-section').addClass('col-md-6')
+  }else if ($('.main-projects-section').hasClass('col-md-7') && $('.projects-page-main-content').hasClass('justify-content-center')) {
+    $('.main-projects-section').removeClass('col-md-7')
+    $('.main-projects-section').addClass('col-md-7')
+  }
+
+}
+
+
+function toggleChartButton() {
+
+  if ($('.main-projects-section').hasClass('col-md-6')) {
+    $('.main-projects-section').removeClass('col-md-6')
+    $('.main-projects-section').addClass('col-md-7')
+  } else if ($('.main-projects-section').hasClass('col-md-7') && $('.projects-page-main-content').hasClass('justify-content-start')) {
+    $('.main-projects-section').removeClass('col-md-7')
+    $('.main-projects-section').addClass('col-md-6')
+  } else if ($('.main-projects-section').hasClass('col-md-7') && $('.projects-page-main-content').hasClass('justify-content-center')) {
+    $('.main-projects-section').removeClass('col-md-7')
+    $('.main-projects-section').addClass('col-md-7')
+  }
+
+}
 
 
 
@@ -551,5 +633,15 @@ const ctx = document.getElementById('myChart');
 
 
      </script>
+
+
+    <style>
+        .reverse {
+          transform: translateY(-4rem);
+        }
+        .fixed {
+          position: fixed;
+        }
+    </style>
 
   {% endblock %}
