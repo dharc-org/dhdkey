@@ -6,7 +6,7 @@
   
 
     <div id="el" v-cloak >
-      <div class="head fixed-top bg-white">
+      <div class="head fixed-top bg-white" style="z-index: 2;">
         <nav class="navbar navbar-expand navbar-light shadow-sm px-sm-5 px-0">
                 <a class="navbar-brand" style="font-size: 1.65rem !important; font-weight:200 !important;" href="{{ url_for('index') }}">DHDKey!</a>
                 {% if title != "Confirmation" %}
@@ -34,9 +34,12 @@
                             <input id="search-input" type="text" v-model="query" oninput="processChange()"
                               class="form-control" placeholder="Search">
                   </div>
-                  <div class="col-3">
-                    <a href="#" data-bs-target="#sidebar-left" data-bs-toggle="collapse"  class="btn btn-secondary rounded-3 reverse d-none"><i class="fas fa-filter text-light"></i></a>
+                  <div class="col-3  d-flex flex-row flex-nowrap gap-1">
+                    <a href="#" data-bs-target="#sidebar-left" data-bs-toggle="collapse"  onclick="toggleFiltersSidebar()" class="btn btn-secondary rounded-3 reverse d-none"><i class="fas fa-filter text-light"></i></a>
                     <a href="#" data-bs-target="#sidebar-right" data-bs-toggle="collapse" class="btn btn-warning rounded-3 reverse d-none"><i class="fas fa-chart-pie text-black-50"></i></a>
+                    {% if author %}
+                    <a href="{{ url_for('projects') }}" class="btn btn-primary rounded-3 reverse d-none"><i class="fas fa-arrow-rotate-left text-light"></i></a>
+                    {% endif %}
                    
        
                  </div>
@@ -54,40 +57,61 @@
 
           <div class="col-3 py-0">
             
-            {% if author %}
-            <nav aria-label="breadcrumb">
+            
+            <!-- <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
+                {% if author %}
                 <li class="breadcrumb-item {% if not author %} active  {% endif %}"><a
-                    href="{{ url_for('projects') }}">Projects</a></li>
+                    href="{{ url_for('projects') }}">All Projects</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ name }}</li>
-              </ol>
-            {% endif %}
+                {% else %}
+                <li class="breadcrumb-item active" aria-current="page">All Projects</li>
+                {% endif %}
+              </ol> -->
+              
+
           
             {% if author %}
-            <h2>{{ name }}</h2>
-            
+            <h4 class="mb-0">
+              <a href="mailto:{{ mail }}" style=" text-decoration: none;" class="text-dark">
+                {{ name }} 
+                <!-- <i class="far fa-envelope text-dark"></i> -->
+              </a>
+            </h4>
+            {% endif %}
+            <h5 class="text-secondary mt-0">[[ searchResult.pagination.total ]] Item<span
+              v-if="searchResult.pagination.total != 1">s</span> Found</h5>
+<!--             
             <h5 class="d-none d-md-block" style="word-break:break-all;"><a
                 href="mailto:{{ mail }}" style="word-break:break-all;">{{ mail }}</a></h5>
-            <h6 class="d-block d-md-none" style="word-break:break-all;"><a
-                href="mailto:{{ mail }}" style="word-break:break-all;">{{ mail }}</a></h6>
-                {% else %}
-            {% endif %}
+            <h5 class="d-block d-md-none" style="word-break:break-all;"><a
+                href="mailto:{{ mail }}" style="word-break:break-all;">{{ mail }}</a></h5> -->
+                
 
-            <div class="d-block">
-              <h5>[[ searchResult.pagination.total ]] Item<span
-                  v-if="searchResult.pagination.total != 1">s</span> Found</h5>
-            </div>
+            
             
           </div>
 
-          <div class="col-6 my-0 px-0">
+          <div class="col-6 my-0 px-0 row">
             <!-- <div id="navbar" > -->
               <!-- <form class="navbar-form navbar-left">
                 <div class="form-group row"> -->
                   
-                    <input id="search-input" type="text" v-model="query" oninput="processChange()"
-                      class="form-control" placeholder="Search">
-                  
+                    <div class="col-12">
+                      <input id="search-input" type="text" v-model="query" oninput="processChange()"
+                        class="form-control" placeholder="Search">
+                    </div>
+
+                      <div class="d-none col-2 d-inline-flex flex-nowrap justify-content-evenly gap-1 py-1">
+                        <a href="#" data-bs-target="#sidebar-left" data-bs-toggle="collapse" onclick="toggleFiltersSidebar()" class="btn btn-secondary rounded-3"><i class="fas fa-filter text-light"></i></a>
+                      
+                        <a href="#" data-bs-target="#sidebar-right" data-bs-toggle="collapse"  class="btn btn-warning rounded-3"><i class="fas fa-chart-pie text-black-50"></i></a>
+
+                        {% if author %}
+                        <a href="{{ url_for('projects') }}" class="btn btn-primary rounded-3"><i class="fas fa-arrow-rotate-left text-light"></i></a>
+                        {% endif %}
+                      </div>
+
                   <!-- <div class="col-2 pl-0">
                     <button type="submit" class="btn btn-primary"
                       style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important"><i
@@ -98,9 +122,12 @@
             </div> -->
           </div>
 
-          <div class="col-3">
-             <a href="#" data-bs-target="#sidebar-left" data-bs-toggle="collapse"  class="btn btn-secondary rounded-3"><i class="fas fa-filter text-light"></i></a>
+          <div class="col-3 d-flex flex-row flex-nowrap gap-1">
+             <a href="#" data-bs-target="#sidebar-left" data-bs-toggle="collapse" onclick="toggleFiltersSidebar()" class="btn btn-secondary rounded-3"><i class="fas fa-filter text-light"></i></a>
              <a href="#" data-bs-target="#sidebar-right" data-bs-toggle="collapse"  class="btn btn-warning rounded-3"><i class="fas fa-chart-pie text-black-50"></i></a>
+             {% if author %}
+              <a href="{{ url_for('projects') }}" class="btn btn-primary rounded-3"><i class="fas fa-arrow-rotate-left text-light"></i></a>
+              {% endif %}
             <!-- <div class="pagination-bar float-right">
               <paginate
                 v-model="page"
@@ -174,9 +201,11 @@
               </div>
             </div></div></div> -->
 
-        <div id="sidebar-left"  class="col-3 border-end ml-0 collapse collapse-horizontal ">
+            <div id="sidebar-left"  class="col-3 ml-0 collapse collapse-horizontal vh-100 bg-white">
+            </div>
+        <div id="sidebar-left-fixed"  class="position-fixed col-3 ml-0 bg-white d-none border-end shadow-sm" style="z-index: 1; padding-top: 5rem; padding-bottom: 5rem; bottom: 0; top: 0; overflow-y:scroll; left: 0;">
             <form>
-              <div class="form-group px-0 ">
+              <div class="form-group px-0">
                   <select id="author_selector"
                     class="form-control form-control-lg rounded" name="id" required 
                     style="width:100%; height:100%;">
@@ -213,7 +242,7 @@
             </div>
         </div>
 
-        <div class="col-md-6 main-projects-section">
+        <div id="projects-list" class="col-md-6 main-projects-section">
           <!-- <div class="breadcrumbs"></div> -->
           <div class="clearfix"></div>
           <div>
@@ -250,7 +279,7 @@
           </div>
           <div class="clearfix"></div>
 
-          <div class="pagination-bar float-right mt-5">
+          <div class="pagination-bar float-right mt-5" style="z-index: 0;">
             <paginate
               v-model="page"
               :page-count="Math.ceil(searchResult.pagination.total / searchResult.pagination.per_page)"
@@ -265,24 +294,72 @@
               :next-class="'page-item'"
               :prev-link-class="'page-link'"
               :next-link-class="'page-link'"
-              :active-class="'active'">
+              :active-class="'active'"
+              >
             </paginate>
           </div>
         </div>
 
-        <div id="sidebar-right" class="col-3 collapse collapse-horizontal show border-start px-0">
-          <div class="d-flex flex-column justify-content-start align-items-center gap-3 " >
+        <!-- <div id="sidebar-right" class="col-3 collapse collapse-horizontal show border-start px-0 position-fixed bg-white vh-100" style="z-index: 1; right: 0; top: 0; padding-top: 5rem;"> -->
+          <div id="sidebar-right" class="col-3 collapse collapse-horizontal show border-start px-0">
+            <div class="d-flex flex-column justify-content-start align-items-center gap-3  " style="height: 100%; min-height: fit-content;" >
+
+            <!-- <div class="mb-2">
+              <canvas id="myBarChart"></canvas>
+            </div>
 
             <div>
               <canvas id="myChart"></canvas>
             </div>
+
+            
             
             <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
               <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked onclick="updateChartAggregations('course')">
               <label class="btn btn-outline-primary" for="btnradio1">Course</label>
               <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" onclick="updateChartAggregations('year')">
               <label class="btn btn-outline-primary" for="btnradio2">Year</label>
+            </div> -->
+
+
+
+
+
+            <div id="carouselExample" class="carousel carousel-dark slide" data-bs-interval="false">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <div class="d-flex flex-column justify-content-start align-items-center gap-3">
+                    <div>
+                      <canvas id="myChart"></canvas>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked onclick="updateChartAggregations('course')">
+                      <label class="btn btn-outline-primary" for="btnradio1">Course</label>
+                      <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" onclick="updateChartAggregations('year')">
+                      <label class="btn btn-outline-primary" for="btnradio2">Year</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <div class="mb-2">
+                    <canvas id="myBarChart"></canvas>
+                  </div>
+                </div>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
             </div>
+
+
+
+
+            
 
           </div>
         </div>
@@ -341,6 +418,14 @@
   <script>
 
 rows = {{ data | tojson | safe}};
+var rowsData = rows
+var coursesUnique = []
+var yearsUnique = []
+function onlyUnique(value, index, array) {
+        return array.indexOf(value) === index;
+      }
+
+      
 
 search_input = '{{ search | safe }}';
 if (search_input === 'None') {
@@ -359,10 +444,17 @@ $(document).ready(function() {
       $('.reverse').css('transform', 'translate3d(0,' + (Math.min(0, -100 + $(this).scrollTop()*2)) + 'px, 0)'); 
       
 
-      // console.log($(this).scrollTop())
-      // if ($(this).scrollTop() <= 0) {
-      //   $('.charts-container').css('transform', 'translateY('+($(this).scrollTop())+ 'px)'); 
-      // }
+      // console.log(Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - $(this).scrollTop())
+
+      
+      // $('#sidebar-left-fixed').css('bottom', ''+(Math.min(0, -100 + $(this).scrollTop()*2))+'px')
+
+      if (Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - $(this).scrollTop() - 10 <= window.innerHeight) {
+        
+        $('#sidebar-left-fixed').css('bottom', '5rem')
+      } else {
+        $('#sidebar-left-fixed').css('bottom', '0')
+      }
 
       
       // if (($(this).scrollTop() > 0) && $(this).scrollTop() < height) { 
@@ -403,43 +495,65 @@ $(document).ready(function() {
 });
 
 
-
-
-function toggleFilterButton() {
-  
+function toggleFiltersSidebar() {
 
   
-  $('.projects-page-main-content').toggleClass('justify-content-center')
-  $('.projects-page-main-content').toggleClass('justify-content-start')
+  
+  $('#sidebar-left').removeClass('d-none')
 
-  if ($('.main-projects-section').hasClass('col-md-6')) {
-    $('.main-projects-section').removeClass('col-md-6')
-    $('.main-projects-section').addClass('col-md-7')
-  }else if ($('.main-projects-section').hasClass('col-md-7') && $('.projects-page-main-content').hasClass('justify-content-start')) {
-    $('.main-projects-section').removeClass('col-md-7')
-    $('.main-projects-section').addClass('col-md-6')
-  }else if ($('.main-projects-section').hasClass('col-md-7') && $('.projects-page-main-content').hasClass('justify-content-center')) {
-    $('.main-projects-section').removeClass('col-md-7')
-    $('.main-projects-section').addClass('col-md-7')
+  if ($('#sidebar-right').hasClass('show') == false) {
+    $('#sidebar-left').addClass('d-none')
   }
 
+
+
+  $('#sidebar-left-fixed').removeClass('d-none')
+  $('#sidebar-left-fixed').toggleClass('shown')
+
+  if ($('#sidebar-left-fixed').hasClass('shown')) {
+    $('#sidebar-left-fixed').removeClass('hidden')
+  } else {
+    $('#sidebar-left-fixed').addClass('hidden')
+  }
 }
 
 
-function toggleChartButton() {
 
-  if ($('.main-projects-section').hasClass('col-md-6')) {
-    $('.main-projects-section').removeClass('col-md-6')
-    $('.main-projects-section').addClass('col-md-7')
-  } else if ($('.main-projects-section').hasClass('col-md-7') && $('.projects-page-main-content').hasClass('justify-content-start')) {
-    $('.main-projects-section').removeClass('col-md-7')
-    $('.main-projects-section').addClass('col-md-6')
-  } else if ($('.main-projects-section').hasClass('col-md-7') && $('.projects-page-main-content').hasClass('justify-content-center')) {
-    $('.main-projects-section').removeClass('col-md-7')
-    $('.main-projects-section').addClass('col-md-7')
-  }
+// function toggleFilterButton() {
+  
 
-}
+  
+//   $('.projects-page-main-content').toggleClass('justify-content-center')
+//   $('.projects-page-main-content').toggleClass('justify-content-start')
+
+//   if ($('.main-projects-section').hasClass('col-md-6')) {
+//     $('.main-projects-section').removeClass('col-md-6')
+//     $('.main-projects-section').addClass('col-md-7')
+//   }else if ($('.main-projects-section').hasClass('col-md-7') && $('.projects-page-main-content').hasClass('justify-content-start')) {
+//     $('.main-projects-section').removeClass('col-md-7')
+//     $('.main-projects-section').addClass('col-md-6')
+//   }else if ($('.main-projects-section').hasClass('col-md-7') && $('.projects-page-main-content').hasClass('justify-content-center')) {
+//     $('.main-projects-section').removeClass('col-md-7')
+//     $('.main-projects-section').addClass('col-md-7')
+//   }
+
+// }
+
+
+// function toggleChartButton() {
+
+//   if ($('.main-projects-section').hasClass('col-md-6')) {
+//     $('.main-projects-section').removeClass('col-md-6')
+//     $('.main-projects-section').addClass('col-md-7')
+//   } else if ($('.main-projects-section').hasClass('col-md-7') && $('.projects-page-main-content').hasClass('justify-content-start')) {
+//     $('.main-projects-section').removeClass('col-md-7')
+//     $('.main-projects-section').addClass('col-md-6')
+//   } else if ($('.main-projects-section').hasClass('col-md-7') && $('.projects-page-main-content').hasClass('justify-content-center')) {
+//     $('.main-projects-section').removeClass('col-md-7')
+//     $('.main-projects-section').addClass('col-md-7')
+//   }
+
+// }
 
 
 
@@ -447,12 +561,10 @@ rows = rows.sort((x, y) => x.title > y.title)
 for (let i = 0; i < rows.length; i++) {
   rows[i].id = i+1 ;
 }
-// console.log(rows)
 let miniSearch = new MiniSearch({
   fields: ['title', 'description', 'authors']
 })
 
-// console.log(rows)
 miniSearch.addAll(rows);
 
 var configuration = {
@@ -550,19 +662,22 @@ var vm = new Vue({
       rowsData = rows
     }
 
-    
+    coursesUnique = rowsData.map(v => v.course).filter(onlyUnique)
+    yearsUnique = rowsData.map(v => v.year).filter(onlyUnique)
+    console.log(rowsData)
+    console.log(coursesUnique)
+    console.log(yearsUnique)
      var result = itemsjs.search({
-      //  query: this.query,
        ids: search_results.map(v => v.id),
        page: this.page,
        per_page: 6,
        filters: this.filters
      })
     searchResultData = itemsjs.search({
-      //  query: this.query,
        ids: search_results.map(v => v.id),
        filters: this.filters
      })     
+     console.log('searchresults',searchResultData)
      return result
    }
  }
@@ -570,7 +685,6 @@ var vm = new Vue({
 
 
 const ctx = document.getElementById('myChart');
-     console.log(searchResultData)
       var chart = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -578,13 +692,16 @@ const ctx = document.getElementById('myChart');
           datasets: [{
             label: 'Number of projects',
             data: searchResultData.data.aggregations.course.buckets/*.filter(v => searchResultData.data.items.map(e => e.course).includes(v.key))*/.map(v => v.doc_count),
-            backgroundColor: [
-              'rgb(255, 99, 132)',
-              'rgb(54, 162, 235)',
-              'rgb(255, 205, 86)'
-            ],
             hoverOffset: 4
           }]
+        },
+        options: {
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          radius: '80%'
         }
       });
 
@@ -601,19 +718,79 @@ const ctx = document.getElementById('myChart');
       function updateChartData() {
         setTimeout(function() {
 
-          // console.log(searchResultData.data.items.map(e => e[chartAggregation]))
-          // console.log(searchResultData.data.aggregations[chartAggregation].buckets.map(v => v.key))
-          // console.log(searchResultData.data.aggregations[chartAggregation].buckets.filter(v => searchResultData.data.items.map(e => e[chartAggregation]).includes(v.key) === false))
-
           chart.data.labels = searchResultData.data.aggregations[chartAggregation].buckets.map(v => v.key);
           chart.data.datasets.forEach((dataset) => {
               dataset.data = searchResultData.data.aggregations[chartAggregation].buckets/*.filter(v => searchResultData.data.items.map(e => e[chartAggregation]).includes(v.key))*/.map(v => v.doc_count)
           });
 
           chart.update()
-        // console.log(searchResultData)
+        console.log(searchResultData)
         }, 10);
       }
+
+      
+   
+
+
+
+      
+
+      const ctl = document.getElementById('myBarChart');
+      
+      ds = []
+      counter = 0
+      for (course of coursesUnique) {
+
+        courseData = []
+        for (year of yearsUnique) {
+          courseCountInYear = 0
+          
+          for (row of rowsData) {
+            if (
+              (row.course == course) && (row.year == year)
+            ) {
+              courseCountInYear += 1
+              counter += 1
+            }
+          }
+
+          courseData.push(courseCountInYear)
+        }
+
+        ds.push(
+          {
+            label: course,
+            
+            data: courseData
+          }
+        )
+      }
+
+
+
+      var barChart = new Chart(ctl, {
+        type: 'bar',
+        data: {
+      labels: searchResultData.data.aggregations.year.buckets.map(v => v.key), 
+      datasets: ds
+      },
+            options: {
+              plugins: {
+                legend: {
+                  display: false
+                }
+              },
+              animation: false,
+              scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true
+                }
+            }
+            }
+      });
 
       function debounce(func, timeout = 100){
         let timer;
@@ -622,13 +799,11 @@ const ctx = document.getElementById('myChart');
           timer = setTimeout(() => { func.apply(this, args); }, timeout);
         };
       }
-      const processChange = debounce(() => updateChartData());
+      const processChange = debounce(() => {updateChartData()});
 
       $(document).click(function() {
         processChange()
       });
-   
-
 
 
 
@@ -638,9 +813,26 @@ const ctx = document.getElementById('myChart');
     <style>
         .reverse {
           transform: translateY(-4rem);
+          transform: translateZ(-1rem);
         }
         .fixed {
           position: fixed;
+        }
+        .active {
+          z-index: 0 ;
+        }
+        #sidebar-left-fixed {
+          transform: translateX(-100%);
+        }
+        #sidebar-left-fixed.shown {
+          transform: translateX(0);
+          transition-duration: 0.1s;
+          transition-timing-function: linear;
+        }
+        #sidebar-left-fixed.hidden {
+          transform: translateX(-100%);
+          transition-duration: 0.1s;
+          transition-timing-function: linear;
         }
     </style>
 

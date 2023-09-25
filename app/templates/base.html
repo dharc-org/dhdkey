@@ -26,7 +26,7 @@
     </head>
     <body class="d-flex flex-column">
                 <div style="min-height: 100vh">
-                    <div class="head fixed-top bg-white">
+                    <div class="head fixed-top bg-white" style="z-index: 0;">
                             <nav class="navbar navbar-expand navbar-light shadow-sm px-sm-5 px-0">
                                     <a class="navbar-brand" style="font-size: 1.65rem !important; font-weight:200 !important;" href="{{ url_for('index') }}">DHDKey!</a>
                                     {% if title != "Confirmation" %}
@@ -60,7 +60,7 @@
                             </div>
                     </div>
                 </div>
-    <footer class="footer bg-dark text-light">
+    <footer class="footer bg-dark text-light position-sticky" style="z-index: 2;">
         <div class="container">
             <div class="row d-flex justify-content-left flex-wrap my-1">
                 <div class="col-6 d-flex flex-column align-items-start justify-content-around mx-0 my-1" style="min-width: fit-content;">
@@ -81,7 +81,7 @@
             </div>
          </footer>
 
-         <footer class="footer bg-secondary text-white py-1">
+         <footer class="footer bg-secondary text-white py-1 position-sticky" style="z-index: 2;">
                 <div class="container">
                     <div class="d-inline-flex justify-content-between w-100 flex-wrap" style="min-width: fit-content;">
                             <div class="my-1" style="min-width: fit-content;">
