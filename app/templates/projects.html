@@ -6,7 +6,7 @@
   
 
     <div id="el" v-cloak >
-      <div class="head fixed-top bg-white" style="z-index: 2;">
+      <div class="head fixed-top bg-white" style="z-index: 3;">
         <nav class="navbar navbar-expand navbar-light shadow-sm px-sm-5 px-0">
                 <a class="navbar-brand" style="font-size: 1.65rem !important; font-weight:200 !important;" href="{{ url_for('index') }}">DHDKey!</a>
                 {% if title != "Confirmation" %}
@@ -203,7 +203,7 @@
 
             <div id="sidebar-left"  class="col-3 ml-0 collapse collapse-horizontal vh-100 bg-white">
             </div>
-        <div id="sidebar-left-fixed"  class="position-fixed col-3 ml-0 bg-white d-none border-end shadow-sm" style="z-index: 1; padding-top: 5rem; padding-bottom: 5rem; bottom: 0; top: 0; overflow-y:scroll; left: 0;">
+        <div id="sidebar-left-fixed"  class="position-fixed col-3 ml-0 bg-white d-none border-end shadow-sm" style="z-index: 2; padding-top: 5rem; padding-bottom: 5rem; bottom: 0; top: 0; overflow-y:scroll; left: 0;">
             <form>
               <div class="form-group px-0">
                   <select id="author_selector"
@@ -279,7 +279,7 @@
           </div>
           <div class="clearfix"></div>
 
-          <div class="pagination-bar float-right mt-5" style="z-index: 0;">
+          <div class="pagination-bar float-right mt-5" style="z-index: 1;">
             <paginate
               v-model="page"
               :page-count="Math.ceil(searchResult.pagination.total / searchResult.pagination.per_page)"
@@ -300,7 +300,7 @@
           </div>
         </div>
 
-        <!-- <div id="sidebar-right" class="col-3 collapse collapse-horizontal show border-start px-0 position-fixed bg-white vh-100" style="z-index: 1; right: 0; top: 0; padding-top: 5rem;"> -->
+        <!-- <div id="sidebar-right" class="col-3 collapse collapse-horizontal show border-start px-0 position-fixed bg-white vh-100" style="z-index: 2; right: 0; top: 0; padding-top: 5rem;"> -->
           <div id="sidebar-right" class="col-3 collapse collapse-horizontal show border-start px-0">
             <div class="d-flex flex-column justify-content-start align-items-center gap-3  " style="height: 100%; min-height: fit-content;" >
 
@@ -819,7 +819,7 @@ const ctx = document.getElementById('myChart');
           position: fixed;
         }
         .active {
-          z-index: 0 ;
+          z-index: 1 ;
         }
         #sidebar-left-fixed {
           transform: translateX(-100%);
