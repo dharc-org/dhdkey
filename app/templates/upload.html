@@ -3,7 +3,7 @@
 {% block content %}
 
     <div class= "col-md-10 col-xl-7 mx-auto mt-5 mb-4 card" style="z-index: 0;"> 
-        <h2 class="mb-3 mt-3">Upload New Project!</h2>
+        <h2 class="mb-4 mt-4">Upload New Project!</h2>
         <form id="projform" autocomplete="off" action="{{ url_for('upload') }}" method="POST">
             
             <!--TITLE-->
@@ -16,7 +16,7 @@
             <!--REPOSITORY LINK-->
             <div class="form-group mb-3">
                 <label for="Repository">Project Github<!-- DH.arc--> repository</label>
-                <input type="url" class="form-control" id="Repository" name="Repository" placeholder="www.example.com">
+                <input type="url" class="form-control" id="Repository" name="Repository" placeholder="github.com/example">
               </div>
             
             <!--WEBSITE LINK-->
@@ -62,7 +62,7 @@
                         </div>
                     </div>
                     <div class="card-footer text-body-secondary bg-light">
-                        <button id="add-more" name="add-more" type="button" class="btn btn-success">Add More</button>
+                        <button id="add-more" name="add-more" type="button" class="btn btn-primary">Add more</button>
                         
                     </div>
                 </div>
@@ -70,37 +70,39 @@
 
             <!--YEAR-->
             <div class="form-group mb-3">
-                <label for="Year">Course Academic Year</label>
+                <label for="Year">Course academic year</label>
                 <select class="form-control" id="Year" name="Year" required="true">
-                    <option value="" selected>Choose...</option>
+                    <option value="" selected>Select course academic year...</option>
                 </select>
               </div>
 
             <!--COURSE-->
             <div class="form-group mb-3">
-            <label for="Course">Course Title</label>
-            <small>(Select Course Academic Year first)</small>
-            <select class="form-control" id="Course" name="Course" disabled required="true">
-                    <option value="" selected>Choose...</option>
-            </select>
+                <label for="Course">Course title</label>
+                <select class="course-title-select form-control text-body-secondary" id="Course" name="Course" disabled required="true">
+                        <option value="" disabled selected>Select course title...</option>
+                </select>
+                <div class="academic-year-form-text form-text mt-0 pt-0">Select course academic year first</div>
             </div>
-            
 
             <!--DESCRIPTION-->
             <div class="form-group mb-3">
-            <label for="Description">Project Description (<span id="charcount">500</span> characters left)</label>
-            <textarea class="form-control" id="Description" name="Description" maxlength = "500" rows="5" required="true"></textarea>
+                <label for="Description">Project Description</label>
+                <div class="form-floating text-body-secondary">
+                    <textarea class="form-control" id="Description" name="Description" maxlength = "500"></textarea>
+                    <label for="Description" class="col-form-label"><span id="charcount">500</span> characters left</label> 
+                </div>
             </div>
 
             <!--RESPONSIBLE MAIL-->
-            <div class="form-group mb-3">
+            <div class="form-group mb-5">
                 <label class="mb-0" for="Responsible">Contact Mail</label>
                 <!--<small id="ResponsibleHelp" class="form-text text-muted mb-1 mt-0">Email address to which data confirmation form will be sent (24h to confirm)</small>-->
-                <input type="mail" class="form-control" id="Responsible" name="Responsible" pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(unibo|studio.unibo)\.it$" placeholder="Enter Unibo Mail" title="Only Unibo Mail accepted (@unibo.it or @studio.unibo.it)" required="true">
+                <input type="mail" class="form-control" id="Responsible" name="Responsible" pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(unibo|studio.unibo)\.it$" placeholder="example@unibo.it" title="Only Unibo Mail accepted (@unibo.it or @studio.unibo.it)" required="true">
                 </div>
 
             <!--privacy-->
-            <div class="form-group my-5">
+            <div class="form-group mb-3">
                     <label class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" id="privacy" required>
                     <label class="custom-control-label" for="privacy">I agree to the <a target="_blank" href="{{ url_for('privacy') }}">Privacy Policy & Terms of Service</a></label>
@@ -108,9 +110,9 @@
                   </div>
 
             <!--Captcha-->
-             <div class="form-group d-flex justify-content-center mb-5">
-                    <div class="g-recaptcha" data-sitekey="6LdawPwUAAAAAPUu2tYQgFlUWEUsdGwVlGigdEqC"></div>
-                </div>
+             <div class="form-group d-flex mb-3">
+                <div class="g-recaptcha" data-sitekey="6LdawPwUAAAAAPUu2tYQgFlUWEUsdGwVlGigdEqC"></div>
+            </div>
 
 
             <button type="submit" class="btn btn-primary">Submit</button>
@@ -181,16 +183,30 @@ $(document).ready(function () {
             yearselected = $(this).val()
             if(yearselected===""){ 
                 $('#Course').prop( "disabled", true );
+                $('.academic-year-form-text').removeClass('d-none')
             }
             else{
+                $('.academic-year-form-text').addClass('d-none')
                 $('#Course').prop( "disabled", false );
-                $('#Course').empty();
+                // $('#Course').empty();
                 courses_year = (courses_data.find(x => x.year === yearselected)).courses
                 for (var i = 0; i < courses_year.length; i++) {
                         $("#Course").append('<option value="'+ courses_year[i] +'">'+ cut(courses_year[i]) + '</option>')
                 }
             }
         });
+
+        $('#Course').change(function() {
+            courseSelected = $(this).val()
+            if(courseSelected===""){ 
+                $('.course-title-select').addClass("text-body-secondary")
+            }
+            else{
+                $('.course-title-select').removeClass("text-body-secondary")
+            }
+        });
+
+
     $("#Description").on('input propertychange paste',function(event){
         $("#charcount").html(500 - this.value.length);
         });
