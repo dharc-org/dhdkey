@@ -41,13 +41,15 @@
                                         </li>
                                         <li class="nav-item {% if title == 'Projects' %}active{% endif %}">
                                             <a id="projects-link-with-tooltip" class="text-nowrap nav-link" href="{{ url_for('projects') }}"
-                                            data-bs-trigger="manual"
+                                            data-bs-trigger="manual" data-bs-selector="true"
                                             data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
                                                 data-bs-title="
                                                 <div class='d-flex flex-column gap-1'>
                                                         <div>1/3</div>
                                                         <div>Here you can find all the DHDKey projects</div>
                                                 </div>"
+
+                                    
                                                 data-bs-placement="bottom"
                                             >Projects</a>
                                         </li>
@@ -61,14 +63,17 @@
                                     </div>
                                     {% endif %}
 
-                                    <div
+                                    <div id="tooltip1"
                                     data-bs-trigger="click"
                                     data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
                                         data-bs-title="
                                         <div class='d-flex flex-column gap-1'>
-                                                <div><a  href='#' id='tooltip-trigger-1' class='text-white'>Need help?</a></div>
+                                                <div><a  href='#' id='tooltip-trigger-1' onclick='showTooltip2()' class='text-white'>Need help?</a></div>
                                                 <div><a href='mailto:nikolai.gorbachev@studio.unibo.it' class='text-white'>Report a problem</a></div>
                                         </div>"
+                                        data-bs-template='
+                                        <div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>
+                                        '
                                         data-bs-placement="bottom"
                                         class="text-dark text-decoration-none" style="cursor: pointer;"><i class="far fa-question-circle bg-white text-secondary icon fa-2x"></i></div>
                                     
@@ -184,24 +189,31 @@
 
     
 
-    function showTooltipById() {
-        
-        var tooltip = new bootstrap.Tooltip($('#projects-link-with-tooltip'), {
-        popperConfig: function (defaultBsPopperConfig) {
-            // var newPopperConfig = {...}
-            // use defaultBsPopperConfig if needed...
-            // return newPopperConfig
-        }
-        })
-        tooltip.show()
+
+    const myTooltipEl1 = document.getElementById('tooltip1')
+        var tooltip = bootstrap.Tooltip.getOrCreateInstance(myTooltipEl1)
+        const myTooltipEl = document.getElementById('projects-link-with-tooltip')
+        var tooltip2 = bootstrap.Tooltip.getOrCreateInstance(myTooltipEl)
+
     
-}
 
-// $("#tooltip-trigger-1").on('click', function() {
-//   showTooltipById()
-// });
-
+    function showTooltip2() {
+                console.log('hey')
+        tooltip2.toggle()
+    }
     $(document).ready(function() {
+
+        myTooltipEl1.addEventListener('shown.bs.tooltip', () => {
+            
+            console.log(myTooltipEl1)
+            $('#tooltip-trigger-1').click(
+
+            function(e){
+                tooltip.hide()
+                tooltip2.show()
+            }
+            );
+        })
 
     })
     
