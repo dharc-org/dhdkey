@@ -48,6 +48,17 @@
 
                 
                 {% endif %}
+
+                <div
+                                    data-bs-trigger="click"
+                                    data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
+                                        data-bs-title="
+                                        <div class='d-flex flex-column gap-1'>
+                                                <div>Need help?</div>
+                                                <div><a href='mailto:nikolai.gorbachev@studio.unibo.it' class='text-white'>Report a problem</a></div>
+                                        </div>"
+                                        data-bs-placement="bottom"
+                                        class="text-dark text-decoration-none"><i class="far fa-question-circle bg-white text-secondary icon fa-2x"></i></div>
                 
             </nav>
       </div>
@@ -301,7 +312,7 @@
         </div>
 
         <!-- <div id="sidebar-right" class="col-3 collapse collapse-horizontal show border-start px-0 position-fixed bg-white vh-100" style="z-index: 2; right: 0; top: 0; padding-top: 5rem;"> -->
-          <div id="sidebar-right" class="col-3 collapse collapse-horizontal show border-start px-0">
+          <div id="sidebar-right" class="col-3 collapse collapse-horizontal show px-0">
             <div class="d-flex flex-column justify-content-start align-items-center gap-3  " style="height: 100%; min-height: fit-content;" >
 
             <!-- <div class="mb-2">
@@ -808,7 +819,16 @@ const ctx = document.getElementById('myChart');
 
 
      </script>
-
+    <script>
+      // const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      //             const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+    <style>
+      .custom-tooltip {
+          --bs-tooltip-bg: var(--bs-dark);
+          --bs-tooltip-color: var(--bs-white);
+      }
+    </style>
 
     <style>
         .reverse {
@@ -833,6 +853,28 @@ const ctx = document.getElementById('myChart');
           transform: translateX(-100%);
           transition-duration: 0.1s;
           transition-timing-function: linear;
+        }
+
+
+        @media only screen and (min-width : 480px) {
+          
+        }
+
+        /* Small Devices, Tablets */
+        @media only screen and (min-width : 768px) {
+
+        }
+
+        /* Medium Devices, Desktops */
+        @media only screen and (min-width : 992px) {
+          #sidebar-right {
+            border-left: 1px solid rgba(0,0,0,0.2);
+          }
+        }
+
+        /* Large Devices, Wide Screens */
+        @media only screen and (min-width : 1200px) {
+
         }
     </style>
 

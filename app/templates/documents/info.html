@@ -72,15 +72,33 @@
 
     <div class="row mb-4">
         <h5 class="col-12 col-sm-3 mb-1">Contact us</h5>
-        <div class="col-12 col-sm-9">
-                <p><a target="_blank" href="mailto:dharc@live.unibo.it"><i class="far fa-envelope"></i>
-                        </a>
+        <div class="col-12 col-sm-9 d-flex flex-row gap-2 justify-content-start align-items-center">
                 
-                        <a rel="license" target="_blank" href="https://github.com/dharc-org/dhdkey"><i class="fab fa-sm fa-github"></i>
+                        
+
+                                <a href="mailto:dharc@live.unibo.it" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="Any questions?<br/>Write us an email!"
+                                data-bs-placement="bottom"
+                                class="text-dark text-decoration-none"><i class="far fa-envelope fa-2x"></i></a>
+                        
+                
+                        <a rel="license" target="_blank" href="https://github.com/dharc-org/dhdkey" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="DHDKey! on GitHub"
+                        data-bs-placement="bottom"
+                        class="text-dark text-decoration-none"><i class="fab fa-github fa-2x"></i>
                                 </a>
                         
-                                <span><i class="fas fa-map-marker-alt"></i> Department of Classical Philology and Italian Studies (FICLIT), via Zamboni 32, 40126, Bologna</span>
-                </p>
+
+                         
+                        
+                         <a href="https://maps.app.goo.gl/SV7KR4WMopS5CN3L6" 
+                         data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="Department of Classical Philology and Italian Studies<br/> (FICLIT)<br/> via Zamboni 32,<br/> 40126, Bologna"
+                                data-bs-placement="bottom"
+                                class="text-dark text-decoration-none"><i class="fas fa-map-marker-alt fa-2x"></i></a>
+                                
+                        <a href="mailto:nikolai.gorbachev@studio.unibo.it" data-bs-toggle="tooltip" data-bs-title="Report a problem"
+                        data-bs-placement="bottom"
+                        class="text-dark text-decoration-none"><i class="far fa-screwdriver-wrench bg-white text-dark icon fa-2x"></i></a>
+
+                
         </div>
     </div>
 
@@ -89,4 +107,8 @@
     
 </div>
 
+<script>
+        // const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        // const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
 {% endblock %}
