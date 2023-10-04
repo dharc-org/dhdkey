@@ -70,7 +70,7 @@
                                                 <div><a href='mailto:nikolai.gorbachev@studio.unibo.it' class='text-white'>Report a problem</a></div>
                                         </div>"
                                         data-bs-placement="bottom"
-                                        class="text-dark text-decoration-none"><i class="far fa-question-circle bg-white text-secondary icon fa-2x"></i></div>
+                                        class="text-dark text-decoration-none" style="cursor: pointer;"><i class="far fa-question-circle bg-white text-secondary icon fa-2x"></i></div>
                                     
                                 </nav>
                     </div>
@@ -181,6 +181,9 @@
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
 
+
+    
+
     function showTooltipById() {
         
         var tooltip = new bootstrap.Tooltip($('#projects-link-with-tooltip'), {
@@ -194,9 +197,9 @@
     
 }
 
-$("#tooltip-trigger-1").on('click', function() {
-  showTooltipById()
-});
+// $("#tooltip-trigger-1").on('click', function() {
+//   showTooltipById()
+// });
 
     $(document).ready(function() {
 
