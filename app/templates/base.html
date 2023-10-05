@@ -40,35 +40,55 @@
                                             <a class="text-nowrap nav-link" href="{{ url_for('index') }}">Home</a>
                                         </li>
                                         <li class="nav-item {% if title == 'Projects' %}active{% endif %}">
-                                            <a id="projects-link-with-tooltip" class="text-nowrap nav-link" href="{{ url_for('projects') }}"
+                                            <a id="tooltip-guide-1" class="text-nowrap nav-link" href="{{ url_for('projects') }}"
                                             data-bs-trigger="manual" data-bs-selector="true"
                                             data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
                                                 data-bs-title="
                                                 <div class='d-flex flex-column gap-1'>
                                                         <div>1/3</div>
                                                         <div>Here you can find all the DHDKey projects</div>
+                                                        <div><a id='guide-ok-button-1' href='#' class='text-white'>OK</a></div>
                                                 </div>"
-
-                                    
                                                 data-bs-placement="bottom"
                                             >Projects</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="text-nowrap nav-link {% if title == 'Upload' %}active{% endif %}" href="{{ url_for('upload') }}">Upload</a>
+                                            <a id="tooltip-guide-2" class="text-nowrap nav-link {% if title == 'Upload' %}active{% endif %}" href="{{ url_for('upload') }}"
+                                            data-bs-trigger="manual" data-bs-selector="true"
+                                            data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
+                                                data-bs-title="
+                                                <div class='d-flex flex-column gap-1'>
+                                                        <div>2/3</div>
+                                                        <div>Here you can upload one of your own!</div>
+                                                        <div><a id='guide-ok-button-2' href='#' class='text-white'>OK</a></div>
+                                                </div>"
+                                                data-bs-placement="bottom"
+                                            >Upload</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="text-nowrap nav-link {% if title == 'Info' %}active{% endif %}" href="{{ url_for('info') }}">Info</a>
+                                            <a id="tooltip-guide-3" class="text-nowrap nav-link {% if title == 'Info' %}active{% endif %}" href="{{ url_for('info') }}"
+                                            data-bs-trigger="manual" data-bs-selector="true"
+                                            data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
+                                                data-bs-title="
+                                                <div class='d-flex flex-column gap-1'>
+                                                        <div>3/3</div>
+                                                        <div>Having some questions?</div>
+                                                        <div>Find here some useful info and contacts!</div>
+                                                        <div><a id='guide-ok-button-3' href='#' class='text-white'>OK</a></div>
+                                                </div>"
+                                                data-bs-placement="bottom"
+                                            >Info</a>
                                         </li>
                                     </ul>
                                     </div>
                                     {% endif %}
 
-                                    <div id="tooltip1"
+                                    <div id="tooltip-help"
                                     data-bs-trigger="click"
                                     data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
                                         data-bs-title="
                                         <div class='d-flex flex-column gap-1'>
-                                                <div><a  href='#' id='tooltip-trigger-1' onclick='showTooltip2()' class='text-white'>Need help?</a></div>
+                                                <div><a  href='#' id='need-help-link' class='text-white'>Need help?</a></div>
                                                 <div><a href='mailto:nikolai.gorbachev@studio.unibo.it' class='text-white'>Report a problem</a></div>
                                         </div>"
                                         data-bs-template='
@@ -190,31 +210,47 @@
     
 
 
-    const myTooltipEl1 = document.getElementById('tooltip1')
-        var tooltip = bootstrap.Tooltip.getOrCreateInstance(myTooltipEl1)
-        const myTooltipEl = document.getElementById('projects-link-with-tooltip')
-        var tooltip2 = bootstrap.Tooltip.getOrCreateInstance(myTooltipEl)
+    const helpButtonWithTooltip = document.getElementById('tooltip-help')
+        var tooltipFromHelpButton = bootstrap.Tooltip.getOrCreateInstance(helpButtonWithTooltip)
+    const projectsLinkWithTooltip = document.getElementById('tooltip-guide-1')
+        var tooltipFromProjectsLink = bootstrap.Tooltip.getOrCreateInstance(projectsLinkWithTooltip)
+    const uploadLinkWithTooltip = document.getElementById('tooltip-guide-2')
+        var tooltipFromUploadLink = bootstrap.Tooltip.getOrCreateInstance(uploadLinkWithTooltip)
+    const infoLinkWithTooltip = document.getElementById('tooltip-guide-3')
+        var tooltipFromInfoLink = bootstrap.Tooltip.getOrCreateInstance(infoLinkWithTooltip)
 
-    
-
-    function showTooltip2() {
-                console.log('hey')
-        tooltip2.toggle()
-    }
     $(document).ready(function() {
-
-        myTooltipEl1.addEventListener('shown.bs.tooltip', () => {
-            
-            console.log(myTooltipEl1)
-            $('#tooltip-trigger-1').click(
-
-            function(e){
-                tooltip.hide()
-                tooltip2.show()
-            }
+        helpButtonWithTooltip.addEventListener('shown.bs.tooltip', () => {
+            $('#need-help-link').click(
+                function(e){
+                    tooltipFromProjectsLink.show()
+                    tooltipFromHelpButton.hide()
+                }
             );
-        })
-
+        });
+        projectsLinkWithTooltip.addEventListener('shown.bs.tooltip', () => {
+            $('#guide-ok-button-1').click(
+                function(e){
+                    tooltipFromUploadLink.show()
+                    tooltipFromProjectsLink.hide()
+                }
+            );
+        });
+        uploadLinkWithTooltip.addEventListener('shown.bs.tooltip', () => {
+            $('#guide-ok-button-2').click(
+                function(e){
+                    tooltipFromInfoLink.show()
+                    tooltipFromUploadLink.hide()
+                }
+            );
+        });
+        infoLinkWithTooltip.addEventListener('shown.bs.tooltip', () => {
+            $('#guide-ok-button-3').click(
+                function(e){
+                    tooltipFromInfoLink.hide()
+                }
+            );
+        });
     })
     
 
