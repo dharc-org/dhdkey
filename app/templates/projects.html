@@ -31,7 +31,7 @@
                         data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
                             data-bs-title="
                             <div class='d-flex flex-column gap-1'>
-                                    <div>3/3</div>
+                                    <div>4/4</div>
                                     <div>Having some questions?</div>
                                     <div>Find here some useful info and contacts!</div>
                                     <div><a id='guide-ok-button-4-p' href='#' class='text-white'>OK</a></div>
@@ -141,7 +141,7 @@
                                             data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
                                                 data-bs-title="
                                                 <div class='d-flex flex-column gap-1'>
-                                                        <div>1/3</div>
+                                                        <div>1/4</div>
                                                         <div>Here you can search among all the DHDKey projects</div>
                                                         <div>You can search by title, description and authors' names</div>
                                                         <div><a id='guide-ok-button-1-p' href='#' class='text-white'>OK</a></div>
@@ -190,7 +190,7 @@
                         data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
                             data-bs-title="
                             <div class='d-flex flex-column gap-1'>
-                                    <div>2/3</div>
+                                    <div>2/4</div>
                                     <div>Here you can refine your search with filters</div>
                                     <div>The filters include authors' names, years of publication and the names of the subjects</div>
                                     <div><a id='guide-ok-button-2-p' href='#' class='text-white'>OK</a></div>
@@ -208,9 +208,9 @@
                         data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
                             data-bs-title="
                             <div class='d-flex flex-column gap-1'>
-                                    <div>3/3</div>
+                                    <div>3/4</div>
                                     <div>With this button you can open/close the statistics charts.</div>
-                                    <div>The charts are to help professors and students see the tendencies among the students' projects.</div>
+                                    <div>The charts visualize the tendencies in the students' projects.</div>
                                     <div>These charts are aggregated by year and subject</div>
                                     <div><a id='guide-ok-button-3-p' href='#' class='text-white'>OK</a></div>
                             </div>"
@@ -539,52 +539,52 @@ if (search_input === 'None') {
           
 const helpButtonWithTooltipP = document.getElementById('tooltip-help-p')
         var tooltipFromHelpButtonP = bootstrap.Tooltip.getOrCreateInstance(helpButtonWithTooltipP)
-    const projectsLinkWithTooltipP = document.getElementById('tooltip-guide-1-p')
-        var tooltipFromProjectsLinkP = bootstrap.Tooltip.getOrCreateInstance(projectsLinkWithTooltipP)
-    const uploadLinkWithTooltipP = document.getElementById('tooltip-guide-2-p')
-        var tooltipFromUploadLinkP = bootstrap.Tooltip.getOrCreateInstance(uploadLinkWithTooltipP)
-    const infoLinkWithTooltipP = document.getElementById('tooltip-guide-3-p')
+    const searchInputWihTooltipP = document.getElementById('tooltip-guide-1-p')
+        var tooltipFromSearchInputP = bootstrap.Tooltip.getOrCreateInstance(searchInputWihTooltipP)
+    const filterButtonWithTooltipP = document.getElementById('tooltip-guide-2-p')
+        var tooltipFromFilterButtonP = bootstrap.Tooltip.getOrCreateInstance(filterButtonWithTooltipP)
+    const chartsButtonWithTooltipP = document.getElementById('tooltip-guide-3-p')
+        var tooltipFromChartsButtonP = bootstrap.Tooltip.getOrCreateInstance(chartsButtonWithTooltipP)
+        const infoLinkWithTooltipP = document.getElementById('tooltip-guide-4-p')
         var tooltipFromInfoLinkP = bootstrap.Tooltip.getOrCreateInstance(infoLinkWithTooltipP)
-        const infoLinkWithTooltipP1 = document.getElementById('tooltip-guide-4-p')
-        var tooltipFromInfoLinkP1 = bootstrap.Tooltip.getOrCreateInstance(infoLinkWithTooltipP1)
 
           helpButtonWithTooltipP.addEventListener('shown.bs.tooltip', () => {
             
             $('#need-help-link-p').click(
                 function(e){
                     tooltipFromHelpButtonP.hide()
-                    tooltipFromProjectsLinkP.show()
+                    tooltipFromSearchInputP.show()
                 }
             );
         });
-        projectsLinkWithTooltipP.addEventListener('shown.bs.tooltip', () => {
+        searchInputWihTooltipP.addEventListener('shown.bs.tooltip', () => {
             $('#guide-ok-button-1-p').click(
                 function(e){
-                    tooltipFromUploadLinkP.show()
-                    tooltipFromProjectsLinkP.hide()
+                    tooltipFromFilterButtonP.show()
+                    tooltipFromSearchInputP.hide()
                 }
             );
         });
-        uploadLinkWithTooltipP.addEventListener('shown.bs.tooltip', () => {
+        filterButtonWithTooltipP.addEventListener('shown.bs.tooltip', () => {
             $('#guide-ok-button-2-p').click(
                 function(e){
+                    tooltipFromChartsButtonP.show()
+                    tooltipFromFilterButtonP.hide()
+                }
+            );
+        });
+        chartsButtonWithTooltipP.addEventListener('shown.bs.tooltip', () => {
+            $('#guide-ok-button-3-p').click(
+                function(e){
                     tooltipFromInfoLinkP.show()
-                    tooltipFromUploadLinkP.hide()
+                    tooltipFromChartsButtonP.hide()
                 }
             );
         });
         infoLinkWithTooltipP.addEventListener('shown.bs.tooltip', () => {
-            $('#guide-ok-button-3-p').click(
-                function(e){
-                    tooltipFromInfoLinkP1.show()
-                    tooltipFromInfoLinkP.hide()
-                }
-            );
-        });
-        infoLinkWithTooltipP1.addEventListener('shown.bs.tooltip', () => {
             $('#guide-ok-button-4-p').click(
                 function(e){
-                    tooltipFromInfoLinkP1.hide()
+                    tooltipFromInfoLinkP.hide()
                 }
             );
         });
