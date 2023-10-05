@@ -26,7 +26,18 @@
                           <a class="text-nowrap nav-link {% if title == 'Upload' %}active{% endif %}" href="{{ url_for('upload') }}">Upload</a>
                       </li>
                       <li class="nav-item ">
-                          <a class="text-nowrap nav-link {% if title == 'Info' %}active{% endif %}" href="{{ url_for('info') }}">Info</a>
+                        <a id="tooltip-guide-4-p" class="text-nowrap nav-link {% if title == 'Info' %}active{% endif %}" href="{{ url_for('info') }}"
+                        data-bs-trigger="manual" data-bs-selector="true"
+                        data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
+                            data-bs-title="
+                            <div class='d-flex flex-column gap-1'>
+                                    <div>3/3</div>
+                                    <div>Having some questions?</div>
+                                    <div>Find here some useful info and contacts!</div>
+                                    <div><a id='guide-ok-button-4-p' href='#' class='text-white'>OK</a></div>
+                            </div>"
+                            data-bs-placement="bottom"
+                        >Info</a>
                       </li>
                   </ul>
                 </div>
@@ -125,13 +136,14 @@
                 <div class="form-group row"> -->
                   
                     <div class="col-12"
-                    
+                    id="tooltip-guide-1-p"
                     data-bs-trigger="manual" data-bs-selector="true"
                                             data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
                                                 data-bs-title="
                                                 <div class='d-flex flex-column gap-1'>
                                                         <div>1/3</div>
-                                                        <div>Here you can find all the DHDKey projects</div>
+                                                        <div>Here you can search among all the DHDKey projects</div>
+                                                        <div>You can search by title, description and authors' names</div>
                                                         <div><a id='guide-ok-button-1-p' href='#' class='text-white'>OK</a></div>
                                                 </div>"
                                                 data-bs-placement="bottom"
@@ -145,34 +157,16 @@
                         
                     </div>
 
-                      <div class="d-none col-2 d-inline-flex flex-nowrap justify-content-evenly gap-1 py-1"
-                      id="tooltip-guide-2-p" 
-                      data-bs-trigger="hover focus" data-bs-selector="true"
-                        data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
-                            data-bs-title="
-                            <div class='d-flex flex-column gap-1'>
-                                    <div>2/3</div>
-                                    <div>Here you can upload one of your own!</div>
-                                    <div><a id='guide-ok-button-2-p' href='#' class='text-white'>OK</a></div>
-                            </div>"
-                            data-bs-placement="bottom"
+                      <div class="d-none col-2 d-inline-flex flex-nowrap justify-content-evenly gap-1 py-1 bg-danger">
+
                       
-                      >
                         <a href="#" data-bs-target="#sidebar-left" data-bs-toggle="collapse" onclick="toggleFiltersSidebar()" class="btn btn-secondary rounded-3"><i class="fas fa-filter text-light"></i></a>
+                      
                         
+                      
                         <a href="#" data-bs-target="#sidebar-right" data-bs-toggle="collapse"  class="btn btn-warning rounded-3"><i class="fas fa-chart-pie text-black-50"></i></a>
-                        <a id="tooltip-guide-3-p" class="text-nowrap nav-link {% if title == 'Info' %}active{% endif %}" href="{{ url_for('info') }}"
-                        data-bs-trigger="manual" data-bs-selector="true"
-                        data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
-                            data-bs-title="
-                            <div class='d-flex flex-column gap-1'>
-                                    <div>3/3</div>
-                                    <div>Having some questions?</div>
-                                    <div>Find here some useful info and contacts!</div>
-                                    <div><a id='guide-ok-button-3-p' href='#' class='text-white'>OK</a></div>
-                            </div>"
-                            data-bs-placement="bottom"
-                        >Info</a>
+                      
+                        
                         {% if author %}
                         <a href="{{ url_for('projects') }}" class="btn btn-primary rounded-3"><i class="fas fa-arrow-rotate-left text-light"></i></a>
                         {% endif %}
@@ -189,8 +183,42 @@
           </div>
 
           <div class="col-3 d-flex flex-row flex-nowrap gap-1">
-             <a href="#" data-bs-target="#sidebar-left" data-bs-toggle="collapse" onclick="toggleFiltersSidebar()" class="btn btn-secondary rounded-3"><i class="fas fa-filter text-light"></i></a>
-             <a href="#" data-bs-target="#sidebar-right" data-bs-toggle="collapse"  class="btn btn-warning rounded-3"><i class="fas fa-chart-pie text-black-50"></i></a>
+
+            <span   
+                      id="tooltip-guide-2-p" 
+                      data-bs-trigger="manual" data-bs-selector="true"
+                        data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
+                            data-bs-title="
+                            <div class='d-flex flex-column gap-1'>
+                                    <div>2/3</div>
+                                    <div>Here you can refine your search with filters</div>
+                                    <div>The filters include authors' names, years of publication and the names of the subjects</div>
+                                    <div><a id='guide-ok-button-2-p' href='#' class='text-white'>OK</a></div>
+                            </div>"
+                            data-bs-placement="right"
+                      
+                      >
+                <a href="#" data-bs-target="#sidebar-left" data-bs-toggle="collapse" onclick="toggleFiltersSidebar()" class="btn btn-secondary rounded-3"><i class="fas fa-filter text-light"></i></a>
+             </span>
+
+
+             <span  
+                      id="tooltip-guide-3-p"
+                      data-bs-trigger="manual" data-bs-selector="true"
+                        data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
+                            data-bs-title="
+                            <div class='d-flex flex-column gap-1'>
+                                    <div>3/3</div>
+                                    <div>With this button you can open/close the statistics charts.</div>
+                                    <div>The charts are to help professors and students see the tendencies among the students' projects.</div>
+                                    <div>These charts are aggregated by year and subject</div>
+                                    <div><a id='guide-ok-button-3-p' href='#' class='text-white'>OK</a></div>
+                            </div>"
+                            data-bs-placement="left"
+                      
+                      >
+                  <a href="#" data-bs-target="#sidebar-right" data-bs-toggle="collapse"  class="btn btn-warning rounded-3"><i class="fas fa-chart-pie text-black-50"></i></a>
+             </span>
              {% if author %}
               <a href="{{ url_for('projects') }}" class="btn btn-primary rounded-3"><i class="fas fa-arrow-rotate-left text-light"></i></a>
               {% endif %}
@@ -506,19 +534,22 @@ if (search_input === 'None') {
 
 
 
+        $( window ).on( "load", function() { 
+
+          
 const helpButtonWithTooltipP = document.getElementById('tooltip-help-p')
         var tooltipFromHelpButtonP = bootstrap.Tooltip.getOrCreateInstance(helpButtonWithTooltipP)
-    const projectsLinkWithTooltipP = document.getElementById('search-input')
+    const projectsLinkWithTooltipP = document.getElementById('tooltip-guide-1-p')
         var tooltipFromProjectsLinkP = bootstrap.Tooltip.getOrCreateInstance(projectsLinkWithTooltipP)
     const uploadLinkWithTooltipP = document.getElementById('tooltip-guide-2-p')
         var tooltipFromUploadLinkP = bootstrap.Tooltip.getOrCreateInstance(uploadLinkWithTooltipP)
     const infoLinkWithTooltipP = document.getElementById('tooltip-guide-3-p')
         var tooltipFromInfoLinkP = bootstrap.Tooltip.getOrCreateInstance(infoLinkWithTooltipP)
+        const infoLinkWithTooltipP1 = document.getElementById('tooltip-guide-4-p')
+        var tooltipFromInfoLinkP1 = bootstrap.Tooltip.getOrCreateInstance(infoLinkWithTooltipP1)
 
-
-$(document).ready(function() {
-
-  helpButtonWithTooltipP.addEventListener('shown.bs.tooltip', () => {
+          helpButtonWithTooltipP.addEventListener('shown.bs.tooltip', () => {
+            
             $('#need-help-link-p').click(
                 function(e){
                     tooltipFromHelpButtonP.hide()
@@ -545,10 +576,24 @@ $(document).ready(function() {
         infoLinkWithTooltipP.addEventListener('shown.bs.tooltip', () => {
             $('#guide-ok-button-3-p').click(
                 function(e){
+                    tooltipFromInfoLinkP1.show()
                     tooltipFromInfoLinkP.hide()
                 }
             );
         });
+        infoLinkWithTooltipP1.addEventListener('shown.bs.tooltip', () => {
+            $('#guide-ok-button-4-p').click(
+                function(e){
+                    tooltipFromInfoLinkP1.hide()
+                }
+            );
+        });
+
+
+         })
+$(document).ready(function() {
+
+  
 
 
 
