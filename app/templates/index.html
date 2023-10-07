@@ -43,7 +43,7 @@
                 </div>
               </div>
               
-              <div id="search-options-list"  class="search-options-list col-10 pr-0 card shadow-sm w-50 hidden" style="position: absolute; z-index: 10; overflow-y: scroll; max-height: 20rem;">
+              <div id="search-options-list"  class="search-options-list col-10 pr-0 card shadow-sm w-50 d-none " style="position: absolute; z-index: 10; overflow-y: scroll; max-height: 20rem;">
                 <div class="search-option proj-item-index px-3 py-3 d-flex flex-column gap-2" v-for="item of searchResult.data.items">
                     <p class="mb-0" style="word-wrap: break-word;">
                       <a class="text-dark" style="font-size: 1rem;" v-bind:href= "'{{ url_for('projects', search="") }}' + [[item.title]]">[[ item.title ]]</a>
@@ -265,7 +265,7 @@
 
     function showOptions() {
       if (document.getElementById("search-input").value !== "") {
-        $('#search-options-list').removeClass('hidden')
+        $('#search-options-list').removeClass('d-none')
       }
     }
 
@@ -281,7 +281,7 @@
       && event.target.classList.contains('search-input') === false
       ) {
         
-          $('#search-options-list').addClass('hidden')
+          $('#search-options-list').addClass('d-none')
       }
     });
 
