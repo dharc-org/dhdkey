@@ -96,6 +96,7 @@ def projects():
 
 
 #NO CONFIRMATION MAIL
+'''
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
@@ -113,8 +114,8 @@ def upload():
     else:
         courses_data = data_support.prepare_data(app.config['CSV_PATH'])
         return render_template('upload.html', title='Upload', courses_data=courses_data)
-
 '''
+
 #upload route
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -129,12 +130,37 @@ def upload():
     else:
         courses_data = data_support.prepare_data(app.config['CSV_PATH'])
         return render_template('upload.html', title='Upload', courses_data=courses_data)
+    
+
+#upload route
+@app.route('/update', methods=['GET', 'POST'])
+def update():
+    id = request.args['id']
+    print(id)
+
+    # TODO parse form from project tile
+
+    
+    # data = data_support.retrieve_json(id)
+    print(data)
+    if request.method == 'POST':
+        data = request.form
+        time = datetime.now()
+        jsondata = data_support.parse_form(data, time)
+        mail_support.user_confirmation_email(jsondata)
+        confirmationemail = jsondata["Responsible"]
+        flash(confirmationemail, 'sended')
+        return redirect(url_for('index'))
+    else:
+        courses_data = data_support.prepare_data(app.config['CSV_PATH'])
+        return render_template('update.html', title='Update', courses_data=courses_data, data=data)
 
 
 #confirmation route, token required
 @app.route('/confirmation/<token>', methods=['GET', 'POST'])
 def confirmation(token):
     id = mail_support.verify_token(token)
+    # print(id)
     if not id:
         flash('fail')
         return redirect(url_for('index')) #wrong token
@@ -142,6 +168,7 @@ def confirmation(token):
         flash("already")
         return redirect(url_for('index'))   # expired token
     data = data_support.retrieve_json(id)
+    # print(data)
     if not data:
         flash('expired')
         return redirect(url_for('index'))  # Do not exist
@@ -156,7 +183,7 @@ def confirmation(token):
             data_support.remove_json(id)
         return redirect(url_for('index'))
     return render_template('confirmation_form.html', title='Confirmation', token=token, data=data)
-'''
+
 
 #Admin route
 @app.route('/admin', methods=['GET', 'POST'])
@@ -288,8 +315,8 @@ def handle_http_exception(error):
         'description': error.description,
         'stack_trace': traceback.format_exc()
     }
-    log_msg = f"HTTPException {error_dict}, Description: {error_dict.description}, Stack trace: {error_dict.stack_trace}"
-    logger.log(msg=log_msg)
+    log_msg = f"HTTPException {error_dict}, Description: {error_dict.keys()}, Stack trace: "
+    logger.log(level=0, msg=log_msg)
     response = jsonify(error_dict)
     response.status_code = error.code
     return response

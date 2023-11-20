@@ -348,8 +348,8 @@
               <div class="mb-3 ">
                 <p class="d-flex gap-3"><a class=" text-dark fw-light"
                     v-for="(aut, index) in item.authors"
-                    v-bind:href="'{{ url_for('projects', id="") }}' + [[getId(index,item.ids)]]">[[
-                    aut ]]</a></p>
+                    v-bind:href="'{{ url_for('projects', id="") }}' + [[getId(index,item.ids)]]"
+                    >[[ aut ]]</a></p>
               </div>
               <div>
                 <b>Academic Year:</b> [[ item.year ]]
@@ -371,6 +371,13 @@
                     class="fab fa-github"></i> Github<!-- DH.arc--> Repository
                   <i class="fas fa-external-link-alt fa-xs"></i></a>
               </div>
+              <div>
+                <form v-bind:action="'{{ url_for('update', id="") }}' + [[item.graph]]" method="POST">
+                  <div>
+                      <input type="submit" class="btn btn-warning mb-3" style="width:100%" name="action" value="Modify">
+                  </div>
+                </form>  
+            </div>
 
             </div>
           </div>
@@ -843,7 +850,13 @@ var vm = new Vue({
     }
     
     coursesUnique = rowsData.map(v => v.course).filter(onlyUnique)
-    yearsUnique = rowsData.map(v => v.year).filter(onlyUnique).sort((a,b) => a>b)
+    yearsUnique = rowsData.map(v => v.year).filter(onlyUnique).sort((a,b) => 
+      {
+        if (a>b) return 1;
+        if (a<b) return -1;
+        if (a==b) return 0;
+      }
+    )
     // console.log(rowsData)
     // console.log(coursesUnique)
     // console.log(yearsUnique)

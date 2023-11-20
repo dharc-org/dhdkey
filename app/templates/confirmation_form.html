@@ -24,7 +24,7 @@
         </div>
         <form action="{{ url_for('confirmation', token=token) }}" method="POST">
             <button class="btn btn-success mr-3" name="selection" type="submit" value="confirm" onclick="return confirm('Are you sure to confirm?')">Confirm</button>
-            <button class="btn btn-danger" name="selection" type="submit" value="reject" onclick="return confirm('Are you sure to reject?')">reject</button>
+            <button class="btn btn-danger" name="selection" type="submit" value="reject" onclick="return confirm('Are you sure to cancel?')">Cancel</button>
         </form>
     </div>
         
