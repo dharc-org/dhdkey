@@ -94,6 +94,35 @@ def projects():
             search = request.args['search']
         return render_template('projects.html', title='Projects', data=data, name=None, autdata=autdata, author=False, search=search)
 
+@app.route('/projects/edit/project', methods=['POST'])
+def EditProject():
+    id = request.args['id']
+    if request.method == 'POST':
+        if request.form["action"] == "EDIT":
+            data = [
+                project for project in SPARQL_support.get_available() if project['graph'] == id
+                ][0]
+            print(data)
+            
+            authors_data = []
+            for aut in data['ids']:
+                _, aut_fullname, aut_mail = SPARQL_support.by_author(aut)
+                aut_name, aut_surname = (aut_fullname.split(',')[0], aut_fullname.split(',')[1])
+                authors_data.append(
+                    {
+                        "name": aut_name,
+                        "surname": aut_surname,
+                        "mail": aut_mail
+                    }
+                )
+            
+
+            if len(data):
+                courses_data = data_support.prepare_data(app.config['CSV_PATH'])
+                return render_template('update.html', title='Update', courses_data=courses_data, project_data=data, authors_data=authors_data)
+            # print(request.form)
+
+    return redirect(url_for('projects'))
 
 #NO CONFIRMATION MAIL
 '''
@@ -121,6 +150,7 @@ def upload():
 def upload():
     if request.method == 'POST':
         data = request.form
+        # print(data)
         time = datetime.now()
         jsondata = data_support.parse_form(data, time)
         mail_support.user_confirmation_email(jsondata)
