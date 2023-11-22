@@ -183,7 +183,7 @@ def update_confirmation(token):
         print('already')
         return redirect(url_for('index'))   # expired token
     data = data_support.retrieve_json(id)
-    # print(data)
+    print(data)
     if not data:
         flash('expired')
         print('expired')
@@ -193,9 +193,10 @@ def update_confirmation(token):
         if request.form["selection"] == "confirm":
             print('trying to confirm')
             SPARQL_support.delete_graph(id)
-            rdf_data = rdf_support.ProjectRdf(data)
+            rdf_data = rdf_support.ProjectRdf(data,'ONLINE')
             SPARQL_support.add_data(rdf_data, quad=True)
             data_support.remove_json(id)
+            SPARQL_support.dump()
             print('confirmed')
             flash("confirmed")
         elif request.form["selection"] == "reject":
