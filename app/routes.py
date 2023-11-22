@@ -122,8 +122,11 @@ def update():
         else:
             print('post')
             data = request.form
+            print(data)
             time = datetime.now()
-            jsondata = data_support.parse_form(data, time)
+            print(request.form["graphid"])
+            jsondata = data_support.parse_form(data, time, force_id=request.form["graphid"])
+            print(jsondata)
             mail_support.user_confirmation_email(jsondata)
             confirmationemail = jsondata["Responsible"]
             flash(confirmationemail, 'sended')
@@ -186,15 +189,22 @@ def update_confirmation(token):
     print(data)
     if not data:
         flash('expired')
+        print('here')
         print('expired')
         return redirect(url_for('index'))  # Do not exist
     #confirmation/rejection
     if request.method == 'POST':
+        print('posting form')
         if request.form["selection"] == "confirm":
             print('trying to confirm')
-            SPARQL_support.delete_graph(id)
+            SPARQL_support.delete_graph(data['graph'])
+            # SPARQL_support.dump()
+            print('deleted graph')
+
             rdf_data = rdf_support.ProjectRdf(data,'ONLINE')
             SPARQL_support.add_data(rdf_data, quad=True)
+            SPARQL_support.change_status("ONLINE", id)
+            SPARQL_support.change_all_author(id)
             data_support.remove_json(id)
             SPARQL_support.dump()
             print('confirmed')
@@ -203,7 +213,7 @@ def update_confirmation(token):
             data_support.remove_json(id)
             print('rejected')
         return redirect(url_for('index'))
-    return render_template('confirmation_form.html', title='Confirmation', token=token, data=data)
+    return render_template('confirmation_update_form.html', title='Confirmation', token=token, data=data)
 
 #NO CONFIRMATION MAIL
 '''
