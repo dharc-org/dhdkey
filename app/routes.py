@@ -94,16 +94,16 @@ def projects():
             search = request.args['search']
         return render_template('projects.html', title='Projects', data=data, name=None, autdata=autdata, author=False, search=search)
 
-@app.route('/projects/edit/project', methods=['POST'])
-def EditProject():
-    id = request.args['id']
+
+@app.route('/update', methods=['POST'])
+def update():
     if request.method == 'POST':
         if request.form["action"] == "EDIT":
+            id = request.args['id']
             data = [
                 project for project in SPARQL_support.get_available() if project['graph'] == id
                 ][0]
             print(data)
-            
             authors_data = []
             for aut in data['ids']:
                 _, aut_fullname, aut_mail = SPARQL_support.by_author(aut)
@@ -115,14 +115,94 @@ def EditProject():
                         "mail": aut_mail
                     }
                 )
-            
-
             if len(data):
                 courses_data = data_support.prepare_data(app.config['CSV_PATH'])
+                # return render_template('update.html', title='Update', courses_data=courses_data, project_data=data, authors_data=authors_data)
                 return render_template('update.html', title='Update', courses_data=courses_data, project_data=data, authors_data=authors_data)
-            # print(request.form)
+        else:
+            print('post')
+            data = request.form
+            time = datetime.now()
+            jsondata = data_support.parse_form(data, time)
+            mail_support.user_confirmation_email(jsondata)
+            confirmationemail = jsondata["Responsible"]
+            flash(confirmationemail, 'sended')
+            return redirect(url_for('index'))
 
+                # return redirect(url_for('update', id=id))
+            # print(request.form)
     return redirect(url_for('projects'))
+
+
+#update route
+# @app.route('/update/<id>', methods=['GET', 'POST'])
+# def update(id):
+#     print(id)
+#     if request.method == 'POST':
+#         print('post')
+#         data = request.form
+#         time = datetime.now()
+#         jsondata = data_support.parse_form(data, time)
+#         mail_support.user_confirmation_email(jsondata)
+#         confirmationemail = jsondata["Responsible"]
+#         flash(confirmationemail, 'sended')
+#         return redirect(url_for('index'))
+#     else:
+#         courses_data = data_support.prepare_data(app.config['CSV_PATH'])
+#         data = [
+#                 project for project in SPARQL_support.get_available() if project['graph'] == id
+#                 ][0]
+#         authors_data = []
+#         for aut in data['ids']:
+#             _, aut_fullname, aut_mail = SPARQL_support.by_author(aut)
+#             aut_name, aut_surname = (aut_fullname.split(',')[0], aut_fullname.split(',')[1])
+#             authors_data.append(
+#                 {
+#                     "name": aut_name,
+#                     "surname": aut_surname,
+#                     "mail": aut_mail
+#                 }
+#             )
+#         if len(data):
+#             courses_data = data_support.prepare_data(app.config['CSV_PATH'])
+#         return render_template('update.html', title='Update', courses_data=courses_data, project_data=data, authors_data=authors_data)
+
+
+#confirmation route, token required
+@app.route('/update-confirmation/<token>', methods=['GET', 'POST'])
+def update_confirmation(token):
+    print('here')
+    id = mail_support.verify_token(token)
+    # print(id)
+    if not id:
+        flash('fail')
+        print('fail')
+        return redirect(url_for('index')) #wrong token
+    if SPARQL_support.expired(id):
+        flash("already")
+        print('already')
+        return redirect(url_for('index'))   # expired token
+    data = data_support.retrieve_json(id)
+    # print(data)
+    if not data:
+        flash('expired')
+        print('expired')
+        return redirect(url_for('index'))  # Do not exist
+    #confirmation/rejection
+    if request.method == 'POST':
+        if request.form["selection"] == "confirm":
+            print('trying to confirm')
+            SPARQL_support.delete_graph(id)
+            rdf_data = rdf_support.ProjectRdf(data)
+            SPARQL_support.add_data(rdf_data, quad=True)
+            data_support.remove_json(id)
+            print('confirmed')
+            flash("confirmed")
+        elif request.form["selection"] == "reject":
+            data_support.remove_json(id)
+            print('rejected')
+        return redirect(url_for('index'))
+    return render_template('confirmation_form.html', title='Confirmation', token=token, data=data)
 
 #NO CONFIRMATION MAIL
 '''
@@ -162,28 +242,6 @@ def upload():
         return render_template('upload.html', title='Upload', courses_data=courses_data)
     
 
-#upload route
-@app.route('/update', methods=['GET', 'POST'])
-def update():
-    id = request.args['id']
-    print(id)
-
-    # TODO parse form from project tile
-
-    
-    # data = data_support.retrieve_json(id)
-    print(data)
-    if request.method == 'POST':
-        data = request.form
-        time = datetime.now()
-        jsondata = data_support.parse_form(data, time)
-        mail_support.user_confirmation_email(jsondata)
-        confirmationemail = jsondata["Responsible"]
-        flash(confirmationemail, 'sended')
-        return redirect(url_for('index'))
-    else:
-        courses_data = data_support.prepare_data(app.config['CSV_PATH'])
-        return render_template('update.html', title='Update', courses_data=courses_data, data=data)
 
 
 #confirmation route, token required
