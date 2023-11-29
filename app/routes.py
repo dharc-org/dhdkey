@@ -107,7 +107,8 @@ def update():
             authors_data = []
             for aut in data['ids']:
                 _, aut_fullname, aut_mail = SPARQL_support.by_author(aut)
-                aut_name, aut_surname = (aut_fullname.split(',')[0], aut_fullname.split(',')[1])
+                print(f"full_name: {aut_fullname}")
+                aut_surname, aut_name  = (aut_fullname.split(',')[0].strip(), aut_fullname.split(',')[1].strip())
                 authors_data.append(
                     {
                         "name": aut_name,
@@ -127,7 +128,7 @@ def update():
             print(request.form["graphid"])
             jsondata = data_support.parse_form(data, time, force_id=request.form["graphid"])
             print(jsondata)
-            mail_support.user_confirmation_email(jsondata)
+            mail_support.user_confirmation_email(jsondata, mode='update')
             confirmationemail = jsondata["Responsible"]
             flash(confirmationemail, 'sended')
             return redirect(url_for('index'))
@@ -172,7 +173,7 @@ def update():
 
 
 #confirmation route, token required
-@app.route('/update-confirmation/<token>', methods=['GET', 'POST'])
+@app.route('/confirmation-update/<token>', methods=['GET', 'POST'])
 def update_confirmation(token):
     print('here')
     id = mail_support.verify_token(token)
@@ -184,7 +185,7 @@ def update_confirmation(token):
     if SPARQL_support.expired(id):
         flash("already")
         print('already')
-        return redirect(url_for('index'))   # expired token
+        return redirect(url_for('index'))   #expired token
     data = data_support.retrieve_json(id)
     print(data)
     if not data:
@@ -213,7 +214,16 @@ def update_confirmation(token):
             data_support.remove_json(id)
             print('rejected')
         return redirect(url_for('index'))
-    return render_template('confirmation_update_form.html', title='Confirmation', token=token, data=data)
+    
+    routing_data={
+        'url_for': 'update_confirmation',
+        'title_text': 'Updated Data Summary'
+    }
+    return render_template('confirmation_form.html', 
+                           title='Update confirmation', 
+                           token=token, 
+                           data=data,
+                           routing_data=routing_data)
 
 #NO CONFIRMATION MAIL
 '''
@@ -281,7 +291,11 @@ def confirmation(token):
         elif request.form["selection"] == "reject":
             data_support.remove_json(id)
         return redirect(url_for('index'))
-    return render_template('confirmation_form.html', title='Confirmation', token=token, data=data)
+    routing_data={
+        'url_for': 'confirmation',
+        'title_text': 'Uploaded Data Summary'
+    }
+    return render_template('confirmation_form.html', title='Confirmation', token=token, data=data, routing_data=routing_data)
 
 
 #Admin route
