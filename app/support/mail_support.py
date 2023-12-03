@@ -30,7 +30,7 @@ MODE_TO_FILENAME_DICT = {
 MODE_TO_TOPIC_DICT = {
     'upload': 'DHDKey! Project Confirmation',
     'update': 'DHDKey! Project Update',
-    'delete': 'DHDKey! Project Removal'
+    'delete': 'DHDKey! Project Deletion'
 }
 
 mail = Mail(app)

@@ -98,7 +98,7 @@ def projects():
 @app.route('/update', methods=['POST'])
 def update():
     if request.method == 'POST':
-        if request.form["action"] == "EDIT":
+        if request.form["action"] in ["Edit project", "Delete project"]:
             id = request.args['id']
             data = [
                 project for project in SPARQL_support.get_available() if project['graph'] == id
@@ -118,17 +118,20 @@ def update():
                 )
             if len(data):
                 courses_data = data_support.prepare_data(app.config['CSV_PATH'])
-                # return render_template('update.html', title='Update', courses_data=courses_data, project_data=data, authors_data=authors_data)
-                return render_template('update.html', title='Update', courses_data=courses_data, project_data=data, authors_data=authors_data)
+                if request.form["action"] == 'Edit project':
+                    return render_template('update.html', title='Update', courses_data=courses_data, project_data=data, authors_data=authors_data)
+                elif request.form["action"] == 'Delete project':
+                    return render_template('delete.html', title='Update', courses_data=courses_data, project_data=data, authors_data=authors_data)
         else:
             print('post')
             data = request.form
             print(data)
             time = datetime.now()
             print(request.form["graphid"])
+            request_mode = request.form["mode"]
             jsondata = data_support.parse_form(data, time, force_id=request.form["graphid"])
             print(jsondata)
-            mail_support.user_confirmation_email(jsondata, mode='update')
+            mail_support.user_confirmation_email(jsondata, mode=request_mode)
             confirmationemail = jsondata["Responsible"]
             flash(confirmationemail, 'sended')
             return redirect(url_for('index'))
@@ -218,6 +221,59 @@ def update_confirmation(token):
     routing_data={
         'url_for': 'update_confirmation',
         'title_text': 'Updated Data Summary'
+    }
+    return render_template('confirmation_form.html', 
+                           title='Update confirmation', 
+                           token=token, 
+                           data=data,
+                           routing_data=routing_data)
+
+
+@app.route('/confirmation-delete/<token>', methods=['GET', 'POST'])
+def delete_confirmation(token):
+    print('here')
+    id = mail_support.verify_token(token)
+    # print(id)
+    if not id:
+        flash('fail')
+        print('fail')
+        return redirect(url_for('index')) #wrong token
+    if SPARQL_support.expired(id):
+        flash("already")
+        print('already')
+        return redirect(url_for('index'))   #expired token
+    data = data_support.retrieve_json(id)
+    print(data)
+    if not data:
+        flash('expired')
+        print('here')
+        print('expired')
+        return redirect(url_for('index'))  # Do not exist
+    #confirmation/rejection
+    if request.method == 'POST':
+        print('posting form')
+        if request.form["selection"] == "confirm":
+            print('trying to confirm')
+            SPARQL_support.delete_graph(data['graph'])
+            # SPARQL_support.dump()
+            print('deleted graph')
+
+            # rdf_data = rdf_support.ProjectRdf(data,'ONLINE')
+            # SPARQL_support.add_data(rdf_data, quad=True)
+            # SPARQL_support.change_status("ONLINE", id)
+            # SPARQL_support.change_all_author(id)
+            data_support.remove_json(id)
+            SPARQL_support.dump()
+            print('confirmed')
+            flash("confirmed")
+        elif request.form["selection"] == "reject":
+            data_support.remove_json(id)
+            print('rejected')
+        return redirect(url_for('index'))
+    
+    routing_data={
+        'url_for': 'delete_confirmation',
+        'title_text': 'Data summary of the project to delete'
     }
     return render_template('confirmation_form.html', 
                            title='Update confirmation', 

@@ -3,26 +3,26 @@
 {% block content %}
 
     <div class= "col-md-10 col-xl-7 mx-auto mt-5 mb-4 card" style="z-index: 0;"> 
-        <h2 class="mb-4 mt-4 display-6">Update your project!</h2>
+        <h2 class="mb-4 mt-4 display-6">Delete your project ;_(</h2>
         <form id="projform" autocomplete="off" action="{{ url_for('update') }}" method="POST">
             
             <!--TITLE-->
             <div class="form-group mb-3">
                     <label for="Title">Project title</label>
-                    <input type="text" class="form-control" id="Title" name="Title" required="true" placeholder="Enter your project&#39;s title">
+                    <input readonly="readonly" type="text" class="form-control text-bg-light text-black-50" id="Title" name="Title" required="true" placeholder="Enter your project&#39;s title">
               </div>
 
 
             <!--REPOSITORY LINK-->
             <div class="form-group mb-3">
                 <label for="Repository">Project Github<!-- DH.arc--> repository</label>
-                <input type="url" class="form-control" id="Repository" name="Repository" placeholder="github.com/example">
+                <input readonly="readonly" type="url" class="form-control text-bg-light text-black-50" id="Repository" name="Repository" placeholder="github.com/example">
               </div>
             
             <!--WEBSITE LINK-->
             <div class="form-group mb-3">
                     <label for="Homepage">Project website (optional)</label>
-                    <input type="url" class="form-control" id="Homepage" name="Homepage" placeholder="www.example.com">
+                    <input readonly="readonly" type="url" class="form-control text-bg-light text-black-50" id="Homepage" name="Homepage" placeholder="www.example.com">
                   </div>
 
             
@@ -42,17 +42,21 @@
                             <div class="card-body text-body-secondary bg-white p-3">
                                 <div class="row">
                                     <div class="col-12 authorname">
-                                        <div class="mb-2 form-floating">
-                                            <input type="text" class="form-control" id="Aut[0][Name]"  name="Aut[0][Name]" required="true" placeholder="Enter Author&#39;s Name" >
-                                            <label for="Aut[0][Name]" class="col-sm-4 col-form-label">Author Name</label>
+                                        <!-- <div class="mb-2 form-floating">
+                                            <input readonly="readonly" type="text" class="form-control text-bg-light text-black-50" id="Aut[0][Name]"  name="Aut[0][Name]" required="true" placeholder="Enter Author&#39;s Name" >
+                                            <label for="Aut[0][Name]" class="col-sm-4 col-form-label text-bg-light">Author Name</label>
+                                        </div> -->
+                                        <div class="form-group mb-3 d-flex flex-column align-items-start">
+                                            <label for="Aut[0][Name]" class="text-black">Author name</label>
+                                            <input readonly="readonly" type="text" class="form-control text-bg-light text-black-50" id="Aut[0][Name]" name="Aut[0][Name]" required="true" placeholder="Enter your project&#39;s title">
                                         </div>
-                                        <div class="mb-2 form-floating">
-                                            <input type="text" class="form-control" id="Aut[0][Surname]"  name="Aut[0][Surname]"  required="true" placeholder="Enter Author&#39;s Surname">
-                                            <label for="Aut[0][Surname]"  class="col-sm-4 col-form-label">Author Surname</label>
+                                        <div class="form-group mb-3 d-flex flex-column align-items-start">
+                                            <label for="Aut[0][Surname]" class="text-black">Author Surname</label>
+                                            <input readonly="readonly" type="text" class="form-control text-bg-light text-black-50" id="Aut[0][Surname]"  name="Aut[0][Surname]"  required="true" placeholder="Enter Author&#39;s Surname">
                                         </div>
-                                        <div class="form-floating">
-                                            <input type="mail" class="form-control" id="Aut[0][Mail]" name="Aut[0][Mail]" pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(unibo|studio.unibo)\.it$" placeholder="Enter Author&#39;s Unibo Mail" title="Only Unibo Mail accepted (@unibo.it or @studio.unibo.it)" required="true">
-                                            <label for="Aut[0][Mail]"  class="col-sm-4 col-form-label">UniboMail</label>
+                                        <div class="form-group d-flex flex-column align-items-start">
+                                            <label for="Aut[0][Mail]" class="text-black">UniboMail</label>
+                                            <input readonly="readonly" type="mail" class="form-control text-bg-light text-black-50" id="Aut[0][Mail]" name="Aut[0][Mail]" pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(unibo|studio.unibo)\.it$" placeholder="Enter Author&#39;s Unibo Mail" title="Only Unibo Mail accepted (@unibo.it or @studio.unibo.it)" required="true">
                                         </div>
                                     </div>
                                     
@@ -61,36 +65,30 @@
                             
                         </div>
                     </div>
-                    <div class="card-footer text-body-secondary bg-light">
+                    <!-- <div class="card-footer text-body-secondary bg-light">
                         <button id="add-more" name="add-more" type="button" class="btn btn-primary">Add more</button>
                         
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
             <!--YEAR-->
             <div class="form-group mb-3">
                 <label for="Year">Course academic year</label>
-                <select class="form-control" id="Year" name="Year" required="true">
-                    <option value="" selected>Select course academic year...</option>
-                </select>
+                <input readonly="readonly" type="text" class="form-control text-bg-light text-black-50" id="Year" name="Year">
               </div>
 
             <!--COURSE-->
             <div class="form-group mb-3">
                 <label for="Course">Course title</label>
-                <select class="course-title-select form-control text-body-secondary" id="Course" name="Course" disabled required="true">
-                        <option value="" disabled selected>Select course title...</option>
-                </select>
-                <div class="academic-year-form-text form-text mt-0 pt-0">Select course academic year first</div>
+                <input readonly="readonly" type="text" class="form-control text-bg-light text-black-50" id="Course" name="Course">
             </div>
 
             <!--DESCRIPTION-->
             <div class="form-group mb-3">
                 <label for="Description">Project Description</label>
                 <div class="form-floating text-body-secondary">
-                    <textarea class="form-control" id="Description" name="Description" maxlength = "500"></textarea>
-                    <label for="Description" class="col-form-label"><span id="charcount">500</span> characters left</label> 
+                    <textarea readonly="readonly" class="form-control text-bg-light text-black-50" id="Description" name="Description" maxlength = "500"></textarea>
                 </div>
             </div>
 
@@ -121,7 +119,7 @@
 
             <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
             <input class="btn btn-warning mb-3 d-none"  name="graphid" value="{{project_data.graph}}">
-            <input class="btn btn-warning mb-3 d-none"  name="mode" value="update">
+            <input class="btn btn-warning mb-3 d-none"  name="mode" value="delete">
             <input type="submit" class="btn btn-primary mb-3"  name="action" value="Submit">
 
         </form>
@@ -145,6 +143,8 @@ $(document).ready(function () {
     document.getElementById('Repository').value=project_data['repository']
     document.getElementById('Homepage').value=project_data['homepage']
     document.getElementById('Description').value=project_data['description']    
+    document.getElementById('Year').value=project_data['year']   
+    document.getElementById('Course').value=project_data['course'] 
 
     for (var i = 0; i < courses_data.length; i++) {
         $("#Year").append('<option value="'+ courses_data[i].year +'">'+ courses_data[i].year + '</option>')
@@ -178,17 +178,17 @@ $(document).ready(function () {
                             <div class="card-body text-body-secondary bg-white p-3">\
                                 <div class="row">\
                                     <div class="col-12 pr-0 authorname">\
-                                        <div class="mb-2 form-floating">\
-                                            <input type="text" class="form-control" id="Aut[' + next + '][Name]"  name="Aut[' + next + '][Name]"  required="true" placeholder="Enter Author&#39;s Name">\
-                                            <label for="Aut[' + next + '][Name]" class="col-sm-4 col-form-label">Author Name</label>\
+                                        <div class="form-group mb-3 d-flex flex-column align-items-start">\
+                                            <label for="Aut[' + next + '][Name]" class="text-black">Author Name</label>\
+                                            <input type="text" class="form-control text-bg-light text-black-50" id="Aut[' + next + '][Name]"  name="Aut[' + next + '][Name]"  required="true" placeholder="Enter Author&#39;s Name">\
                                         </div>\
-                                        <div class="mb-2 form-floating">\
-                                            <input type="text" class="form-control" id="Aut[' + next + '][Surname]"  name="Aut[' + next + '][Surname]"  required="true" placeholder="Enter Author&#39;s Surname">\
-                                            <label for="Aut[' + next + '][Surname]"  class="col-sm-4 col-form-label">Author Surname</label>\
+                                        <div class="form-group mb-3 d-flex flex-column align-items-start">\
+                                            <label for="Aut[' + next + '][Surname]"  class="text-black">Author Surname</label>\
+                                            <input type="text" class="form-control text-bg-light text-black-50" id="Aut[' + next + '][Surname]"  name="Aut[' + next + '][Surname]"  required="true" placeholder="Enter Author&#39;s Surname">\
                                         </div>\
-                                        <div class="form-floating">\
-                                            <input type="mail" class="form-control" id="Aut[' + next + '][Mail]" name="Aut[' + next + '][Mail]" pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(unibo|studio.unibo)\.it$" placeholder="Enter Author&#39;s Unibo Mail" title="Only Unibo Mail accepted (@unibo.it or @studio.unibo.it)" required="true">\
-                                            <label for="Aut[' + next + '][Mail]"  class="col-sm-4 col-form-label">UniboMail</label>\
+                                        <div class="form-group mb-3 d-flex flex-column align-items-start">\
+                                            <label for="Aut[' + next + '][Mail]"  class="text-black">UniboMail</label>\
+                                            <input type="mail" class="form-control text-bg-light text-black-50" id="Aut[' + next + '][Mail]" name="Aut[' + next + '][Mail]" pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(unibo|studio.unibo)\.it$" placeholder="Enter Author&#39;s Unibo Mail" title="Only Unibo Mail accepted (@unibo.it or @studio.unibo.it)" required="true">\
                                         </div>\
                                     </div>\
                                 </div>\

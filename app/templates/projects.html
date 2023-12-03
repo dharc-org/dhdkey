@@ -342,47 +342,53 @@
         <div id="projects-list" class="col-md-6 main-projects-section">
           <!-- <div class="breadcrumbs"></div> -->
           <div class="clearfix"></div>
-          <div>
             <div class="proj-item" v-for="item of searchResult.data.items">
               
               <form v-bind:action="'{{ url_for('update', id="") }}' + [[item.graph]]" method="POST">
-                
-              <h3 class="mt-3" style="word-wrap: break-word;">[[ item.title ]]</h3>
-              <div class="mb-3 ">
-                <p class="d-flex gap-3"><a class=" text-dark fw-light"
-                    v-for="(aut, index) in item.authors"
-                    v-bind:href="'{{ url_for('projects', id="") }}' + [[getId(index,item.ids)]]"
-                    >[[ aut ]]</a></p>
-              </div>
-              <div>
-                <b>Academic Year:</b> [[ item.year ]]
-              </div>
-              <div>
-                <b>Course:</b> <a v-bind:href="item.courseurl" target="_blank">[[
-                  item.course ]] <i class="fas fa-external-link-alt fa-xs"></i></a>
-              </div>
-              <div class="mt-3 mb-3">
-                [[ item.description ]]
-              </div>
-              <div class="mb-3">
-                <div v-if="item.homepage">
-                  <a v-bind:href="item.homepage" target="_blank"><i
-                      class="fas fa-arrow-alt-circle-right"></i> Project Website
-                    <i class="fas fa-external-link-alt fa-xs"></i></a>
-                </div>
-                <a v-bind:href="item.repository" target="_blank"><i
-                    class="fab fa-github"></i> Github<!-- DH.arc--> Repository
-                  <i class="fas fa-external-link-alt fa-xs"></i></a>
-              </div>
-              <div>
+                  <div class="d-flex flex-row justify-content-between mt-3">
+                    <h3 style="word-wrap: break-word;">[[ item.title ]]</h3>
+                    
+                    <div class="btn-group">
+                      <button type="button" class="btn dropdown-toggle rounded-3" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><input type="submit" class="btn" name="action" value="Edit project"></a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><input type="submit" class="btn" name="action" value="Delete project"></a></li>
+                      </ul>
+                    </div>
 
-                  <div>
-                      <input type="submit" class="btn btn-warning mb-3" style="width:100%" name="action" value="EDIT">
                   </div>
-              </form>  
-            </div>
+                  <div class="mb-3 ">
+                    <p class="d-flex gap-3"><a class=" text-dark fw-light"
+                        v-for="(aut, index) in item.authors"
+                        v-bind:href="'{{ url_for('projects', id="") }}' + [[getId(index,item.ids)]]"
+                        >[[ aut ]]</a></p>
+                  </div>
+                  <div>
+                    <b>Academic Year:</b> [[ item.year ]]
+                  </div>
+                  <div>
+                    <b>Course:</b> <a v-bind:href="item.courseurl" target="_blank">[[
+                      item.course ]] <i class="fas fa-external-link-alt fa-xs"></i></a>
+                  </div>
+                  <div class="mt-3 mb-3">
+                    [[ item.description ]]
+                  </div>
+                  <div class="mb-3">
+                    <div v-if="item.homepage">
+                      <a v-bind:href="item.homepage" target="_blank"><i
+                          class="fas fa-arrow-alt-circle-right"></i> Project Website
+                      <i class="fas fa-external-link-alt fa-xs"></i></a>
+                    </div>
+                    <a v-bind:href="item.repository" target="_blank"><i
+                        class="fab fa-github"></i> Github<!-- DH.arc--> Repository
+                    <i class="fas fa-external-link-alt fa-xs"></i></a>
+                  </div>
 
-            </div>
+              </form>  
+
           </div>
           <div class="clearfix"></div>
 
@@ -524,6 +530,13 @@
   <script>
     const tooltipTriggerList1 = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList1 = [...tooltipTriggerList1].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl, {
+      trigger: 'focus'
+    }))
+
+    // const popover = new bootstrap.Popover('.popover-dismiss', )
   </script>
   <script>
 

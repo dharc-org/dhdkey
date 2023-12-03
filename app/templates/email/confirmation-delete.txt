@@ -1,0 +1,17 @@
+Dear Student,
+Thank you for your contribution!
+
+To confirm deletion of the project "{{ title }}" click on the following link:
+
+https://projects.dharc.unibo.it/dhdkey/confirmation-delete/{{token}}
+
+If you were not trying to delete any project simply ignore this message.
+
+Sincerely,
+
+
+The DHDKey! Team
+
+
+** THIS IS AN AUTOMATED MESSAGE - PLEASE DO NOT REPLY DIRECTLY TO THIS EMAIL **
+More Info at https://projects.dharc.unibo.it/dhdkey/
