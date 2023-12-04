@@ -98,7 +98,7 @@ def get_all(status):
         cleaned_data.append(prog_dict)
     return cleaned_data
 
-def by_author(aut_id):
+def by_author(aut_id, access='ONLINE'):
     aut = app.config["BASE_URI"] + "person/" + aut_id
     query = '''prefix dct:<http://purl.org/dc/terms/>
         prefix doap:<http://usefulinc.com/ns/doap#>
@@ -108,7 +108,7 @@ def by_author(aut_id):
         (group_concat(distinct ?hpage;separator="<!=;=!>") as ?homepage)
         WHERE{ 
             GRAPH ?g {
-                ?g dct:accessRights 'ONLINE'.
+                ?g dct:accessRights '%s'.
                 ?pro a foaf:Project;
                 dct:title ?title;
                 dct:description ?description;
@@ -125,7 +125,7 @@ def by_author(aut_id):
             BIND(CONCAT(STR( ?surname ), ", ", (?name)) as ?author).
             BIND(CONCAT(STR( ?Autsurname ), ", ", (?Autname)) as ?Firstauthor).
             BIND(REPLACE(strbefore( ?mail, "@" ), "\\\\.", "_") as ?id )
-            }}group by ?g ?title ?description ?year ?course ?courseurl ?repository ?Autmail ?Firstauthor''' % (aut, aut)
+            }}group by ?g ?title ?description ?year ?course ?courseurl ?repository ?Autmail ?Firstauthor''' % (access, aut, aut)
     data = get_query(query)
 
     cleaned_data = []

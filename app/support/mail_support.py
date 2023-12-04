@@ -48,7 +48,16 @@ def user_confirmation_email(data, mode='upload'):
                                          title=title,
                                          token=token)
                 )
+    
 
+def suspended_details_email(data, address):
+    send_email('DHDKey! suspended projects details',
+               recipients=[address],
+               html_body=render_template(f'email/suspended_projects_info.html',
+                                        data=data),
+               text_body=render_template(f'email/suspended_projects_info.txt',
+                                        data=data),
+                )
 
 def send_async_email(app, msg):
     with app.app_context():

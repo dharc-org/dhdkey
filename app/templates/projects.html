@@ -73,8 +73,9 @@
                                     data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-html="true" 
                                         data-bs-title="
                                         <div class='d-flex flex-column gap-1'>
-                                                <div><a  href='#' id='need-help-link-p' class='text-white'>Need help?</a></div>
+                                                <div><a href='#' id='need-help-link-p' class='text-white'>Need help?</a></div>
                                                 <div><a href='mailto:nikolai.gorbachev@studio.unibo.it' class='text-white'>Report a problem</a></div>
+                                                <div><a href='#' id='show-modal-link' class='text-white' type='button' data-bs-toggle='modal' data-bs-target='#myProjectsModal'>My projects' status</a></div>
                                         </div>"
                                         data-bs-template='
                                         <div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>
@@ -91,6 +92,36 @@
                 
             </nav>
       </div>
+
+
+
+
+      <div class="modal fade" id="myProjectsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Check out suspended projects</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form>
+              <div class="modal-body">
+                <div>Here you can request to see all your suspended projects' info via mail.</div>
+                <div>Suspended projects are those you submitted but which haven't been controlled by moderators yet</div>
+                <div class="form-floating">
+                  <input type="mail" class="form-control" id="mail" name="mail" pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(unibo|studio.unibo)\.it$" placeholder="Enter Author&#39;s Unibo Mail" title="Only Unibo Mail accepted (@unibo.it or @studio.unibo.it)" required="true">
+                  <label for="mail" class="col-sm-4 col-form-label">UniboMail</label>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <input type="submit" class="btn btn-primary" name="action" value="Check my projects">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+
       <!-- <div class="shadow-sm py-2 mt-5" style="background-color: rgba(255, 255, 255, 0.9);"> -->
       <div class="mt-4 mb-1">
         <nav class="row my-0 mx-0 navbar navbar-expand navbar-light">
@@ -537,6 +568,8 @@
     }))
 
     // const popover = new bootstrap.Popover('.popover-dismiss', )
+
+    
   </script>
   <script>
 
@@ -559,7 +592,6 @@ if (search_input === 'None') {
 
 
         $( window ).on( "load", function() { 
-
           
 const helpButtonWithTooltipP = document.getElementById('tooltip-help-p')
         var tooltipFromHelpButtonP = bootstrap.Tooltip.getOrCreateInstance(helpButtonWithTooltipP)
@@ -580,6 +612,15 @@ const helpButtonWithTooltipP = document.getElementById('tooltip-help-p')
                     tooltipFromSearchInputP.show()
                 }
             );
+
+            $('#show-modal-link').click(
+              function(e){
+                  let myProjectsModal = new bootstrap.Modal(document.getElementById('myProjectsModal'), {});
+                  myProjectsModal.show();
+                }
+            )
+          
+
         });
         searchInputWihTooltipP.addEventListener('shown.bs.tooltip', () => {
             $('#guide-ok-button-1-p').click(
@@ -662,6 +703,8 @@ $(document).ready(function() {
   }
 
   var author_select_dta = {{ autdata | tojson | safe}};
+  // console.log('here are authors data:')
+  // console.log(author_select_dta)
 
   $('#author_selector').select2({
       data: author_select_dta,

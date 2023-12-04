@@ -22,6 +22,7 @@ from app.support import data_support, mail_support, admin_support, SPARQL_suppor
 from flask import render_template, request, redirect, url_for, flash, Response
 from datetime import datetime
 from flask_login import current_user, login_user, logout_user, login_required
+from urllib import parse
 
 #dump everyday at 3 A.M. (italian time zone)
 #scheduler.add_job(routine_support.routine, 'cron', hour='3')
@@ -71,22 +72,35 @@ def privacy():
 
 @app.route('/projects')
 def projects():
-    try:
+    if 'mail' in request.args.keys():
+        print(request.args['mail'])
+        aut_id = parse.quote(request.args['mail'].split("@")[0].replace(".", "_").lower(), safe="")
+        try:
+            data, autname, autmail = SPARQL_support.by_author(aut_id, 'SUSPENDED')
+        except IndexError as _:
+            flash('not found')
+            return redirect(url_for('index'))
+        print(data)
+        mail_support.suspended_details_email(data, address=request.args['mail'].lower())
+        # confirmationemail = jsondata["Responsible"]
+        flash(request.args['mail'], 'details sent')
+        return redirect(url_for('index'))
+
+    if 'id' in request.args.keys():
         id = request.args['id']
         data, autname, autmail = SPARQL_support.by_author(id)
-        # print('here')
+        print(data)
         autdata = SPARQL_support.find_all_authors()
         name = id
         mail = None
         search = None
         if 'search' in request.args.keys():
             search = request.args['search']
-        # print('here')
         if data:
             name = autname
             mail = autmail
-        return render_template('projects.html', title=name, data=data, name=name, mail= mail, autdata=autdata, author=True, search=search)
-    except:
+        return render_template('projects.html', title=name, data=data, name=name, mail=mail, autdata=autdata, author=True, search=search)
+    else:
         data = SPARQL_support.get_all("ONLINE")
         autdata = SPARQL_support.find_all_authors()
         search=''
@@ -211,8 +225,8 @@ def update_confirmation(token):
             SPARQL_support.change_all_author(id)
             data_support.remove_json(id)
             SPARQL_support.dump()
-            print('confirmed')
-            flash("confirmed")
+            print('updated')
+            flash("updated")
         elif request.form["selection"] == "reject":
             data_support.remove_json(id)
             print('rejected')
@@ -264,8 +278,8 @@ def delete_confirmation(token):
             # SPARQL_support.change_all_author(id)
             data_support.remove_json(id)
             SPARQL_support.dump()
-            print('confirmed')
-            flash("confirmed")
+            print('deleted')
+            flash("deleted")
         elif request.form["selection"] == "reject":
             data_support.remove_json(id)
             print('rejected')

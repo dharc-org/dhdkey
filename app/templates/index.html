@@ -102,15 +102,73 @@
                             <p>Thank you for your contribution!</p>
                           </div>
                           <div class="modal-footer bg-light  justify-content-center">
-                            <button type="button" class="btn btn-secondary btn-success" data-dismiss="modal">OK</button>
+                            <button type="button" class="btn btn-secondary btn-success" data-bs-dismiss="modal">OK</button>
                           </div>
                         </div>
                       </div>
                     </div>
 
                     <script>
-                        $("#upload-modal").modal("show")
+                        // $("#upload-modal").modal("show")
+                        let uploadModal = new bootstrap.Modal(document.getElementById('upload-modal'), {});
+                        uploadModal.show();
+                        // document.getElementById('upload-modal').focus()
                     </script>
+
+
+                    {% elif message == "updated" %}
+                    <div class="modal fade" id="update-modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content bg-transparent">
+                            <div class="modal-header bg-success justify-content-center">
+                                    <i class="fas fa-cloud-upload-alt fa-5x text-light"></i>
+                            </div>
+                            <div class="text-center modal-body bg-light">
+                                    <h4>Project Updated!</h4>
+                              <p>Thank you for your contribution!</p>
+                            </div>
+                            <div class="modal-footer bg-light  justify-content-center">
+                              <button type="button" class="btn btn-secondary btn-success" data-bs-dismiss="modal">OK</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <script>
+                          // $("#upload-modal").modal("show")
+                          let updateModal = new bootstrap.Modal(document.getElementById('update-modal'), {});
+                          updateModal.show();
+                          // document.getElementById('upload-modal').focus()
+                      </script>
+
+
+                      
+                    {% elif message == "deleted" %}
+                    <div class="modal fade" id="delete-modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content bg-transparent">
+                            <div class="modal-header bg-success justify-content-center">
+                                    <i class="fas fa-cloud-upload-alt fa-5x text-light"></i>
+                            </div>
+                            <div class="text-center modal-body bg-light">
+                              <h4>Project Deleted!</h4>
+                              <p>Thank you for your contribution and we hope to see you again soon!</p>
+                            </div>
+                            <div class="modal-footer bg-light  justify-content-center">
+                              <button type="button" class="btn btn-secondary btn-success" data-bs-dismiss="modal">OK</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <script>
+                          // $("#upload-modal").modal("show")
+                          let deleteModal = new bootstrap.Modal(document.getElementById('delete-modal'), {});
+                          deleteModal.show();
+                          // document.getElementById('upload-modal').focus()
+                      </script>
+
+
 
                     {% elif message == "error" %}
                     <div class="modal fade" id="error-modal" tabindex="-1" role="dialog">
@@ -124,14 +182,41 @@
                             <p>Problems were encountered uploading the project, please check the data entered and try again. If the error reoccurs do not hesitate to contact us.</p>
                             </div>
                             <div class="modal-footer bg-light  justify-content-center">
-                            <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">OK</button>
+                            <button type="button" class="btn btn-secondary btn-danger" data-bs-dismiss="modal">OK</button>
                             </div>
                         </div>
                         </div>
                     </div>
-
                     <script>
-                        $("#error-modal").modal("show")
+                        // $("#error-modal").modal("show")
+                        // document.getElementById('error-modal').focus()
+                        let errorModal = new bootstrap.Modal(document.getElementById('error-modal'), {});
+                        errorModal.show();
+                    </script>
+
+                    {% elif message == "not found" %}
+                    <div class="modal fade" id="error-modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content bg-transparent">
+                            <div class="modal-header bg-danger justify-content-center">
+                                    <i class="fas fa-exclamation-triangle fa-5x text-light"></i>
+                            </div>
+                            <div class="modal-body bg-light">
+                                    <h4 class="text-center">No suspended projects found</h4>
+                            <p>Seems like no projects were submitted with the email you mentioned.</p>
+                            <p>Try searching on the website or <a href='mailto:nikolai.gorbachev@studio.unibo.it'>contact us</a></p>
+                            </div>
+                            <div class="modal-footer bg-light  justify-content-center">
+                            <button type="button" class="btn btn-secondary btn-danger" data-bs-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <script>
+                        // $("#error-modal").modal("show")
+                        // document.getElementById('error-modal').focus()
+                        errorModal = new bootstrap.Modal(document.getElementById('error-modal'), {});
+                        errorModal.show();
                     </script>
 
 
@@ -147,14 +232,17 @@
                             <p>Your confirmation token expired. If you haven't confirmed the project already, you need to submit the project data again.</p>
                           </div>
                           <div class="modal-footer bg-light  justify-content-center">
-                            <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">OK</button>
+                            <button type="button" class="btn btn-secondary btn-danger" data-bs-dismiss="modal">OK</button>
                           </div>
                         </div>
                       </div>
                     </div>
 
                     <script>
-                        $("#fail-modal").modal("show")
+                        // $("#fail-modal").modal("show")
+                        // document.getElementById('fail-modal').focus()
+                        let failModal = new bootstrap.Modal(document.getElementById('fail-modal'), {});
+                        failModal.show();
                   </script>
 
                     {% elif message == "fail" %}
@@ -169,14 +257,17 @@
                             <p>Wrong Confirmation Token.</p>
                             </div>
                             <div class="modal-footer bg-light  justify-content-center">
-                            <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">OK</button>
+                            <button type="button" class="btn btn-secondary btn-danger" data-bs-dismiss="modal">OK</button>
                             </div>
                         </div>
                         </div>
                     </div>
 
                     <script>
-                        $("#fail-modal").modal("show")
+                        // $("#fail-modal").modal("show")
+                        // document.getElementById('fail-modal').focus()
+                        errorModal = new bootstrap.Modal(document.getElementById('error-modal'), {});
+                        errorModal.show();
                     </script>
 
 
@@ -192,14 +283,17 @@
                             <p>Thank you for your contribution!</p>
                           </div>
                           <div class="modal-footer bg-light  justify-content-center">
-                            <button type="button" class="btn btn-secondary btn-success" data-dismiss="modal">OK</button>
+                            <button type="button" class="btn btn-secondary btn-success" data-bs-dismiss="modal">OK</button>
                           </div>
                         </div>
                       </div>
                     </div>
 
                     <script>
-                        $("#upload-modal").modal("show")
+                        // $("#upload-modal").modal("show")
+                        // document.getElementById('upload-modal').focus()
+                        uploadModal = new bootstrap.Modal(document.getElementById('upload-modal'), {});
+                        uploadModal.show();
                     </script>
 
 
@@ -211,20 +305,51 @@
                                   <i class="fas fa-envelope fa-5x text-light"></i>
                           </div>
                           <div class="modal-body bg-light">
-                                  <h4 class="text-center">Awaiting Confirmation</h4>
-                            <p>Thank you for your contribution! A confirmation email has been sent to the address: {{message}}<br>
-                              You have 24 hours to confirm your project data.</p>
+                            <h4 class="text-center">Awaiting Confirmation</h4>
+                            <p>Thank you for your contribution!</p>
+                            <p>A confirmation email has been sent to the address: {{message}}</p>
+                            <p>The email will expire after 24 hours</p>
                           </div>
                           <div class="modal-footer bg-light  justify-content-center">
-                            <button type="button" class="btn btn-secondary btn-warning" data-dismiss="modal">OK</button>
+                            <button type="button" class="btn btn-secondary btn-warning" data-bs-dismiss="modal">OK</button>
                           </div>
                         </div>
                       </div>
                     </div>
 
                     <script>
-                        $("#upload-modal").modal("show")
+                        // $("#upload-modal").modal("show")
+                        // document.getElementById('upload-modal').focus()
+                        uploadModal = new bootstrap.Modal(document.getElementById('upload-modal'), {});
+                        uploadModal.show();
                     </script>
+
+                
+                    {% elif category == "details sent" %}
+                    <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content bg-transparent">
+                                <div class="modal-header bg-warning justify-content-center">
+                                        <i class="fas fa-envelope fa-5x text-light"></i>
+                                </div>
+                                <div class="modal-body bg-light">
+                                  <h4 class="text-center">Suspended projects' details sent!</h4>
+                                  <p>Thank you for your contribution!</p>
+                                  <p>We've sent an email with the details on all your projects that haven't passed the moderation yet: {{message}}</p>
+                                </div>
+                                <div class="modal-footer bg-light  justify-content-center">
+                                  <button type="button" class="btn btn-secondary btn-warning" data-bs-dismiss="modal">OK</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <script>
+                              // $("#upload-modal").modal("show")
+                              // document.getElementById('upload-modal').focus()
+                              uploadModal = new bootstrap.Modal(document.getElementById('upload-modal'), {});
+                              uploadModal.show();
+                          </script>
 
               {% elif message == "login" %}
               <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog">
@@ -237,13 +362,18 @@
                                   <h4 class="text-center">Login Required</h4>
                           </div>
                           <div class="modal-footer bg-light  justify-content-center">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
                           </div>
                       </div>
                       </div>
                   </div>
 
-                  <script> $("#upload-modal").modal("show") </script>
+                  <script> 
+                    // $("#upload-modal").modal("show") 
+                    // document.getElementById('upload-modal').focus()
+                    uploadModal = new bootstrap.Modal(document.getElementById('upload-modal'), {});
+                    uploadModal.show();
+                  </script>
 
               {% endif %}                                
             {% endfor %}
