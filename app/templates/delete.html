@@ -16,13 +16,13 @@
             <!--REPOSITORY LINK-->
             <div class="form-group mb-3">
                 <label for="Repository">Project Github<!-- DH.arc--> repository</label>
-                <input readonly="readonly" type="url" class="form-control text-bg-light text-black-50" id="Repository" name="Repository" placeholder="github.com/example">
+                <input readonly="readonly" type="text" class="form-control text-bg-light text-black-50" id="Repository" name="Repository" placeholder="github.com/example">
               </div>
             
             <!--WEBSITE LINK-->
             <div class="form-group mb-3">
                     <label for="Homepage">Project website (optional)</label>
-                    <input readonly="readonly" type="url" class="form-control text-bg-light text-black-50" id="Homepage" name="Homepage" placeholder="www.example.com">
+                    <input readonly="readonly" type="text" class="form-control text-bg-light text-black-50" id="Homepage" name="Homepage" placeholder="www.example.com">
                   </div>
 
             
@@ -138,7 +138,7 @@ $(document).ready(function () {
     // project_data_str = project_data_str.replace(/u?'(.+?)': u?'(.+?)'/g, '"$1":"$2"').replace(/&quot;/ig,'"').replace('\\"','"');
     // var project_data = JSON.parse(project_data_str);
 
-    console.log(project_data);
+    // console.log(project_data);
     document.getElementById('Title').value=project_data['title']
     document.getElementById('Repository').value=project_data['repository']
     document.getElementById('Homepage').value=project_data['homepage']
@@ -149,7 +149,7 @@ $(document).ready(function () {
     for (var i = 0; i < courses_data.length; i++) {
         $("#Year").append('<option value="'+ courses_data[i].year +'">'+ courses_data[i].year + '</option>')
         }
-    console.log(authors_data)
+    // console.log(authors_data)
     for (var i = 0; i < authors_data.length; i++) {
         $("#Responsible").append('<option value="'+ authors_data[i].mail +'">'+ authors_data[i].mail + '</option>')
     }

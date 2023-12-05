@@ -16,13 +16,13 @@
             <!--REPOSITORY LINK-->
             <div class="form-group mb-3">
                 <label for="Repository">Project Github<!-- DH.arc--> repository</label>
-                <input type="url" class="form-control" id="Repository" name="Repository" placeholder="github.com/example">
+                <input type="text" required="true" class="form-control" id="Repository" name="Repository" placeholder="github.com/example" pattern="[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)" title="Make sure to provide a valid URL">
               </div>
             
             <!--WEBSITE LINK-->
             <div class="form-group mb-3">
                     <label for="Homepage">Project website (optional)</label>
-                    <input type="url" class="form-control" id="Homepage" name="Homepage" placeholder="www.example.com">
+                    <input type="text" class="form-control" id="Homepage" name="Homepage" placeholder="example.com" pattern="[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)" title="Make sure to provide a valid URL">
                   </div>
 
             
@@ -140,7 +140,7 @@ $(document).ready(function () {
     // project_data_str = project_data_str.replace(/u?'(.+?)': u?'(.+?)'/g, '"$1":"$2"').replace(/&quot;/ig,'"').replace('\\"','"');
     // var project_data = JSON.parse(project_data_str);
 
-    console.log(project_data);
+    // console.log(project_data);
     document.getElementById('Title').value=project_data['title']
     document.getElementById('Repository').value=project_data['repository']
     document.getElementById('Homepage').value=project_data['homepage']
@@ -149,7 +149,7 @@ $(document).ready(function () {
     for (var i = 0; i < courses_data.length; i++) {
         $("#Year").append('<option value="'+ courses_data[i].year +'">'+ courses_data[i].year + '</option>')
         }
-    console.log(authors_data)
+    // console.log(authors_data)
     for (var i = 0; i < authors_data.length; i++) {
         $("#Responsible").append('<option value="'+ authors_data[i].mail +'">'+ authors_data[i].mail + '</option>')
     }
@@ -214,6 +214,16 @@ $(document).ready(function () {
         });
     }
 
+    $('#projform').submit(function() {
+        var repo = $('#Repository');
+        if ((repo.val().match(/^http:\/\//) == null) && (repo.val().match(/^https:\/\//) == null)) {
+            repo.val("https://" + repo.val());
+        }
+        var home = $('#Homepage');
+        if ((home.val().match(/^http:\/\//) == null) && (home.val().match(/^https:\/\//) == null) && (home.val().length > 0)) {
+            home.val("https://" + home.val());
+        }
+    });
     
 
     $("#add-more").click(function(e){

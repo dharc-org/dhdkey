@@ -43,12 +43,7 @@
                       </li>
                   </ul>
                 </div>
-
-                
                 <div style="width: 1rem; height: 100%;"></div>
-                
-
-
                 <div class="row pt-1 gap-0 col-lg-7 col-xl-8 col-md-6">
                   <div class="my-0 mr-0 col-11 col-md-7 reverse d-none pr-0">
                     <input id="search-input" type="text" v-model="query" oninput="processChange()"
@@ -57,9 +52,7 @@
                   <div class="ml-0 col-3 d-none d-md-flex py-1 flex-row flex-nowrap gap-1 justify-content-start pl-0">
                     <a href="#" data-bs-target="#sidebar-left" data-bs-toggle="collapse"  onclick="toggleFiltersSidebar()" class="btn btn-secondary rounded-3 reverse d-none pl-0 ml-0"><i class="fas fa-filter text-light"></i></a>
                     <a href="#" data-bs-target="#sidebar-right" data-bs-toggle="collapse" class="btn btn-warning rounded-3 reverse d-none"><i class="fas fa-chart-pie text-black-50"></i></a>
-                    {% if author %}
                     <a href="{{ url_for('projects') }}" class="btn btn-primary rounded-3 reverse d-none"><i class="fas fa-arrow-rotate-left text-light"></i></a>
-                    {% endif %}
                   </div>
                 </div>
 
@@ -83,17 +76,9 @@
                                         data-bs-placement="bottom"
                                         class="text-dark text-decoration-none" style="cursor: pointer;"><i class="far fa-question-circle bg-white text-secondary icon fa-2x"></i></div>
 
-
-
-                
                 {% endif %}
-
-                
-                
             </nav>
       </div>
-
-
 
 
       <div class="modal fade" id="myProjectsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -105,14 +90,14 @@
             </div>
             <form>
               <div class="modal-body">
-                <div>Here you can request to see all your suspended projects' info via mail.</div>
-                <div>Suspended projects are those you submitted but which haven't been controlled by moderators yet</div>
+                <div class="mb-3">Here you can request to see all your projects that were uploaded but not controlled by the moderators yet</div>
+                <div class="mb-3">We will send you the project' info on your email address:</div>
                 <div class="form-floating">
                   <input type="mail" class="form-control" id="mail" name="mail" pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(unibo|studio.unibo)\.it$" placeholder="Enter Author&#39;s Unibo Mail" title="Only Unibo Mail accepted (@unibo.it or @studio.unibo.it)" required="true">
                   <label for="mail" class="col-sm-4 col-form-label">UniboMail</label>
                 </div>
               </div>
-              <div class="modal-footer">
+              <div class="modal-footer d-flex flex-row justify-content-start">
                 <input type="submit" class="btn btn-primary" name="action" value="Check my projects">
               </div>
             </form>
@@ -120,54 +105,24 @@
         </div>
       </div>
 
-
-
-      <!-- <div class="shadow-sm py-2 mt-5" style="background-color: rgba(255, 255, 255, 0.9);"> -->
       <div class="mt-4 mb-1">
         <nav class="row my-0 mx-0 navbar navbar-expand navbar-light">
 
           <div class="col-3 py-0">
             
-            
-            <!-- <nav aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                {% if author %}
-                <li class="breadcrumb-item {% if not author %} active  {% endif %}"><a
-                    href="{{ url_for('projects') }}">All Projects</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ name }}</li>
-                {% else %}
-                <li class="breadcrumb-item active" aria-current="page">All Projects</li>
-                {% endif %}
-              </ol>
-            </nav> -->
-              
-
-          
             {% if author %}
             <h4 class="mb-0">
               <a href="mailto:{{ mail }}" style=" text-decoration: none;" class="text-dark">
                 {{ name }} 
-                <!-- <i class="far fa-envelope text-dark"></i> -->
               </a>
             </h4>
             {% endif %}
             <h5 class="text-secondary mt-0">[[ searchResult.pagination.total ]] Item<span
               v-if="searchResult.pagination.total != 1">s</span> Found</h5>
-<!--             
-            <h5 class="d-none d-md-block" style="word-break:break-all;"><a
-                href="mailto:{{ mail }}" style="word-break:break-all;">{{ mail }}</a></h5>
-            <h5 class="d-block d-md-none" style="word-break:break-all;"><a
-                href="mailto:{{ mail }}" style="word-break:break-all;">{{ mail }}</a></h5> -->
-                
-
-            
             
           </div>
 
           <div class="col-6 my-0 px-0 row">
-            <!-- <div id="navbar" > -->
-              <!-- <form class="navbar-form navbar-left">
-                <div class="form-group row"> -->
                   
                     <div class="col-12"
                     id="tooltip-guide-1-p"
@@ -190,30 +145,6 @@
 
                         
                     </div>
-
-                      <div class="d-none col-2 d-inline-flex flex-nowrap justify-content-evenly gap-1 py-1 bg-danger">
-
-                      
-                        <a href="#" data-bs-target="#sidebar-left" data-bs-toggle="collapse" onclick="toggleFiltersSidebar()" class="btn btn-secondary rounded-3"><i class="fas fa-filter text-light"></i></a>
-                      
-                        
-                      
-                        <a href="#" data-bs-target="#sidebar-right" data-bs-toggle="collapse"  class="btn btn-warning rounded-3"><i class="fas fa-chart-pie text-black-50"></i></a>
-                      
-                        
-                        {% if author %}
-                        <a href="{{ url_for('projects') }}" class="btn btn-primary rounded-3"><i class="fas fa-arrow-rotate-left text-light"></i></a>
-                        {% endif %}
-                      </div>
-
-                  <!-- <div class="col-2 pl-0">
-                    <button type="submit" class="btn btn-primary"
-                      style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important"><i
-                        class="fas fa-search"></i></button>
-                  </div> -->
-                <!-- </div>
-              </form>
-            </div> -->
           </div>
 
           <div class="col-3 d-flex flex-row flex-nowrap gap-1">
@@ -253,60 +184,33 @@
                       >
                   <a href="#" data-bs-target="#sidebar-right" data-bs-toggle="collapse"  class="btn btn-warning rounded-3"><i class="fas fa-chart-pie text-black-50"></i></a>
              </span>
-             {% if author %}
               <a href="{{ url_for('projects') }}" class="btn btn-primary rounded-3"><i class="fas fa-arrow-rotate-left text-light"></i></a>
-              {% endif %}
-            <!-- <div class="pagination-bar float-right">
-              <paginate
-                v-model="page"
-                :page-count="Math.ceil(searchResult.pagination.total / searchResult.pagination.per_page)"
-                :page-range="3"
-                :click-handler="goToPage"
-                :prev-text="'Prev'"
-                :next-text="'Next'"
-                :container-class="'pagination'"
-                :page-class="'page-item'"
-                :page-link-class="'page-link'"
-                :prev-class="'page-item'"
-                :next-class="'page-item'"
-                :prev-link-class="'page-link'"
-                :next-link-class="'page-link'"
-                :active-class="'active'">
-              </paginate>
-            </div> -->
+            
+            
 
           </div>
         </nav>
         
       </div>
 
-      <!-- <button type="button"
-        class="btn-block btn btn-secondary d-block d-sm-block  text-left mt-3"
-        data-toggle="modal" data-target="#modal_filter">
-        Refine Search<i class="pt-1 float-right fas fa-tasks"></i>
-      </button> -->
-
      
 
       <div class="projects-page-main-content row d-flex justify-content-center mb-3">
-
-
-        <!-- <div class="modal" id="modal_filter" tabindex="-1" role="dialog"
-          data-backdrop="static">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"><i
-                    class="fas fa-tasks"></i> Refine Search</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                  aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
+            <div id="sidebar-left"  class="col-md-3 col-10 ml-0 collapse collapse-horizontal vh-100">
+              <form class="d-md-none d-block">
+                <div class="form-group px-0">
+                    <select id="author_selector"
+                      class="form-control form-control-lg rounded" name="id" required 
+                      style="width:100%; height:100%;">
+                      <option value></option>
+                    </select>
+                </div>
+              </form>
+              <div class="d-block d-md-none">
                 <div v-for="facet in searchResult.data.aggregations">
-                  <h5 style="margin-bottom: 5px;"><strong
-                      style="color: #337ab7;">[[ facet.title ]]</strong></h5>
+                  <h5 style="margin-bottom: 5px;"><strong style="color: #337ab7;">[[
+                      facet.title ]]</strong></h5>
+
                   <ul class="browse-list list-unstyled long-list"
                     style="margin-bottom: 0;">
                     <li v-for="bucket in facet.buckets">
@@ -323,52 +227,41 @@
                   </ul>
                 </div>
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary"
-                  data-dismiss="modal">Close</button>
-              </div>
-            </div></div></div> -->
-
-            <div id="sidebar-left"  class="col-3 ml-0 collapse collapse-horizontal vh-100 bg-white">
             </div>
-        <div id="sidebar-left-fixed"  class="position-fixed col-3 ml-0 bg-white d-none border-end shadow-sm" style="z-index: 2; padding-top: 5rem; padding-bottom: 5rem; bottom: 0; top: 0; overflow-y:scroll; left: 0;">
-            <form>
-              <div class="form-group px-0">
-                  <select id="author_selector"
-                    class="form-control form-control-lg rounded" name="id" required 
-                    style="width:100%; height:100%;">
-                    <option value></option>
-                  </select>
-                <!-- <div class="col-2 pl-0">
-                  <button type="submit" class="btn btn-primary"
-                    style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important"><i
-                      class="fas fa-search"></i></button>
 
-                </div> -->
-              </div>
-            </form>
-            <div class="d-block">
-              <div v-for="facet in searchResult.data.aggregations">
-                <h5 style="margin-bottom: 5px;"><strong style="color: #337ab7;">[[
-                    facet.title ]]</strong></h5>
 
-                <ul class="browse-list list-unstyled long-list"
-                  style="margin-bottom: 0;">
-                  <li v-for="bucket in facet.buckets">
-                    <div class="checkbox block"
-                      style="margin-top: 0; margin-bottom: 0;">
-                      <label>
-                        <input class="checkbox" @click="goToPage(1)"
-                          type="checkbox" v-model="filters[facet.name]"
-                          v-bind:value="bucket.key">
-                        [[ bucket.key ]] ([[ bucket.doc_count ]])
-                      </label>
-                    </div>
-                  </li>
-                </ul>
+            <div id="sidebar-left-fixed"  class="d-none d-md-block position-fixed col-3 ml-0 bg-white border-end shadow-sm" style="z-index: 2; padding-top: 5rem; padding-bottom: 5rem; bottom: 0; top: 0; overflow-y:scroll; left: 0;">
+              <form>
+                <div class="form-group px-0">
+                    <select id="author_selector_fixed"
+                      class="form-control form-control-lg rounded" name="id" required 
+                      style="width:100%; height:100%;">
+                      <option value></option>
+                    </select>
+                </div>
+              </form>
+              <div class="d-block">
+                <div v-for="facet in searchResult.data.aggregations">
+                  <h5 style="margin-bottom: 5px;"><strong style="color: #337ab7;">[[
+                      facet.title ]]</strong></h5>
+
+                  <ul class="browse-list list-unstyled long-list"
+                    style="margin-bottom: 0;">
+                    <li v-for="bucket in facet.buckets">
+                      <div class="checkbox block"
+                        style="margin-top: 0; margin-bottom: 0;">
+                        <label>
+                          <input class="checkbox" @click="goToPage(1)"
+                            type="checkbox" v-model="filters[facet.name]"
+                            v-bind:value="bucket.key">
+                          [[ bucket.key ]] ([[ bucket.doc_count ]])
+                        </label>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </div>
-        </div>
+          </div>
 
         <div id="projects-list" class="col-md-6 main-projects-section">
           <!-- <div class="breadcrumbs"></div> -->
@@ -443,32 +336,8 @@
             </paginate>
           </div>
         </div>
-
-        <!-- <div id="sidebar-right" class="col-3 collapse collapse-horizontal show border-start px-0 position-fixed bg-white vh-100" style="z-index: 2; right: 0; top: 0; padding-top: 5rem;"> -->
-          <div id="sidebar-right" class="col-3 collapse collapse-horizontal show px-0">
+          <div id="sidebar-right" class="col-10 col-md-3 collapse collapse-horizontal show px-0">
             <div class="d-flex flex-column justify-content-start align-items-center gap-3  " style="height: 100%; min-height: fit-content;" >
-
-            <!-- <div class="mb-2">
-              <canvas id="myBarChart"></canvas>
-            </div>
-
-            <div>
-              <canvas id="myChart"></canvas>
-            </div>
-
-            
-            
-            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-              <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked onclick="updateChartAggregations('course')">
-              <label class="btn btn-outline-primary" for="btnradio1">Course</label>
-              <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" onclick="updateChartAggregations('year')">
-              <label class="btn btn-outline-primary" for="btnradio2">Year</label>
-            </div> -->
-
-
-
-
-
             <div id="carouselExample" class="carousel carousel-dark slide" data-bs-interval="false">
               <div class="carousel-inner">
                 <div class="carousel-item active">
@@ -497,57 +366,12 @@
                 <span class="visually-hidden">Next</span>
               </button>
             </div>
-
-
-
-
-            
-
           </div>
         </div>
-
-        <div class="clearfix"></div>
-      </div>
-
-      
-
-    </div>
-
-
-    <!-- <div class="container-fluid">
-        <div class="row flex-nowrap">
-            <div class="col-auto px-0">
-                <div id="sidebar" class="collapse collapse-horizontal show border-end">
-                    <div id="sidebar-nav" style="width: 160px;" class="list-group border-0 rounded-0 text-sm-start min-vh-100">
-                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-bootstrap"></i> <span>Item</span> </a>
-                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-film"></i> <span>Item</span></a>
-                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-heart"></i> <span>Item</span></a>
-                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-bricks"></i> <span>Item</span></a>
-                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-clock"></i> <span>Item</span></a>
-                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-archive"></i> <span>Item</span></a>
-                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-gear"></i> <span>Item</span></a>
-                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-calendar"></i> <span>Item</span></a>
-                        <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-envelope"></i> <span>Item</span></a>
-                    </div>
-                </div>
-            </div>
-            <main class="col ps-md-2 pt-2">
-                <a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse" class="border rounded-3 p-1 text-decoration-none"><i class="bi bi-list bi-lg py-2 p-1"></i> Menu</a>
-                <div class="page-header pt-3">
-                    <h2>Bootstrap 5 Sidebar Menu - Simple</h2>
-                </div>
-                <p class="lead">A offcanvas "push" vertical nav menu example.</p>
-                <hr>
-                <div class="row">
-                    <div class="col-12">
-                        <p>This is a simple collapsing sidebar menu for Bootstrap 5. Unlike the Offcanvas component that overlays the content, this sidebar will "push" the content. Sriracha biodiesel taxidermy organic post-ironic, Intelligentsia salvia mustache 90's code editing brunch. Butcher polaroid VHS art party, hashtag Brooklyn deep v PBR narwhal sustainable mixtape swag wolf squid tote bag. Tote bag cronut semiotics, raw denim deep v taxidermy messenger bag. Tofu YOLO Etsy, direct trade ethical Odd Future jean shorts paleo. Forage Shoreditch tousled aesthetic irony, street art organic Bushwick artisan cliche semiotics ugh synth chillwave meditation. Shabby chic lomo plaid vinyl chambray Vice. Vice sustainable cardigan, Williamsburg master cleanse hella DIY 90's blog.</p>
-                        <p>Ethical Kickstarter PBR asymmetrical lo-fi. Dreamcatcher street art Carles, stumptown gluten-free Kickstarter artisan Wes Anderson wolf pug. Godard sustainable you probably haven't heard of them, vegan farm-to-table Williamsburg slow-carb readymade disrupt deep v. Meggings seitan Wes Anderson semiotics, cliche American Apparel whatever. Helvetica cray plaid, vegan brunch Banksy leggings +1 direct trade. Wayfarers codeply PBR selfies. Banh mi McSweeney's Shoreditch selfies, forage fingerstache food truck occupy YOLO Pitchfork fixie iPhone fanny pack art party Portland.</p>
-                    </div>
-                </div>
-            </main>
+        <div class="clearfix">
         </div>
-    </div> -->
-
+      </div>
+    </div>
   </div>
 
   <script src="https://unpkg.com/itemsjs@1.0.37/dist/itemsjs.min.js"></script>
@@ -573,27 +397,24 @@
   </script>
   <script>
 
-rows = {{ data | tojson | safe}};
-var rowsData = rows
-var coursesUnique = []
-var yearsUnique = []
-function onlyUnique(value, index, array) {
-        return array.indexOf(value) === index;
-      }
+  rows = {{ data | tojson | safe}};
+  var rowsData = rows
+  var coursesUnique = []
+  var yearsUnique = []
+  function onlyUnique(value, index, array) {
+          return array.indexOf(value) === index;
+        }
 
-      
+        
 
-search_input = '{{ search | safe }}';
-if (search_input === 'None') {
-  search_input = null
-}
+  search_input = '{{ search | safe }}';
+  if (search_input === 'None') {
+    search_input = null
+  }
 
-
-
-
-        $( window ).on( "load", function() { 
+  $( window ).on( "load", function() { 
           
-const helpButtonWithTooltipP = document.getElementById('tooltip-help-p')
+    const helpButtonWithTooltipP = document.getElementById('tooltip-help-p')
         var tooltipFromHelpButtonP = bootstrap.Tooltip.getOrCreateInstance(helpButtonWithTooltipP)
     const searchInputWihTooltipP = document.getElementById('tooltip-guide-1-p')
         var tooltipFromSearchInputP = bootstrap.Tooltip.getOrCreateInstance(searchInputWihTooltipP)
@@ -660,13 +481,6 @@ $(document).ready(function() {
 
   
 
-
-
-
-
-
-
-
   var body = document.body,
     html = document.documentElement;
   var height = Math.max( body.scrollHeight, body.offsetHeight, 
@@ -677,11 +491,6 @@ $(document).ready(function() {
       $('.reverse').css('transform', 'translate3d(0,' + (Math.min(0, -100 + $(this).scrollTop()*2)) + 'px, 0)'); 
       
 
-      // console.log(Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - $(this).scrollTop())
-
-      
-      // $('#sidebar-left-fixed').css('bottom', ''+(Math.min(0, -100 + $(this).scrollTop()*2))+'px')
-
       if (Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - $(this).scrollTop() - 10 <= window.innerHeight) {
         
         $('#sidebar-left-fixed').css('bottom', '5rem')
@@ -690,10 +499,6 @@ $(document).ready(function() {
       }
 
       
-      // if (($(this).scrollTop() > 0) && $(this).scrollTop() < height) { 
-      //   $('.charts-container').addClass('fixed')
-      // } else {
-      // }
     }).scroll();
 
 
@@ -707,6 +512,13 @@ $(document).ready(function() {
   // console.log(author_select_dta)
 
   $('#author_selector').select2({
+      data: author_select_dta,
+      placeholder: "Select an Author",
+      allowClear: true,
+      templateResult: formatAut
+  });
+
+  $('#author_selector_fixed').select2({
       data: author_select_dta,
       placeholder: "Select an Author",
       allowClear: true,
@@ -727,22 +539,15 @@ $(document).ready(function() {
     $(this).parents('form').submit();
   });
 
+  $('#author_selector_fixed').on('select2:select', function (e) {
+    $(this).parents('form').submit();
+  });
+
 });
 
 
 function toggleFiltersSidebar() {
-
   
-  
-  $('#sidebar-left').removeClass('d-none')
-
-  if ($('#sidebar-right').hasClass('show') == false) {
-    $('#sidebar-left').addClass('d-none')
-  }
-
-
-
-  $('#sidebar-left-fixed').removeClass('d-none')
   $('#sidebar-left-fixed').toggleClass('shown')
 
   if ($('#sidebar-left-fixed').hasClass('shown')) {
@@ -751,45 +556,6 @@ function toggleFiltersSidebar() {
     $('#sidebar-left-fixed').addClass('hidden')
   }
 }
-
-
-
-// function toggleFilterButton() {
-  
-
-  
-//   $('.projects-page-main-content').toggleClass('justify-content-center')
-//   $('.projects-page-main-content').toggleClass('justify-content-start')
-
-//   if ($('.main-projects-section').hasClass('col-md-6')) {
-//     $('.main-projects-section').removeClass('col-md-6')
-//     $('.main-projects-section').addClass('col-md-7')
-//   }else if ($('.main-projects-section').hasClass('col-md-7') && $('.projects-page-main-content').hasClass('justify-content-start')) {
-//     $('.main-projects-section').removeClass('col-md-7')
-//     $('.main-projects-section').addClass('col-md-6')
-//   }else if ($('.main-projects-section').hasClass('col-md-7') && $('.projects-page-main-content').hasClass('justify-content-center')) {
-//     $('.main-projects-section').removeClass('col-md-7')
-//     $('.main-projects-section').addClass('col-md-7')
-//   }
-
-// }
-
-
-// function toggleChartButton() {
-
-//   if ($('.main-projects-section').hasClass('col-md-6')) {
-//     $('.main-projects-section').removeClass('col-md-6')
-//     $('.main-projects-section').addClass('col-md-7')
-//   } else if ($('.main-projects-section').hasClass('col-md-7') && $('.projects-page-main-content').hasClass('justify-content-start')) {
-//     $('.main-projects-section').removeClass('col-md-7')
-//     $('.main-projects-section').addClass('col-md-6')
-//   } else if ($('.main-projects-section').hasClass('col-md-7') && $('.projects-page-main-content').hasClass('justify-content-center')) {
-//     $('.main-projects-section').removeClass('col-md-7')
-//     $('.main-projects-section').addClass('col-md-7')
-//   }
-
-// }
-
 
 
 rows = rows.sort((x, y) => x.title > y.title)
@@ -803,17 +569,6 @@ let miniSearch = new MiniSearch({
 miniSearch.addAll(rows);
 
 var configuration = {
-  // searchableFields: ['title', 'description', 'authors'],
-  // sortings: { 
-  //   name_asc: {
-  //     field: 'title', 
-  //     order: 'desc'
-  //   }, 
-  //   price_desc: {
-	// 		field:  "year",
-	// 		order:  "desc",
-	// 	},
-  // },
   native_search_enabled: false,
   custom_id_field: 'id',
   aggregations: {
@@ -895,7 +650,6 @@ var vm = new Vue({
     var search_results = []
 
 
-    // TODO: revisit this function
     if (this.query && this.query.length) {
       search_results = miniSearch.search(this.query, {prefix: true, boost: { title: 5 }, fuzzy: 0.2})
       rowsUpdated = rows.filter(v => search_results.map(v => v.id).includes(v.id));
@@ -916,9 +670,6 @@ var vm = new Vue({
         if (a==b) return 0;
       }
     )
-    // console.log(rowsData)
-    // console.log(coursesUnique)
-    // console.log(yearsUnique)
      var result = itemsjs.search({
        ids: search_results.map(v => v.id),
        page: this.page,
@@ -929,7 +680,10 @@ var vm = new Vue({
        ids: search_results.map(v => v.id),
        filters: this.filters
      }) 
-     console.log('searchresults',searchResultData)
+     result.data.aggregations.year.buckets = result.data.aggregations.year.buckets.sort((a,b)=> {
+      if (a.key<b.key) return 1
+      else return -1
+    })
      return result
    }
  }
@@ -976,7 +730,6 @@ const ctx = document.getElementById('myChart');
           });
 
           chart.update()
-        // console.log(searchResultData)
         }, 10);
       }
 
@@ -988,13 +741,12 @@ const ctx = document.getElementById('myChart');
       
 
       const ctl = document.getElementById('myBarChart');
-      console.log(rowsData)
       ds = []
       counter = 0
       for (course of coursesUnique) {
 
         courseData = []
-        console.log(yearsUnique)
+        // console.log(yearsUnique)
         for (year of yearsUnique) {
           courseCountInYear = 0
           
@@ -1019,7 +771,7 @@ const ctx = document.getElementById('myChart');
         )
       }
 
-      console.log(ds)
+      // console.log(ds)
 
       var barChart = new Chart(ctl, {
         type: 'bar',
@@ -1046,7 +798,6 @@ const ctx = document.getElementById('myChart');
             }
       });
 
-      // barChart.resize(100, 600);
 
       function debounce(func, timeout = 100){
         let timer;

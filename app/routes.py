@@ -73,14 +73,12 @@ def privacy():
 @app.route('/projects')
 def projects():
     if 'mail' in request.args.keys():
-        print(request.args['mail'])
         aut_id = parse.quote(request.args['mail'].split("@")[0].replace(".", "_").lower(), safe="")
         try:
             data, autname, autmail = SPARQL_support.by_author(aut_id, 'SUSPENDED')
         except IndexError as _:
             flash('not found')
             return redirect(url_for('index'))
-        print(data)
         mail_support.suspended_details_email(data, address=request.args['mail'].lower())
         # confirmationemail = jsondata["Responsible"]
         flash(request.args['mail'], 'details sent')
@@ -89,7 +87,6 @@ def projects():
     if 'id' in request.args.keys():
         id = request.args['id']
         data, autname, autmail = SPARQL_support.by_author(id)
-        print(data)
         autdata = SPARQL_support.find_all_authors()
         name = id
         mail = None
@@ -117,11 +114,9 @@ def update():
             data = [
                 project for project in SPARQL_support.get_available() if project['graph'] == id
                 ][0]
-            print(data)
             authors_data = []
             for aut in data['ids']:
                 _, aut_fullname, aut_mail = SPARQL_support.by_author(aut)
-                print(f"full_name: {aut_fullname}")
                 aut_surname, aut_name  = (aut_fullname.split(',')[0].strip(), aut_fullname.split(',')[1].strip())
                 authors_data.append(
                     {
@@ -137,14 +132,10 @@ def update():
                 elif request.form["action"] == 'Delete project':
                     return render_template('delete.html', title='Update', courses_data=courses_data, project_data=data, authors_data=authors_data)
         else:
-            print('post')
             data = request.form
-            print(data)
             time = datetime.now()
-            print(request.form["graphid"])
             request_mode = request.form["mode"]
             jsondata = data_support.parse_form(data, time, force_id=request.form["graphid"])
-            print(jsondata)
             mail_support.user_confirmation_email(jsondata, mode=request_mode)
             confirmationemail = jsondata["Responsible"]
             flash(confirmationemail, 'sended')
@@ -192,32 +183,23 @@ def update():
 #confirmation route, token required
 @app.route('/confirmation-update/<token>', methods=['GET', 'POST'])
 def update_confirmation(token):
-    print('here')
     id = mail_support.verify_token(token)
     # print(id)
     if not id:
         flash('fail')
-        print('fail')
         return redirect(url_for('index')) #wrong token
     if SPARQL_support.expired(id):
         flash("already")
-        print('already')
         return redirect(url_for('index'))   #expired token
     data = data_support.retrieve_json(id)
-    print(data)
     if not data:
         flash('expired')
-        print('here')
-        print('expired')
         return redirect(url_for('index'))  # Do not exist
     #confirmation/rejection
     if request.method == 'POST':
-        print('posting form')
         if request.form["selection"] == "confirm":
-            print('trying to confirm')
             SPARQL_support.delete_graph(data['graph'])
             # SPARQL_support.dump()
-            print('deleted graph')
 
             rdf_data = rdf_support.ProjectRdf(data,'ONLINE')
             SPARQL_support.add_data(rdf_data, quad=True)
@@ -225,11 +207,9 @@ def update_confirmation(token):
             SPARQL_support.change_all_author(id)
             data_support.remove_json(id)
             SPARQL_support.dump()
-            print('updated')
             flash("updated")
         elif request.form["selection"] == "reject":
             data_support.remove_json(id)
-            print('rejected')
         return redirect(url_for('index'))
     
     routing_data={
@@ -245,44 +225,27 @@ def update_confirmation(token):
 
 @app.route('/confirmation-delete/<token>', methods=['GET', 'POST'])
 def delete_confirmation(token):
-    print('here')
     id = mail_support.verify_token(token)
     # print(id)
     if not id:
         flash('fail')
-        print('fail')
         return redirect(url_for('index')) #wrong token
     if SPARQL_support.expired(id):
         flash("already")
-        print('already')
         return redirect(url_for('index'))   #expired token
     data = data_support.retrieve_json(id)
-    print(data)
     if not data:
         flash('expired')
-        print('here')
-        print('expired')
         return redirect(url_for('index'))  # Do not exist
     #confirmation/rejection
     if request.method == 'POST':
-        print('posting form')
         if request.form["selection"] == "confirm":
-            print('trying to confirm')
             SPARQL_support.delete_graph(data['graph'])
-            # SPARQL_support.dump()
-            print('deleted graph')
-
-            # rdf_data = rdf_support.ProjectRdf(data,'ONLINE')
-            # SPARQL_support.add_data(rdf_data, quad=True)
-            # SPARQL_support.change_status("ONLINE", id)
-            # SPARQL_support.change_all_author(id)
             data_support.remove_json(id)
             SPARQL_support.dump()
-            print('deleted')
             flash("deleted")
         elif request.form["selection"] == "reject":
             data_support.remove_json(id)
-            print('rejected')
         return redirect(url_for('index'))
     
     routing_data={
