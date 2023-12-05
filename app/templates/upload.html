@@ -139,7 +139,7 @@ $(document).ready(function () {
             repo.val("https://" + repo.val());
         }
         var home = $('#Homepage');
-        if ((home.val().match(/^http:\/\//) == null) && (home.val().match(/^https:\/\//) == null) && home.val().length > 0) {
+        if ((home.val().match(/^http:\/\//) == null) && (home.val().match(/^https:\/\//) == null) && (home.val().length > 0)) {
             home.val("https://" + home.val());
         }
     });
