@@ -436,16 +436,12 @@
     for (let i = 0; i < rows.length; i++) {
       rows[i].id = i+1 ;
     }
-    // console.log(rows)
     let miniSearch = new MiniSearch({
       fields: ['title', 'description', 'authors']
     })
 
-    // console.log(rows)
     miniSearch.addAll(rows);
     var configuration = {
-      // searchableFields: ['title', 'description', 'authors'],
-      // sortings: { name_asc: {field: 'title', order: 'asc'}},
       native_search_enabled: false,
       custom_id_field: 'id',
       aggregations: {
@@ -461,8 +457,7 @@
         },
       }
     }
-    
-    // console.log(rows)
+
     itemsjs = itemsjs(rows, configuration);
     var searchResultData = []
 
