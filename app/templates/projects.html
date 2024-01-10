@@ -245,7 +245,7 @@
      
 
         <div class="projects-page-main-content row d-flex justify-content-center mb-3">
-            <div id="sidebar-left"  class="col-md-3 col-10 ml-0 collapse collapse-horizontal vh-100">
+            <div id="sidebar-left"  class="col-lg-3 col-10 ml-0 collapse collapse-horizontal vh-100">
                 <form class="d-md-none d-block">
                     <div class="form-group px-0">
                         <select 
@@ -347,7 +347,7 @@
             </div>
 
 
-            <div id="projects-list" class="col-md-6 main-projects-section">
+            <div id="projects-list" class="col-md-10 col-lg-6 main-projects-section">
                 <div class="clearfix"></div>
                 <div class="proj-item" v-for="item of searchResult.data.items">
                     <form v-bind:action="'{{ url_for('update', id="") }}' + [[item.graph]]" method="POST">
@@ -443,7 +443,7 @@
             </div>
             <div 
             id="sidebar-right" 
-            class="col-10 col-md-3 collapse collapse-horizontal show px-0"
+            class="col-10 col-lg-3 collapse collapse-horizontal show px-0"
             >
                 <div 
                 class="d-flex flex-column justify-content-start align-items-center gap-3" 
@@ -457,7 +457,7 @@
                         <div class="carousel-inner">
                             <div class="carousel-item active">
                                 <div 
-                                class="d-flex flex-column justify-content-center align-items-center gap-2" 
+                                class="d-flex flex-column justify-content-center align-items-center gap-2 pt-4" 
                                 style="height: 25rem;"
                                 >
                                     <canvas id="myChart"></canvas>
@@ -470,7 +470,7 @@
                                 </div>
                             </div>
                             <div class="carousel-item">
-                              <div class="d-flex flex-column justify-content-center px-3 py-2" style="height: 25rem;">
+                              <div class="d-flex flex-column justify-content-center px-4 mx-1 py-4" style="height: 25rem;">
                                 <canvas id="myBarChart"></canvas>
                               </div>
                             </div>
@@ -786,7 +786,7 @@
           display: false
         }
       },
-      radius: '80%'
+      radius: '75%'
     }
   });
   var chartAggregation = 'course'
