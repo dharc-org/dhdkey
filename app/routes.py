@@ -140,9 +140,6 @@ def update():
             confirmationemail = jsondata["Responsible"]
             flash(confirmationemail, 'sended')
             return redirect(url_for('index'))
-
-                # return redirect(url_for('update', id=id))
-            # print(request.form)
     return redirect(url_for('projects'))
 
 
@@ -199,7 +196,6 @@ def update_confirmation(token):
     if request.method == 'POST':
         if request.form["selection"] == "confirm":
             SPARQL_support.delete_graph(data['graph'])
-            # SPARQL_support.dump()
 
             rdf_data = rdf_support.ProjectRdf(data,'ONLINE')
             SPARQL_support.add_data(rdf_data, quad=True)
@@ -302,7 +298,6 @@ def upload():
 @app.route('/confirmation/<token>', methods=['GET', 'POST'])
 def confirmation(token):
     id = mail_support.verify_token(token)
-    # print(id)
     if not id:
         flash('fail')
         return redirect(url_for('index')) #wrong token
@@ -310,7 +305,6 @@ def confirmation(token):
         flash("already")
         return redirect(url_for('index'))   # expired token
     data = data_support.retrieve_json(id)
-    # print(data)
     if not data:
         flash('expired')
         return redirect(url_for('index'))  # Do not exist
