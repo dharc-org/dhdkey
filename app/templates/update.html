@@ -164,13 +164,24 @@
                 </div>
             </div>
 
+            {% if current_user.is_authenticated %}
             <!--RESPONSIBLE MAIL-->
-            <div class="form-group mb-5">
+            <div class="form-group mb-5  d-none">
                 <label for="Responsible">Contact Mail</label>
-                <select class="form-control" id="Responsible" name="Responsible" required="true">
+                <select class="form-control" id="Responsible" name="Responsible" 
+                >
                     <option value="" selected>Address for confirmation emal</option>
                 </select>
             </div>
+            {% else %}
+            <div class="form-group mb-5">
+                <label for="Responsible">Contact Mail</label>
+                <select class="form-control" id="Responsible" name="Responsible" 
+                required="true">
+                    <option value="" selected>Address for confirmation emal</option>
+                </select>
+            </div>
+            {% endif %}
 
             <!--privacy-->
             <div class="form-group mb-3">
@@ -193,6 +204,11 @@
             <input class="btn btn-warning mb-3 d-none"  name="graphid" value="{{project_data.graph}}">
             <input class="btn btn-warning mb-3 d-none"  name="mode" value="update">
             <input type="submit" class="btn btn-primary mb-3"  name="action" value="Submit">
+
+            
+            {% if current_user.is_authenticated %}
+                <input class="btn btn-warning mb-3 d-none"  name="auth" value="True">
+            {%endif%}
         </form>
     </div>
 

@@ -100,12 +100,12 @@
                       <td></td>
                       <td>
                         <h3>
-                          <span class="badge badge-success" v-if="item.access === 'ONLINE'">[[item.access]]</span>
-                          <span class="badge badge-warning" v-if="item.access === 'OFFLINE'">[[item.access]]</span>
+                          <span class="badge fw-light text-dark ms-0 ps-0" v-if="item.access === 'ONLINE'">[[item.access]]</span>
+                          <span class="badge fw-light text-dark ms-0 ps-0" v-if="item.access === 'OFFLINE'">[[item.access]]</span>
                         </h3>
                         <h3>[[ item.title ]]</h3>
                         <div>
-                         <h5><span class="badge badge-info mr-1" v-for="(aut, index) in item.authors">[[ aut ]]</span></h5>
+                         <h5><span class="badge fw-light text-dark ps-0" v-for="(aut, index) in item.authors">[[ aut ]]</span></h5>
                         </div>
                         <div>
                          <b>Academic Year:</b> [[ item.year ]]
@@ -125,14 +125,44 @@
                       </td>
                       <td>
                           <form  v-bind:action="'{{ url_for('AdminEditProject', id="") }}' + [[item.graph]]" method="POST">
-                              <div v-if="item.access === 'ONLINE'">
-                                  <input type="submit" class="btn btn-warning mb-3" style="width:100%" name="action" value="GO OFFLINE">
-                                  <input type="submit" class="btn btn-danger" style="width:100%" name="action" value="REMOVE" onclick="return confirm('Are you sure to remove?')">
-                              </div>
-                              <div v-if="item.access === 'OFFLINE'">
-                                  <input type="submit" class="btn btn-success mb-3" style="width:100%" name="action" value="GO ONLINE">
-                                  <input type="submit" class="btn btn-danger" style="width:100%" name="action" value="REMOVE" onclick="return confirm('Are you sure to remove?')">
-                              </div>
+                              
+                                  <div class="btn-group" >
+                                    <button 
+                                    type="button" 
+                                    class="btn dropdown-toggle rounded-3" 
+                                    data-bs-toggle="dropdown" 
+                                    aria-expanded="false"
+                                    >
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item" href="#">
+                                              <input type="submit" class="btn" name="action" value="EDIT PROJECT">
+                                            </a>
+                                        </li>
+                                        <li>
+                                          <hr class="dropdown-divider">
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="#">
+                                              <input type="submit" class="btn" style="width:100%" name="action" value="REMOVE" onclick="return confirm('Are you sure to delete the project?')">
+                                            </a>
+                                        </li>
+                                        <li>
+                                          <hr class="dropdown-divider">
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="#">
+                                              <input v-if="item.access === 'ONLINE'" type="submit" class="btn" style="width:100%" name="action" value="GO OFFLINE">
+                                              <input v-if="item.access === 'OFFLINE'" type="submit" class="btn" style="width:100%" name="action" value="GO ONLINE">
+                                              
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+
                             </form>  
                       </td>
                     </tr>

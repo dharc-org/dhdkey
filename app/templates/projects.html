@@ -354,15 +354,17 @@
                         <div class="d-flex flex-row justify-content-between mt-3">
                             <h3 style="word-wrap: break-word;">[[ item.title ]]</h3>
                             <div class="btn-group">
+                              <form>
                                 <button 
-                                type="button" 
-                                class="btn dropdown-toggle rounded-3" 
-                                data-bs-toggle="dropdown" 
-                                aria-expanded="false"
+                                type="submit" 
+                                class="btn rounded-3"
+                                value="Edit project"
+                                name="action"
                                 >
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
-                                <ul class="dropdown-menu">
+                                </form>
+                                <!-- <ul class="dropdown-menu">
                                     <li>
                                         <a class="dropdown-item" href="#">
                                             <input type="submit" class="btn" name="action" value="Edit project">
@@ -376,7 +378,7 @@
                                             <input type="submit" class="btn" name="action" value="Delete project">
                                         </a>
                                     </li>
-                                </ul>
+                                </ul> -->
                             </div>
                         </div>
                         <div class="mb-3 ">
@@ -762,6 +764,10 @@
         }) 
         result.data.aggregations.year.buckets = result.data.aggregations.year.buckets.sort((a,b)=> {
           if (a.key<b.key) return 1
+          else return -1
+        })
+        result.data.aggregations.course.buckets = result.data.aggregations.course.buckets.sort((a,b)=> {
+          if (a.key>b.key) return 1
           else return -1
         })
         return result

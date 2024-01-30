@@ -109,6 +109,28 @@ def projects():
 @app.route('/update', methods=['POST'])
 def update():
     if request.method == 'POST':
+        if current_user.is_authenticated and request.form["action"] in ["Submit"]:
+            if request.method == 'POST':
+                # print(request.form["action"])
+                try:
+                    data = request.form
+                    # print(data)
+                    time = datetime.now()
+                    id = request.form["graphid"]
+                    jsondata = data_support.parse_form(data, time, force_id=id)
+                    # print(jsondata)
+                    rdf_data = rdf_support.ProjectRdf(jsondata)
+                    SPARQL_support.delete_graph(request.form["graphid"])
+                    SPARQL_support.add_data(rdf_data, quad=True)
+                    SPARQL_support.change_status("ONLINE", jsondata['Id'])
+                    SPARQL_support.change_all_author(jsondata['Id'])
+                    flash("updated")
+                    SPARQL_support.dump()
+                except Exception as e:
+                    print(e)
+                    flash("error")
+            return redirect(url_for('index'))
+
         if request.form["action"] in ["Edit project", "Delete project"]:
             id = request.args['id']
             data = [
@@ -379,6 +401,25 @@ def AdminEditProject():
             SPARQL_support.change_status("OFFLINE", id)
         elif request.form["action"] == "REMOVE":
             SPARQL_support.delete_graph(id)
+        elif request.form["action"] == "EDIT PROJECT":
+            id = request.args['id']
+            data = [
+                project for project in SPARQL_support.get_available() if project['graph'] == id
+                ][0]
+            authors_data = []
+            for aut in data['ids']:
+                _, aut_fullname, aut_mail = SPARQL_support.by_author(aut)
+                aut_surname, aut_name  = (aut_fullname.split(',')[0].strip(), aut_fullname.split(',')[1].strip())
+                authors_data.append(
+                    {
+                        "name": aut_name,
+                        "surname": aut_surname,
+                        "mail": aut_mail
+                    }
+                )
+            if len(data):
+                courses_data = data_support.prepare_data(app.config['CSV_PATH'])
+            return render_template('update.html', title='Update', courses_data=courses_data, project_data=data, authors_data=authors_data)
         SPARQL_support.dump()
     return redirect(url_for('AdminEdit'))
 
