@@ -101,7 +101,7 @@
                       <td>
                         <h3>[[ item.title ]]</h3>
                         <div>
-                         <h5><span class="badge badge-primary mr-1" v-for="(aut, index) in item.authors">[[ aut ]]</span></h5>
+                         <h5><span class="badge fw-light text-dark ps-0" v-for="(aut, index) in item.authors">[[ aut ]]</span></h5>
                         </div>
                         <div>
                             <b>Published By:</b> [[item.publisher]]
@@ -123,10 +123,10 @@
                       </div>
                       </td>
                       <td>
-                          <form  v-bind:action="'{{ url_for('AdminConfirmProject', id="") }}' + [[item.graph]]" method="POST">
-                              <input type="submit" class="btn btn-success mb-3" style="width:100%" name="action" value="CONFIRM" onclick="return confirm('Are you sure to confirm?')">
-                              <input type="submit" class="btn btn-danger" style="width:100%" name="action" value="REJECT" onclick="return confirm('Are you sure to reject?')">
-                            </form>  
+                        <form  v-bind:action="'{{ url_for('AdminConfirmProject', id="") }}' + [[item.graph]]" method="POST">
+                            <input type="submit" class="btn btn-success mb-3" style="width:100%" name="action" value="CONFIRM" onclick="return confirm('Are you sure to confirm?')">
+                            <input type="submit" class="btn btn-danger" style="width:100%" name="action" value="REJECT" onclick="return confirm('Are you sure to reject?')">
+                          </form>  
                       </td>
                     </tr>
                </tbody>

@@ -22,6 +22,7 @@ from app.support import data_support, mail_support, admin_support, SPARQL_suppor
 from flask import render_template, request, redirect, url_for, flash, Response
 from datetime import datetime
 from flask_login import current_user, login_user, logout_user, login_required
+from urllib import parse
 
 #dump everyday at 3 A.M. (italian time zone)
 #scheduler.add_job(routine_support.routine, 'cron', hour='3')
@@ -41,7 +42,21 @@ def inject_template_scope():
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html', title="Home")
+    try:
+        id = request.args['id']
+        search = request.args['search']
+        data, autname, autmail = SPARQL_support.by_author(id)
+        autdata = SPARQL_support.find_all_authors()
+        name = id
+        mail = None
+        if data:
+            name = autname
+            mail = autmail
+        return render_template('projects.html', title=name, data=data, name=name, mail=mail, autdata=autdata, author=True, search=search)
+    except:
+        data = SPARQL_support.get_all("ONLINE")
+        autdata = SPARQL_support.find_all_authors()
+        return render_template('index.html', title="Home", data=data, autdata=autdata)
 
 @app.route('/info')
 def info():
@@ -57,23 +72,212 @@ def privacy():
 
 @app.route('/projects')
 def projects():
-    try:
+    if 'mail' in request.args.keys():
+        aut_id = parse.quote(request.args['mail'].split("@")[0].replace(".", "_").lower(), safe="")
+        try:
+            data, autname, autmail = SPARQL_support.by_author(aut_id, 'SUSPENDED')
+        except IndexError as _:
+            flash('not found')
+            return redirect(url_for('index'))
+        mail_support.suspended_details_email(data, address=request.args['mail'].lower())
+        # confirmationemail = jsondata["Responsible"]
+        flash(request.args['mail'], 'details sent')
+        return redirect(url_for('index'))
+
+    if 'id' in request.args.keys():
         id = request.args['id']
         data, autname, autmail = SPARQL_support.by_author(id)
         autdata = SPARQL_support.find_all_authors()
         name = id
         mail = None
+        search = None
+        if 'search' in request.args.keys():
+            search = request.args['search']
         if data:
             name = autname
             mail = autmail
-        return render_template('projects.html', title=name, data=data, name=name, mail= mail, autdata=autdata, author=True)
-    except:
+        return render_template('projects.html', title=name, data=data, name=name, mail=mail, autdata=autdata, author=True, search=search)
+    else:
         data = SPARQL_support.get_all("ONLINE")
         autdata = SPARQL_support.find_all_authors()
-        return render_template('projects.html', title='Projects', data=data, name=None, autdata=autdata, author=False)
+        search=''
+        if 'search' in request.args.keys():
+            search = request.args['search']
+        return render_template('projects.html', title='Projects', data=data, name=None, autdata=autdata, author=False, search=search)
 
+
+@app.route('/update', methods=['POST'])
+def update():
+    if request.method == 'POST':
+        if current_user.is_authenticated and request.form["action"] in ["Submit"]:
+            if request.method == 'POST':
+                # print(request.form["action"])
+                try:
+                    data = request.form
+                    # print(data)
+                    time = datetime.now()
+                    id = request.form["graphid"]
+                    jsondata = data_support.parse_form(data, time, force_id=id)
+                    # print(jsondata)
+                    rdf_data = rdf_support.ProjectRdf(jsondata)
+                    SPARQL_support.delete_graph(request.form["graphid"])
+                    SPARQL_support.add_data(rdf_data, quad=True)
+                    SPARQL_support.change_status("ONLINE", jsondata['Id'])
+                    SPARQL_support.change_all_author(jsondata['Id'])
+                    flash("updated")
+                    SPARQL_support.dump()
+                except Exception as e:
+                    print(e)
+                    flash("error")
+            return redirect(url_for('index'))
+
+        if request.form["action"] in ["Edit project", "Delete project"]:
+            id = request.args['id']
+            data = [
+                project for project in SPARQL_support.get_available() if project['graph'] == id
+                ][0]
+            authors_data = []
+            for aut in data['ids']:
+                _, aut_fullname, aut_mail = SPARQL_support.by_author(aut)
+                aut_surname, aut_name  = (aut_fullname.split(',')[0].strip(), aut_fullname.split(',')[1].strip())
+                authors_data.append(
+                    {
+                        "name": aut_name,
+                        "surname": aut_surname,
+                        "mail": aut_mail
+                    }
+                )
+            if len(data):
+                courses_data = data_support.prepare_data(app.config['CSV_PATH'])
+                if request.form["action"] == 'Edit project':
+                    return render_template('update.html', title='Update', courses_data=courses_data, project_data=data, authors_data=authors_data)
+                elif request.form["action"] == 'Delete project':
+                    return render_template('delete.html', title='Update', courses_data=courses_data, project_data=data, authors_data=authors_data)
+        else:
+            data = request.form
+            time = datetime.now()
+            request_mode = request.form["mode"]
+            jsondata = data_support.parse_form(data, time, force_id=request.form["graphid"])
+            mail_support.user_confirmation_email(jsondata, mode=request_mode)
+            confirmationemail = jsondata["Responsible"]
+            flash(confirmationemail, 'sended')
+            return redirect(url_for('index'))
+    return redirect(url_for('projects'))
+
+
+#update route
+# @app.route('/update/<id>', methods=['GET', 'POST'])
+# def update(id):
+#     print(id)
+#     if request.method == 'POST':
+#         print('post')
+#         data = request.form
+#         time = datetime.now()
+#         jsondata = data_support.parse_form(data, time)
+#         mail_support.user_confirmation_email(jsondata)
+#         confirmationemail = jsondata["Responsible"]
+#         flash(confirmationemail, 'sended')
+#         return redirect(url_for('index'))
+#     else:
+#         courses_data = data_support.prepare_data(app.config['CSV_PATH'])
+#         data = [
+#                 project for project in SPARQL_support.get_available() if project['graph'] == id
+#                 ][0]
+#         authors_data = []
+#         for aut in data['ids']:
+#             _, aut_fullname, aut_mail = SPARQL_support.by_author(aut)
+#             aut_name, aut_surname = (aut_fullname.split(',')[0], aut_fullname.split(',')[1])
+#             authors_data.append(
+#                 {
+#                     "name": aut_name,
+#                     "surname": aut_surname,
+#                     "mail": aut_mail
+#                 }
+#             )
+#         if len(data):
+#             courses_data = data_support.prepare_data(app.config['CSV_PATH'])
+#         return render_template('update.html', title='Update', courses_data=courses_data, project_data=data, authors_data=authors_data)
+
+
+#confirmation route, token required
+@app.route('/confirmation-update/<token>', methods=['GET', 'POST'])
+def update_confirmation(token):
+    id = mail_support.verify_token(token)
+    # print(id)
+    if not id:
+        flash('fail')
+        return redirect(url_for('index')) #wrong token
+    if SPARQL_support.expired(id):
+        flash("already")
+        return redirect(url_for('index'))   #expired token
+    data = data_support.retrieve_json(id)
+    if not data:
+        flash('expired')
+        return redirect(url_for('index'))  # Do not exist
+    #confirmation/rejection
+    if request.method == 'POST':
+        if request.form["selection"] == "confirm":
+            SPARQL_support.delete_graph(data['graph'])
+
+            rdf_data = rdf_support.ProjectRdf(data,'ONLINE')
+            SPARQL_support.add_data(rdf_data, quad=True)
+            SPARQL_support.change_status("ONLINE", id)
+            SPARQL_support.change_all_author(id)
+            data_support.remove_json(id)
+            SPARQL_support.dump()
+            flash("updated")
+        elif request.form["selection"] == "reject":
+            data_support.remove_json(id)
+        return redirect(url_for('index'))
+    
+    routing_data={
+        'url_for': 'update_confirmation',
+        'title_text': 'Updated Data Summary'
+    }
+    return render_template('confirmation_form.html', 
+                           title='Update confirmation', 
+                           token=token, 
+                           data=data,
+                           routing_data=routing_data)
+
+
+@app.route('/confirmation-delete/<token>', methods=['GET', 'POST'])
+def delete_confirmation(token):
+    id = mail_support.verify_token(token)
+    # print(id)
+    if not id:
+        flash('fail')
+        return redirect(url_for('index')) #wrong token
+    if SPARQL_support.expired(id):
+        flash("already")
+        return redirect(url_for('index'))   #expired token
+    data = data_support.retrieve_json(id)
+    if not data:
+        flash('expired')
+        return redirect(url_for('index'))  # Do not exist
+    #confirmation/rejection
+    if request.method == 'POST':
+        if request.form["selection"] == "confirm":
+            SPARQL_support.delete_graph(data['graph'])
+            data_support.remove_json(id)
+            SPARQL_support.dump()
+            flash("deleted")
+        elif request.form["selection"] == "reject":
+            data_support.remove_json(id)
+        return redirect(url_for('index'))
+    
+    routing_data={
+        'url_for': 'delete_confirmation',
+        'title_text': 'Data summary of the project to delete'
+    }
+    return render_template('confirmation_form.html', 
+                           title='Update confirmation', 
+                           token=token, 
+                           data=data,
+                           routing_data=routing_data)
 
 #NO CONFIRMATION MAIL
+'''
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
@@ -91,13 +295,14 @@ def upload():
     else:
         courses_data = data_support.prepare_data(app.config['CSV_PATH'])
         return render_template('upload.html', title='Upload', courses_data=courses_data)
-
 '''
+
 #upload route
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
         data = request.form
+        # print(data)
         time = datetime.now()
         jsondata = data_support.parse_form(data, time)
         mail_support.user_confirmation_email(jsondata)
@@ -107,6 +312,8 @@ def upload():
     else:
         courses_data = data_support.prepare_data(app.config['CSV_PATH'])
         return render_template('upload.html', title='Upload', courses_data=courses_data)
+    
+
 
 
 #confirmation route, token required
@@ -133,8 +340,12 @@ def confirmation(token):
         elif request.form["selection"] == "reject":
             data_support.remove_json(id)
         return redirect(url_for('index'))
-    return render_template('confirmation_form.html', title='Confirmation', token=token, data=data)
-'''
+    routing_data={
+        'url_for': 'confirmation',
+        'title_text': 'Uploaded Data Summary'
+    }
+    return render_template('confirmation_form.html', title='Confirmation', token=token, data=data, routing_data=routing_data)
+
 
 #Admin route
 @app.route('/admin', methods=['GET', 'POST'])
@@ -190,6 +401,25 @@ def AdminEditProject():
             SPARQL_support.change_status("OFFLINE", id)
         elif request.form["action"] == "REMOVE":
             SPARQL_support.delete_graph(id)
+        elif request.form["action"] == "EDIT PROJECT":
+            id = request.args['id']
+            data = [
+                project for project in SPARQL_support.get_available() if project['graph'] == id
+                ][0]
+            authors_data = []
+            for aut in data['ids']:
+                _, aut_fullname, aut_mail = SPARQL_support.by_author(aut)
+                aut_surname, aut_name  = (aut_fullname.split(',')[0].strip(), aut_fullname.split(',')[1].strip())
+                authors_data.append(
+                    {
+                        "name": aut_name,
+                        "surname": aut_surname,
+                        "mail": aut_mail
+                    }
+                )
+            if len(data):
+                courses_data = data_support.prepare_data(app.config['CSV_PATH'])
+            return render_template('update.html', title='Update', courses_data=courses_data, project_data=data, authors_data=authors_data)
         SPARQL_support.dump()
     return redirect(url_for('AdminEdit'))
 
@@ -266,8 +496,8 @@ def handle_http_exception(error):
         'description': error.description,
         'stack_trace': traceback.format_exc()
     }
-    log_msg = f"HTTPException {error_dict}, Description: {error_dict.description}, Stack trace: {error_dict.stack_trace}"
-    logger.log(msg=log_msg)
+    log_msg = f"HTTPException {error_dict}, Description: {error_dict.keys()}, Stack trace: "
+    logger.log(level=0, msg=log_msg)
     response = jsonify(error_dict)
     response.status_code = error.code
     return response

@@ -1,217 +1,557 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container d-flex flex-column d-flex justify-content-center" style="height: 100%;">
-  <!-- <div class="container d-flex flex-column justify-content-start py-5 my-5" style="background-color: red;"> -->
-    <!-- e9ecef-->
+<div class="container d-flex flex-column d-flex justify-content-start pt-5" style="height: 100%;">
+  <div class="row mt-5">
+    <div class="col-sm-8 font-weight-light mx-auto mt-5">
+      <h1 class="display-4 mb-0">
+        DHDKey!
+      </h1>
+      <h4 class="lead mt-0" style="font-variant: small-caps;">
+          <span class="text-nowrap">
+            Digital Humanities & Digital Knowledge
+          </span>
+          <span class="text-nowrap">
+              Educational Yearbook
+          </span> 
+      </h4>
+    </div>
+  </div>
 
-      <div class="row">
-          <div class="col-sm-10 pt-5 font-weight-light mb-5 mx-auto">
-              <h1 class="display-4">DHDKey</h1>
-              <h4 class="lead" style="font-variant: small-caps">Digital Humanities & Digital Knowledge Educational Yearbook</h4>
-              <!-- <hr class="my-4"> -->
-              <!-- <p class="lead">Explore students' projects from the <b><a class="text-white" href="https://corsi.unibo.it/2cycle/DigitalHumanitiesKnowledge">Digital Humanities & Digital Knowledge course at the University of Bologna</a></b>.</p>  -->
-
+  <div class="row">
+    <div id="el"  class="col-sm-8 mx-auto">    
+      <form  action="{{ url_for('projects') }}"  class="navbar-form navbar-left" autocomplete="off">
+        <div class="row">
+          <div class="col-10">
+            <input type="text" v-model="query" onkeypress="preventSubmitting(event)" onfocus="showOptions()"  oninput="showOptions()"  class="form-control search-input" id="search-input" placeholder="Search for a project by name, description or authors">
           </div>
-      </div>
-      <div class="row">
-          <div class="col-sm-10 mx-auto">
-              <div class="row text-center mt-n5">
-                  <div class="col-sm pb-2">
-                      <div class="card shadow-sm">
-                          <div class="card-body d-flex flex-column align-items-center">
-                              <i class="fa fa-book-open fa-7x bg-white text-dark icon"></i>
-                              <a href="{{ url_for('projects') }}" class="btn btn-outline-dark mt-3">Browse projects</a>
-                          </div>
-                      </div>
+          <div class="col-2">
+            <a class="btn btn-primary" style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important" v-bind:href= "'{{ url_for('projects', search="") }}' + [[ query ]]">
+              <i class="fas fa-search"></i>
+            </a>
+          </div>
+        </div>
+        <div id="search-options-list"  class="search-options-list col-10 pr-0 card shadow-sm w-50 d-none " style="position: absolute; z-index: 10; overflow-y: scroll; max-height: 20rem;">
+          <div class="search-option proj-item-index px-3 py-3 d-flex flex-column gap-2" v-for="item of searchResult.data.items">
+            <p class="mb-0" style="word-wrap: break-word;">
+              <a class="text-dark" style="font-size: 1rem;" v-bind:href= "'{{ url_for('projects', search="") }}' + [[item.title]]">[[ item.title ]]</a>
+            </p>
+            <div class="d-flex flex-row flex-wrap">
+              <a class="py-0 px-0 my-0 me-2 text-secondary text-nowrap" style="font-size: 0.75rem;" v-for="(aut, index) in item.authors" v-bind:href= "'{{ url_for('projects', id="") }}' + [[getId(index,item.ids)]]">[[ aut ]]</a>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div class="row text-center d-flex flex-row justify-content-between align-items-stretch flex-wrap">
+          <div class="col-sm pb-2">
+              <div class="card shadow-sm">
+                  <div class="card-body d-flex flex-column align-items-center">
+                      <i class="fa fa-book-open fa-7x bg-white text-dark icon"></i>
+                      <a href="{{ url_for('projects') }}" class="btn btn-outline-dark mt-3 text-nowrap">Browse all projects</a>
                   </div>
-                  <div class="col-sm pb-2">
-                      <div class="card shadow-sm">
-                          <div class="card-body d-flex flex-column align-items-center">
-                              <i class="far fa-arrow-alt-circle-up fa-7x bg-white text-dark icon "></i>
-                              <a href="{{ url_for('upload') }}" class="btn btn-outline-dark mt-3">Upload new project</a>
-                          </div>
-                      </div>
+              </div>
+          </div>
+          <div class="col-sm pb-2" >
+              <div class="card shadow-sm">
+                  <div class="card-body d-flex flex-column align-items-center">
+                      <i class="far fa-arrow-alt-circle-up fa-7x bg-white text-dark icon "></i>
+                      <a href="{{ url_for('upload') }}" class="btn btn-outline-dark mt-3 text-nowrap">Upload new project</a>
                   </div>
-                  <div class="col-sm pb-2">
-                      <div class="card shadow-sm">
-                          <div class="card-body d-flex flex-column align-items-center">
-                              <i class="far fa-question-circle fa-7x bg-white text-dark icon "></i>
-                              <a href="{{ url_for('info') }}" class="btn btn-outline-dark mt-3">User guide</a>
-                          </div>
-                      </div>
+              </div>
+          </div>
+          <div class="col-sm pb-2">
+              <div class="card shadow-sm">
+                  <div class="card-body d-flex flex-column align-items-center">
+                      <i class="far fa-question-circle fa-7x bg-white text-dark icon "></i>
+                      <a href="{{ url_for('info') }}" class="btn btn-outline-dark mt-3 text-nowrap">Useful info</a>
                   </div>
               </div>
           </div>
       </div>
-      <div style="height: 10rem;">
-      </div>
-  <!-- </div> -->
+    </div>
+  </div>
 </div>
-    {% with messages = get_flashed_messages(with_categories=True) %}
-      {% if messages %}
-          {% for category, message in messages %}
-              {% if message == "confirmed" %}
-                  <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content bg-transparent">
-                          <div class="modal-header bg-success justify-content-center">
-                                  <i class="fas fa-cloud-upload-alt fa-5x text-light"></i>
-                          </div>
-                          <div class="text-center modal-body bg-light">
-                                  <h4>Project Uploaded!</h4>
-                            <p>The request is being approved</p>
-                            <p>Thank you for your contribution!</p>
-                          </div>
-                          <div class="modal-footer bg-light  justify-content-center">
-                            <button type="button" class="btn btn-secondary btn-success" data-dismiss="modal">OK</button>
-                          </div>
-                        </div>
+
+<!-- section dedicated to modal messages -->
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+  {% if messages %}
+      {% for category, message in messages %}
+
+          {% if message == "confirmed" %}
+          <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content bg-transparent">
+                      <div class="modal-header bg-success justify-content-center">
+                              <i class="fas fa-cloud-upload-alt fa-5x text-light"></i>
                       </div>
-                    </div>
-
-                    <script>
-                        $("#upload-modal").modal("show")
-                    </script>
-
-                    {% elif message == "error" %}
-                    <div class="modal fade" id="error-modal" tabindex="-1" role="dialog">
-                        <div class="modal-dialog" role="document">
-                        <div class="modal-content bg-transparent">
-                            <div class="modal-header bg-danger justify-content-center">
-                                    <i class="fas fa-exclamation-triangle fa-5x text-light"></i>
-                            </div>
-                            <div class="modal-body bg-light">
-                                    <h4 class="text-center">Something Went Wrong</h4>
-                            <p>Problems were encountered uploading the project, please check the data entered and try again. If the error reoccurs do not hesitate to contact us.</p>
-                            </div>
-                            <div class="modal-footer bg-light  justify-content-center">
-                            <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">OK</button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
-                    <script>
-                        $("#error-modal").modal("show")
-                    </script>
-
-
-              {% elif message == "expired" %}
-                  <div class="modal fade" id="fail-modal" tabindex="-1" role="dialog">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content bg-transparent">
-                          <div class="modal-header bg-danger justify-content-center">
-                                  <i class="fas fa-exclamation-triangle fa-5x text-light"></i>
-                          </div>
-                          <div class="modal-body bg-light">
-                                  <h4 class="text-center">Expired</h4>
-                            <p>Your confirmation token expired. If you haven't confirmed the project already, you need to submit the project data again.</p>
-                          </div>
-                          <div class="modal-footer bg-light  justify-content-center">
-                            <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">OK</button>
-                          </div>
-                        </div>
+                      <div class="text-center modal-body bg-light">
+                          <h4>Project Uploaded!</h4>
+                          <p>The request is being approved</p>
+                          <p>Thank you for your contribution!</p>
                       </div>
-                    </div>
-
-                    <script>
-                        $("#fail-modal").modal("show")
-                  </script>
-
-                    {% elif message == "fail" %}
-                    <div class="modal fade" id="fail-modal" tabindex="-1" role="dialog">
-                        <div class="modal-dialog" role="document">
-                        <div class="modal-content bg-transparent">
-                            <div class="modal-header bg-danger justify-content-center">
-                                    <i class="fas fa-exclamation-triangle fa-5x text-light"></i>
-                            </div>
-                            <div class="modal-body bg-light">
-                                    <h4 class="text-center">Failed</h4>
-                            <p>Wrong Confirmation Token.</p>
-                            </div>
-                            <div class="modal-footer bg-light  justify-content-center">
-                            <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">OK</button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
-                    <script>
-                        $("#fail-modal").modal("show")
-                    </script>
-
-
-              {% elif message == "already" %}
-              <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content bg-transparent">
-                          <div class="modal-header bg-success justify-content-center">
-                                  <i class="fas fa-check-circle fa-5x text-light"></i>
-                          </div>
-                          <div class="modal-body bg-light">
-                                  <h4 class="text-center">Project Already Confirmed</h4>
-                            <p>Thank you for your contribution!</p>
-                          </div>
-                          <div class="modal-footer bg-light  justify-content-center">
-                            <button type="button" class="btn btn-secondary btn-success" data-dismiss="modal">OK</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <script>
-                        $("#upload-modal").modal("show")
-                    </script>
-
-
-              {% elif category == "sended" %}
-              <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content bg-transparent">
-                          <div class="modal-header bg-warning justify-content-center">
-                                  <i class="fas fa-envelope fa-5x text-light"></i>
-                          </div>
-                          <div class="modal-body bg-light">
-                                  <h4 class="text-center">Awaiting Confirmation</h4>
-                            <p>Thank you for your contribution! A confirmation email has been sent to the address: {{message}}<br>
-                              You have 24 hours to confirm your project data.</p>
-                          </div>
-                          <div class="modal-footer bg-light  justify-content-center">
-                            <button type="button" class="btn btn-secondary btn-warning" data-dismiss="modal">OK</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <script>
-                        $("#upload-modal").modal("show")
-                    </script>
-
-              {% elif message == "login" %}
-              <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog">
-                      <div class="modal-dialog" role="document">
-                      <div class="modal-content bg-transparent">
-                          <div class="modal-header bg-secondary justify-content-center">
-                                  <i class="fas fa-ban fa-5x text-light"></i>
-                          </div>
-                          <div class="modal-body bg-light">
-                                  <h4 class="text-center">Login Required</h4>
-                          </div>
-                          <div class="modal-footer bg-light  justify-content-center">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
-                          </div>
-                      </div>
+                      <div class="modal-footer bg-light  justify-content-center">
+                        <button type="button" class="btn btn-secondary btn-success" data-bs-dismiss="modal">OK</button>
                       </div>
                   </div>
+              </div>
+          </div>
+          <script>
+              let uploadModal = new bootstrap.Modal(document.getElementById('upload-modal'), {});
+              uploadModal.show();
+          </script>
 
-                  <script>
-                      $("#upload-modal").modal("show")
-                  </script>
+          {% elif message == "updated" %}
+          <div class="modal fade" id="update-modal" tabindex="-1" role="dialog">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content bg-transparent">
+                      <div class="modal-header bg-success justify-content-center">
+                          <i class="fas fa-rotate-left fa-5x text-light"></i>
+                      </div>
+                      <div class="text-center modal-body bg-light">
+                          <h4>Project Updated!</h4>
+                          <p>Thank you for your contribution!</p>
+                      </div>
+                      <div class="modal-footer bg-light  justify-content-center">
+                          <button 
+                          type="button" 
+                          class="btn btn-secondary btn-success" 
+                          data-bs-dismiss="modal"
+                          >
+                            OK
+                          </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <script>
+              let updateModal = new bootstrap.Modal(document.getElementById('update-modal'), {});
+              updateModal.show();
+          </script>
 
-              {% endif %}                                
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+          {% elif message == "deleted" %}
+          <div class="modal fade" id="delete-modal" tabindex="-1" role="dialog">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content bg-transparent">
+                      <div class="modal-header bg-success justify-content-center">
+                          <i class="fas fa-eraser fa-5x text-light"></i>
+                      </div>
+                      <div class="text-center modal-body bg-light">
+                          <h4>Project Deleted!</h4>
+                          <p class="mt-1">Thank you for your contribution and we hope to see you again soon!</p>
+                      </div>
+                      <div class="modal-footer bg-light justify-content-center">
+                          <button type="button" class="btn btn-secondary btn-success" data-bs-dismiss="modal">OK</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <script>
+              let deleteModal = new bootstrap.Modal(document.getElementById('delete-modal'), {});
+              deleteModal.show();
+          </script>
+
+          {% elif message == "error" %}
+          <div class="modal fade" id="error-modal" tabindex="-1" role="dialog">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content bg-transparent">
+                      <div class="modal-header bg-danger justify-content-center">
+                          <i class="fas fa-exclamation-triangle fa-5x text-light"></i>
+                      </div>
+                      <div class="modal-body bg-light">
+                          <h4 class="text-center">Something Went Wrong</h4>
+                          <p>Problems were encountered uploading the project, please check the data entered and try again. If the error reoccurs do not hesitate to contact us.</p>
+                      </div>
+                      <div class="modal-footer bg-light  justify-content-center">
+                          <button 
+                          type="button" 
+                          class="btn btn-secondary btn-danger" 
+                          data-bs-dismiss="modal"
+                          >
+                            OK
+                          </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <script>
+              let errorModal = new bootstrap.Modal(document.getElementById('error-modal'), {});
+              errorModal.show();
+          </script>
+
+          {% elif message == "not found" %}
+          <div class="modal fade" id="error-modal" tabindex="-1" role="dialog">
+              <div class="modal-dialog" role="document">
+              <div class="modal-content bg-transparent">
+                  <div class="modal-header bg-danger justify-content-center">
+                          <i class="fas fa-exclamation-triangle fa-5x text-light"></i>
+                  </div>
+                  <div class="modal-body bg-light">
+                          <h4 class="text-center">No suspended projects found</h4>
+                  <p>Seems like no projects were submitted with the email you mentioned.</p>
+                  <p>Try searching on the website or <a href='mailto:nikolai.gorbachev@studio.unibo.it'>contact us</a></p>
+                  </div>
+                  <div class="modal-footer bg-light  justify-content-center">
+                  <button type="button" class="btn btn-secondary btn-danger" data-bs-dismiss="modal">OK</button>
+                  </div>
+              </div>
+              </div>
+          </div>
+          <script>
+              errorModal = new bootstrap.Modal(document.getElementById('error-modal'), {});
+              errorModal.show();
+          </script>
+
+          {% elif message == "expired" %}
+          <div class="modal fade" id="fail-modal" tabindex="-1" role="dialog">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content bg-transparent">
+                      <div class="modal-header bg-danger justify-content-center">
+                          <i class="fas fa-exclamation-triangle fa-5x text-light"></i>
+                      </div>
+                      <div class="modal-body bg-light">
+                          <h4 class="text-center">Expired</h4>
+                          <p>Your confirmation token expired. If you haven't confirmed the project already, you need to submit the project data again.</p>
+                      </div>
+                      <div class="modal-footer bg-light  justify-content-center">
+                          <button 
+                          type="button" 
+                          class="btn btn-secondary btn-danger" 
+                          data-bs-dismiss="modal"
+                          >
+                            OK
+                          </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <script>
+              let failModal = new bootstrap.Modal(document.getElementById('fail-modal'), {});
+              failModal.show();
+          </script>
+
+          {% elif message == "fail" %}
+          <div class="modal fade" id="fail-modal" tabindex="-1" role="dialog">
+              <div class="modal-dialog" role="document">
+              <div class="modal-content bg-transparent">
+                  <div class="modal-header bg-danger justify-content-center">
+                          <i class="fas fa-exclamation-triangle fa-5x text-light"></i>
+                  </div>
+                  <div class="modal-body bg-light">
+                      <h4 class="text-center">Failed</h4>
+                      <p>Wrong Confirmation Token.</p>
+                  </div>
+                  <div class="modal-footer bg-light  justify-content-center">
+                      <button 
+                      type="button" 
+                      class="btn btn-secondary btn-danger" 
+                      data-bs-dismiss="modal"
+                      >
+                        OK
+                      </button>
+                  </div>
+              </div>
+              </div>
+          </div>
+          <script>
+              errorModal = new bootstrap.Modal(document.getElementById('error-modal'), {});
+              errorModal.show();
+          </script>
+
+          {% elif message == "already" %}
+          <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content bg-transparent">
+                      <div class="modal-header bg-success justify-content-center">
+                          <i class="fas fa-check-circle fa-5x text-light"></i>
+                      </div>
+                      <div class="modal-body bg-light">
+                          <h4 class="text-center">Project Already Confirmed</h4>
+                          <p>Thank you for your contribution!</p>
+                      </div>
+                      <div class="modal-footer bg-light  justify-content-center">
+                          <button type="button" class="btn btn-secondary btn-success" data-bs-dismiss="modal">OK</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <script>
+              uploadModal = new bootstrap.Modal(document.getElementById('upload-modal'), {});
+              uploadModal.show();
+          </script>
+
+          {% elif category == "sended" %}
+          <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content bg-transparent">
+                      <div class="modal-header bg-warning justify-content-center">
+                          <i class="fas fa-envelope fa-5x text-light"></i>
+                      </div>
+                      <div class="modal-body bg-light">
+                          <h4 class="text-center">Awaiting Confirmation</h4>
+                          <p>Thank you for your contribution!</p>
+                          <p>A confirmation email has been sent to the address: {{message}}</p>
+                          <p>The email will expire after 24 hours</p>
+                      </div>
+                      <div class="modal-footer bg-light  justify-content-center">
+                          <button type="button" class="btn btn-secondary btn-warning" data-bs-dismiss="modal">OK</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <script>
+              uploadModal = new bootstrap.Modal(document.getElementById('upload-modal'), {});
+              uploadModal.show();
+          </script>
+        
+          {% elif category == "details sent" %}
+          <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content bg-transparent">
+                      <div class="modal-header bg-warning justify-content-center">
+                          <i class="fas fa-envelope fa-5x text-light"></i>
+                      </div>
+                      <div class="modal-body bg-light">
+                          <h4 class="text-center">Suspended projects' details sent!</h4>
+                          <p>Thank you for your contribution!</p>
+                          <p>We've sent an email with the details on all your projects that haven't passed the moderation yet: {{message}}</p>
+                      </div>
+                      <div class="modal-footer bg-light  justify-content-center">
+                          <button 
+                          type="button" 
+                          class="btn btn-secondary btn-warning" 
+                          data-bs-dismiss="modal"
+                          >
+                            OK
+                          </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <script>
+              uploadModal = new bootstrap.Modal(document.getElementById('upload-modal'), {});
+              uploadModal.show();
+          </script>
+
+          {% elif message == "login" %}
+          <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content bg-transparent">
+                      <div class="modal-header bg-secondary justify-content-center">
+                          <i class="fas fa-ban fa-5x text-light"></i>
+                      </div>
+                      <div class="modal-body bg-light">
+                          <h4 class="text-center">Login Required</h4>
+                      </div>
+                      <div class="modal-footer bg-light  justify-content-center">
+                          <button 
+                          type="button" 
+                          class="btn btn-secondary" 
+                          data-bs-dismiss="modal"
+                          >
+                            OK
+                          </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <script> 
+            uploadModal = new bootstrap.Modal(document.getElementById('upload-modal'), {});
+            uploadModal.show();
+          </script>
+          {% endif %}   
+
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+
+<script src="https://unpkg.com/itemsjs@1.0.37/dist/itemsjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+<script src="https://unpkg.com/vuejs-paginate@2.1.0/dist/index.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/minisearch@6.1.0/dist/umd/index.min.js"></script>
+
+<script>
+
+    function showOptions() {
+      if (document.getElementById("search-input").value !== "") {
+        $('#search-options-list').removeClass('d-none')
+      }
+    }
+
+    function preventSubmitting(e) {
+      if (e.keyCode === 13){
+        e.preventDefault()
+      }
+    }
+
+    $(window).click(function() {
+      if (event.target.parentElement.classList.contains('search-option') === false 
+      && event.target.classList.contains('search-option') === false
+      && event.target.classList.contains('search-input') === false
+      ) {
+        
+          $('#search-options-list').addClass('d-none')
+      }
+    });
+
+    $('#search-options-list').click(function(event){
+      event.stopPropagation();
+    });
+    
+       
+    rows = {{ data | tojson | safe}};
+
+    $(document).ready(function() {
+      var author_select_dta = {{ autdata | tojson | safe}};
+
+      $('#author_selector1').select2({
+        data: author_select_dta,
+        placeholder: "Search for a project by name",
+        allowClear: true,
+        templateResult: formatAut
+      });
+
+      function formatAut (aut) {
+        if (!aut.id) {
+          return aut.text;
+        }
+        var $aut = $(
+          '<span>' + aut.text + ' </span> <span class="text-secondary pl-3 d-none d-md-inline"> ' + aut.id + '</span>'
+        );
+        return $aut;
+      };
+
+      $('#author_selector1').on('select2:select', function (e) {
+        $(this).parents('form').submit();
+      });
+
+    });
+
+
+    rows = rows.sort((x, y) => x.title > y.title)
+    for (let i = 0; i < rows.length; i++) {
+      rows[i].id = i+1 ;
+    }
+    let miniSearch = new MiniSearch({
+      fields: ['title', 'description', 'authors']
+    })
+
+    miniSearch.addAll(rows);
+    var configuration = {
+      native_search_enabled: false,
+      custom_id_field: 'id',
+      aggregations: {
+        year: {
+          title: 'Academic Year',
+          size: 10,
+          conjunction: false
+        },
+        course: {
+          title: 'Course',
+          size: 10,
+          conjunction: false
+        },
+      }
+    }
+
+    itemsjs = itemsjs(rows, configuration);
+    var searchResultData = []
+
+    // add vue component for pagination
+    Vue.component('paginate', VuejsPaginate)
+
+    var vm = new Vue({
+      el: '#el',
+      delimiters: ['[[', ']]'],
+      data: function () {
+        // making it more generic
+        var filters = {};
+        Object.keys(configuration.aggregations).map(function(v) {
+          filters[v] = [];
+        })
+        // adding pagination variables
+        var page = this.page || 1;
+        var per_page = this.per_page || 6;
+        return {
+          query: '',
+            // initializing filters with empty arrays
+            filters: filters,
+            // setting pagination variables
+            page: page,
+            per_page: per_page,
+          }
+      },
+      methods: {
+        getId: function (index, array) {
+          return array[index]
+        },
+        reset: function () {
+          var filters = {};
+          Object.keys(configuration.aggregations).map(function(v) {
+            filters[v] = [];
+          })
+          this.filters = filters;
+          this.page = 1;
+          this.query = '';
+        },
+        goToPage: function (page) {
+          this.page = page;
+          return page;
+        },
+      },
+      watch: {
+          query: function () {
+            this.page = 1;
+          },
+          
+      },
+      computed: {
+        searchResult: function () {
+          var search_results = []
+          if (this.query && this.query.length) {
+            search_results = miniSearch.search(this.query, {prefix: true, boost: { title: 5 }, fuzzy: 0.2})
+            rowsUpdated = rows.filter(v => search_results.map(v => v.id).includes(v.id));
+            rowsUpdated = rowsUpdated.sort((x,y) => search_results.map(v => v.id).indexOf(x.id) > search_results.map(v => v.id).indexOf(y.id))
+            itemsjs.reindex(rowsUpdated)
+            rowsData = rowsUpdated
+          } else {
+            itemsjs.reindex(rows)
+            rowsData = rows
+          }
+          var result = itemsjs.search({
+            ids: search_results.map(v => v.id),
+            page: this.page,
+            per_page: 6,
+            filters: this.filters
+          })
+          searchResultData = itemsjs.search({
+            ids: search_results.map(v => v.id),
+            filters: this.filters
+          })     
+          return result
+        }
+      }
+    }
+  );
+
+</script>
+
+<style>
+    .select2-selection{
+        box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+        border: 1px solid rgba(0,0,0,.125) !important;
+        border-radius: 0.25rem !important;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+</style>
+
 
 {% endblock %}

@@ -22,7 +22,7 @@ from app import app
 from urllib import parse
 import string
 
-def ProjectRdf(data):
+def ProjectRdf(data,access='SUSPENDED'):
     g = ConjunctiveGraph()
     graph = URIRef(app.config["BASE_URI"] + "graph/" + data["Id"])
     proj = URIRef(app.config["BASE_URI"] + "project/" + data["Id"])
@@ -59,7 +59,7 @@ def ProjectRdf(data):
     g.addN([(year_uri, RDFS.label, Literal(data["Year"]), graph)])
 
     #Graph Metadata
-    g.addN([(graph, DCTERMS.accessRights, Literal("SUSPENDED"), graph)])
+    g.addN([(graph, DCTERMS.accessRights, Literal(access), graph)])
     g.addN([(graph, DCTERMS.dateSubmitted, Literal(str(data["Date"]), datatype=XSD.date), graph)])
     pub_uri = URIRef(app.config["BASE_URI"] + "person/" + data["Responsible"].split("@")[0].replace(".", "_"))
     g.addN([(graph, DCTERMS.publisher, pub_uri, graph)])
