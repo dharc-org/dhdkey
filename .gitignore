@@ -1,4 +1,6 @@
 env/
+app/.DS_Store
+.DS_Store
 instance/
 temp/
 dump/
