@@ -1,4 +1,5 @@
 env/
+rules.log
 app/.DS_Store
 app/__pycache__
 app/support/__pycache__
