@@ -21,22 +21,43 @@ from flask_mail import Mail, Message
 import jwt
 from threading import Thread
 
+MODE_TO_FILENAME_DICT = {
+    'upload': 'confirmation',
+    'update': 'confirmation-update',
+    'delete': 'confirmation-delete'
+}
+
+MODE_TO_TOPIC_DICT = {
+    'upload': 'DHDKey! Project Confirmation',
+    'update': 'DHDKey! Project Update',
+    'delete': 'DHDKey! Project Deletion'
+}
+
 mail = Mail(app)
-def user_confirmation_email(data):
+def user_confirmation_email(data, mode='upload'):
     title = data["Title"]
     address = data["Responsible"]
     filename = data["Id"]
     token = get_token(filename)
-    send_email('DHDKey! Project Confirmation',
+    send_email(MODE_TO_TOPIC_DICT[mode],
                recipients=[address],
-               text_body=render_template('email/confirmation.txt',
+               text_body=render_template(f'email/{MODE_TO_FILENAME_DICT[mode]}.txt',
                                          title=title,
                                          token=token),
-               html_body=render_template('email/confirmation.html',
+               html_body=render_template(f'email/{MODE_TO_FILENAME_DICT[mode]}.html',
                                          title=title,
                                          token=token)
                 )
+    
 
+def suspended_details_email(data, address):
+    send_email('DHDKey! suspended projects details',
+               recipients=[address],
+               html_body=render_template(f'email/suspended_projects_info.html',
+                                        data=data),
+               text_body=render_template(f'email/suspended_projects_info.txt',
+                                        data=data),
+                )
 
 def send_async_email(app, msg):
     with app.app_context():

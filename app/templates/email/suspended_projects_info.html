@@ -1,0 +1,34 @@
+<p>Dear Student!<br/>
+We've just received your request to see all your suspended projects<br/>
+Thank you for reaching out!</p>
+
+{% for project in data %}
+<div class="border-bottom border-top" style="text-align: left; margin-top: 30px; margin-bottom: 30px;">
+    <ul>
+        <li><b>Title:</b> {{ project["title"]}}</li>
+        <li><b>Authors:</b>
+            
+            <ul class="my-3">
+                {% for a in project["authors"] %}
+                <li>{{ a }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        <li><b>Description:</b> {{ project["description"]}}</li>
+        <li><b>Github Repository:</b> <a target="_blank" href='{{ data["repository"]}}'>{{ project["repository"]}} </a></li>
+        {% if project["homepage"] %}<li><b>Homepage:</b> <a target="_blank" href='{{ project["homepage"]}}'>{{ project["homepage"]}} </a></li>{% endif %}
+        <li><b>Course:</b> <a target="_blank" href='{{ project["course"]}}'>{{ project["course"]}} </a></li>
+        <li><b>Course's Academic Year:</b> {{ project["year"]}}</li>
+    </ul>
+</div>
+{% endfor %}
+
+<p>If you did not request to see your suspended projects and this email found you by mistake, we suggest that you get in touch with <a href="mailto:dhdkeymail@gmail.com">DHDKey! team</a></p>
+<p>Sincerely,
+    <br>
+    <br>
+The DHDKey! Team</p>
+    <br>
+    <br>
+<p>** THIS IS AN AUTOMATED MESSAGE - PLEASE DO NOT REPLY DIRECTLY TO THIS EMAIL **</p>
+<p>More Info at <a href="https://projects.dharc.unibo.it/dhdkey/">https://projects.dharc.unibo.it/dhdkey/</a></p>

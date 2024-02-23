@@ -34,8 +34,8 @@ login = LoginManager(app)
 login.init_app(app)
 
 
-scheduler = BackgroundScheduler(timezone="europe/rome")
-scheduler.start()
+#scheduler = BackgroundScheduler(timezone="europe/rome")
+#scheduler.start()
 
 #triplestore
 ts = SPARQLWrapper(app.config['TS_URL'])
@@ -64,4 +64,4 @@ from app import routes
 from app.support import routine_support
 
 #dump everyday at 3 A.M. (italian time zone)
-scheduler.add_job(routine_support.routine, 'cron', hour='3')
+#scheduler.add_job(routine_support.routine, 'cron', hour='3')

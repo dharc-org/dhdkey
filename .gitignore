@@ -1,0 +1,14 @@
+env/
+rules.log
+app/.DS_Store
+app/__pycache__
+app/support/__pycache__
+.DS_Store
+instance/
+temp/
+dump/
+courses/
+blazegraph-orig.jar
+blazegraph.jar
+blazegraph.jnl
+DHDM.graphml

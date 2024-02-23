@@ -20,7 +20,7 @@ from urllib import parse
 from app import app
 
 #This function create a dictionary with data curations
-def parse_form(form, time):
+def parse_form(form, time, force_id=None):
     data = {}
     for url_k in form:
         v = form[url_k]
@@ -59,8 +59,11 @@ def parse_form(form, time):
         data["Aut"][aut]["Surname"] = ' '.join(data["Aut"][aut]["Surname"].title().split())
         data["Aut"][aut]["Mail"] = data["Aut"][aut]["Mail"].lower()
     data["Id"] = project_id(data, time)
+    if force_id is not None:
+        data["graph"] = force_id
+    
     data["Course_url"] = find_page(data["Course"], data["Year"])
-    #json_store(data, data["Id"])
+    json_store(data, data["Id"])
     return data
 
 def remove_json(id):
@@ -76,7 +79,7 @@ def retrieve_json(id):
     except:
         return None
 
-def json_store (data, filename):
+def json_store(data, filename):
     path = os.path.join(app.config["TEMP_PATH"], filename + ".json")
     with open(path, 'w') as file:
         json.dump(data, file)

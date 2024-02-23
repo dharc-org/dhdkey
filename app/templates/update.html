@@ -1,0 +1,389 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class= "col-md-10 col-xl-7 mx-auto mt-5 mb-4 card" style="z-index: 0;"> 
+        <h2 class="mb-4 mt-4 display-6">Update your project!</h2>
+        <form id="projform" autocomplete="off" action="{{ url_for('update') }}" method="POST">
+            
+            <!--TITLE-->
+            <div class="form-group mb-3">
+                    <label for="Title">Project title</label>
+                    <input 
+                    type="text" 
+                    class="form-control" 
+                    id="Title" 
+                    name="Title" 
+                    required="true" 
+                    placeholder="Enter your project&#39;s title"
+                    >
+            </div>
+
+            <!--REPOSITORY LINK-->
+            <div class="form-group mb-3">
+                <label for="Repository">Project Github<!-- DH.arc--> repository</label>
+                <input 
+                type="text" 
+                required="true" 
+                class="form-control" 
+                id="Repository" 
+                name="Repository" 
+                placeholder="github.com/example" 
+                pattern="[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)" 
+                title="Make sure to provide a valid URL"
+                >
+            </div>
+            
+            <!--WEBSITE LINK-->
+            <div class="form-group mb-3">
+                <label for="Homepage">Project website (optional)</label>
+                <input type="text" 
+                class="form-control" 
+                id="Homepage" 
+                name="Homepage" 
+                placeholder="example.com" 
+                pattern="[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)" 
+                title="Make sure to provide a valid URL"
+                >
+            </div>
+
+            <!--AUTHORS-->
+            <div class="mb-3">
+                <label>List of authors</label>
+                <div id="author-container" class="card bg-light"> 
+                    <div class="card-body p-3 author-container-body">
+                        <div class="form-group author-fields card author-item text-left text-sm-center" id="item-0">
+                            <div class="card-header text-body-secondary bg-white d-flex flex-row justify-content-end">
+                                <button 
+                                type="button" 
+                                class="btn btn-danger btn-sm delete disabled" 
+                                for="item-0"
+                                >
+                                    <span aria-hidden="true">&times;</span>
+                                </button>   
+                            </div>
+                            <div class="card-body text-body-secondary bg-white p-3">
+                                <div class="row">
+                                    <div class="col-12 authorname">
+                                        <div class="mb-2 form-floating">
+                                            <input 
+                                            type="text" 
+                                            class="form-control" 
+                                            id="Aut[0][Name]"  
+                                            name="Aut[0][Name]" 
+                                            required="true" 
+                                            placeholder="Enter Author&#39;s Name" 
+                                            >
+                                            <label for="Aut[0][Name]" class="col-sm-4 col-form-label">
+                                                Author Name
+                                            </label>
+                                        </div>
+                                        <div class="mb-2 form-floating">
+                                            <input 
+                                            type="text" 
+                                            class="form-control" 
+                                            id="Aut[0][Surname]"  
+                                            name="Aut[0][Surname]"  
+                                            required="true" 
+                                            placeholder="Enter Author&#39;s Surname"
+                                            >
+                                            <label for="Aut[0][Surname]" class="col-sm-4 col-form-label">
+                                                Author Surname
+                                            </label>
+                                        </div>
+                                        <div class="form-floating">
+                                            <input 
+                                            type="mail" 
+                                            class="form-control" 
+                                            id="Aut[0][Mail]" 
+                                            name="Aut[0][Mail]" 
+                                            pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(unibo|studio.unibo)\.it$" 
+                                            placeholder="Enter Author&#39;s Unibo Mail" 
+                                            title="Only Unibo Mail accepted (@unibo.it or @studio.unibo.it)" 
+                                            required="true"
+                                            >
+                                            <label for="Aut[0][Mail]" class="col-sm-4 col-form-label">
+                                                UniboMail
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-body-secondary bg-light">
+                        <button 
+                        id="add-more" 
+                        name="add-more" 
+                        type="button" 
+                        class="btn btn-primary"
+                        >
+                            Add more
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!--YEAR-->
+            <div class="form-group mb-3">
+                <label for="Year">Course academic year</label>
+                <select class="form-control" id="Year" name="Year" required="true">
+                    <option value="" selected>Select course academic year...</option>
+                </select>
+              </div>
+
+            <!--COURSE-->
+            <div class="form-group mb-3">
+                <label for="Course">Course title</label>
+                <select 
+                class="course-title-select form-control text-body-secondary" 
+                id="Course" 
+                name="Course" 
+                disabled 
+                required="true">
+                    <option value="" disabled selected>Select course title...</option>
+                </select>
+                <div class="academic-year-form-text form-text mt-0 pt-0">
+                    Select course academic year first
+                </div>
+            </div>
+
+            <!--DESCRIPTION-->
+            <div class="form-group mb-3">
+                <label for="Description">Project Description</label>
+                <div class="form-floating text-body-secondary">
+                    <textarea 
+                    class="form-control" 
+                    id="Description" 
+                    name="Description" 
+                    maxlength = "500"
+                    ></textarea>
+                    <label for="Description" class="col-form-label">
+                        <span id="charcount">500</span> characters left
+                    </label> 
+                </div>
+            </div>
+
+            {% if current_user.is_authenticated %}
+            <!--RESPONSIBLE MAIL-->
+            <div class="form-group mb-5  d-none">
+                <label for="Responsible">Contact Mail</label>
+                <select class="form-control" id="Responsible" name="Responsible" 
+                >
+                    <option value="" selected>Address for confirmation emal</option>
+                </select>
+            </div>
+            {% else %}
+            <div class="form-group mb-5">
+                <label for="Responsible">Contact Mail</label>
+                <select class="form-control" id="Responsible" name="Responsible" 
+                required="true">
+                    <option value="" selected>Address for confirmation emal</option>
+                </select>
+            </div>
+            {% endif %}
+
+            <!--privacy-->
+            <div class="form-group mb-3">
+                <label class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="privacy" required>
+                    <label class="custom-control-label" for="privacy">
+                        I agree to the 
+                        <a target="_blank" href="{{ url_for('privacy') }}">
+                            Privacy Policy & Terms of Service
+                        </a>
+                    </label>
+                </label>
+            </div>
+
+            <!--Captcha-->
+             <div class="form-group d-flex mb-3">
+                <div class="g-recaptcha" data-sitekey="6LdawPwUAAAAAPUu2tYQgFlUWEUsdGwVlGigdEqC"></div>
+            </div>
+
+            <input class="btn btn-warning mb-3 d-none"  name="graphid" value="{{project_data.graph}}">
+            <input class="btn btn-warning mb-3 d-none"  name="mode" value="update">
+            <input type="submit" class="btn btn-primary mb-3"  name="action" value="Submit">
+
+            
+            {% if current_user.is_authenticated %}
+                <input class="btn btn-warning mb-3 d-none"  name="auth" value="True">
+            {%endif%}
+        </form>
+    </div>
+
+
+<script>
+
+$(document).ready(function () {
+    var next = 0;
+    var len = 1;
+    var courses_data = JSON.parse('{{ courses_data | tojson | safe}}');
+    var project_data = {{ project_data | tojson | safe }};
+    var authors_data = {{ authors_data | tojson | safe }};
+
+    document.getElementById('Title').value=project_data['title']
+    document.getElementById('Repository').value=project_data['repository']
+    document.getElementById('Homepage').value=project_data['homepage']
+    document.getElementById('Description').value=project_data['description']    
+
+    for (var i = 0; i < courses_data.length; i++) {
+        $("#Year").append('<option value="'+ courses_data[i].year +'">'+ courses_data[i].year + '</option>')
+        }
+        
+    for (var i = 0; i < authors_data.length; i++) {
+        $("#Responsible").append('<option value="'+ authors_data[i].mail +'">'+ authors_data[i].mail + '</option>')
+    }
+
+    document.getElementById('Aut[0][Name]').value=authors_data[0]['name']
+    document.getElementById('Aut[0][Surname]').value=authors_data[0]['surname']
+    document.getElementById('Aut[0][Mail]').value=authors_data[0]['mail']
+
+    for (i=1; i < authors_data.length; i++){
+        next = next + 1;
+        $(".delete").removeClass("disabled")
+
+        var template = '<div class="form-group author-fields card author-item mt-3 text-left text-sm-center" id="item-' + next + '">\
+                            <div class="card-header text-body-secondary bg-white d-flex flex-row justify-content-end">\
+                                <button type="button" class="btn btn-danger btn-sm delete" for="item-' + next + '">\
+                                    <span aria-hidden="true">&times;</span>\
+                                </button>\
+                            </div>\
+                            <div class="card-body text-body-secondary bg-white p-3">\
+                                <div class="row">\
+                                    <div class="col-12 pr-0 authorname">\
+                                        <div class="mb-2 form-floating">\
+                                            <input type="text" class="form-control" id="Aut[' + next + '][Name]"  name="Aut[' + next + '][Name]"  required="true" placeholder="Enter Author&#39;s Name">\
+                                            <label for="Aut[' + next + '][Name]" class="col-sm-4 col-form-label">Author Name</label>\
+                                        </div>\
+                                        <div class="mb-2 form-floating">\
+                                            <input type="text" class="form-control" id="Aut[' + next + '][Surname]"  name="Aut[' + next + '][Surname]"  required="true" placeholder="Enter Author&#39;s Surname">\
+                                            <label for="Aut[' + next + '][Surname]"  class="col-sm-4 col-form-label">Author Surname</label>\
+                                        </div>\
+                                        <div class="form-floating">\
+                                            <input type="mail" class="form-control" id="Aut[' + next + '][Mail]" name="Aut[' + next + '][Mail]" pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(unibo|studio.unibo)\.it$" placeholder="Enter Author&#39;s Unibo Mail" title="Only Unibo Mail accepted (@unibo.it or @studio.unibo.it)" required="true">\
+                                            <label for="Aut[' + next + '][Mail]"  class="col-sm-4 col-form-label">UniboMail</label>\
+                                        </div>\
+                                    </div>\
+                                </div>\
+                            </div>\
+                        </div>'
+        
+        $('#author-container .author-container-body').append(template);
+        document.getElementById('Aut['+i+'][Name]').value=authors_data[i]['name']
+        document.getElementById('Aut['+i+'][Surname]').value=authors_data[i]['surname']
+        document.getElementById('Aut['+i+'][Mail]').value=authors_data[i]['mail']
+
+        len = $('.author-item').length;            
+
+        $(".delete").click(function(){
+            var target = $(this).attr('for');
+            $('#'+ target).remove()
+            len = $('.author-item').length;
+            if (len === 1){
+                $(".delete").addClass("disabled")
+                $(".authorname").removeClass("col-11 pr-0")
+                $(".authorname").addClass("col-12")
+            }
+        });
+    }
+
+    $('#projform').submit(function() {
+        var repo = $('#Repository');
+        if ((repo.val().match(/^http:\/\//) == null) && (repo.val().match(/^https:\/\//) == null)) {
+            repo.val("https://" + repo.val());
+        }
+        var home = $('#Homepage');
+        if ((home.val().match(/^http:\/\//) == null) && (home.val().match(/^https:\/\//) == null) && (home.val().length > 0)) {
+            home.val("https://" + home.val());
+        }
+    });
+
+    $("#add-more").click(function(e){
+        e.preventDefault();
+        next = next + 1;
+        $(".delete").removeClass("disabled")
+        var template = '<div class="form-group author-fields card author-item mt-3 text-left text-sm-center" id="item-' + next + '">\
+                            <div class="card-header text-body-secondary bg-white d-flex flex-row justify-content-end">\
+                                <button type="button" class="btn btn-danger btn-sm delete" for="item-' + next + '">\
+                                    <span aria-hidden="true">&times;</span>\
+                                </button>\
+                            </div>\
+                            <div class="card-body text-body-secondary bg-white p-3">\
+                                <div class="row">\
+                                    <div class="col-12 pr-0 authorname">\
+                                        <div class="mb-2 form-floating">\
+                                            <input type="text" class="form-control" id="Aut[' + next + '][Name]"  name="Aut[' + next + '][Name]"  required="true" placeholder="Enter Author&#39;s Name">\
+                                            <label for="Aut[' + next + '][Name]" class="col-sm-4 col-form-label">Author Name</label>\
+                                        </div>\
+                                        <div class="mb-2 form-floating">\
+                                            <input type="text" class="form-control" id="Aut[' + next + '][Surname]"  name="Aut[' + next + '][Surname]"  required="true" placeholder="Enter Author&#39;s Surname">\
+                                            <label for="Aut[' + next + '][Surname]"  class="col-sm-4 col-form-label">Author Surname</label>\
+                                        </div>\
+                                        <div class="form-floating">\
+                                            <input type="mail" class="form-control" id="Aut[' + next + '][Mail]" name="Aut[' + next + '][Mail]" pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(unibo|studio.unibo)\.it$" placeholder="Enter Author&#39;s Unibo Mail" title="Only Unibo Mail accepted (@unibo.it or @studio.unibo.it)" required="true">\
+                                            <label for="Aut[' + next + '][Mail]"  class="col-sm-4 col-form-label">UniboMail</label>\
+                                        </div>\
+                                    </div>\
+                                </div>\
+                            </div>\
+                        </div>'
+        $('#author-container .author-container-body').append(template);
+        len = $('.author-item').length;            
+        $(".delete").click(function(){
+            var target = $(this).attr('for');
+            $('#'+ target).remove()
+            len = $('.author-item').length;
+            if (len === 1){
+                $(".delete").addClass("disabled")
+                $(".authorname").removeClass("col-11 pr-0")
+                $(".authorname").addClass("col-12")
+            }
+        });
+    });
+
+
+    $('#Year').change(function() {
+            yearselected = $(this).val()
+            if(yearselected===""){ 
+                $('#Course').prop( "disabled", true );
+                $('.academic-year-form-text').removeClass('d-none')
+            }
+            else{
+                $('.academic-year-form-text').addClass('d-none')
+                $('#Course').prop( "disabled", false );
+                courses_year = (courses_data.find(x => x.year === yearselected)).courses
+                for (var i = 0; i < courses_year.length; i++) {
+                        $("#Course").append('<option value="'+ courses_year[i] +'">'+ cut(courses_year[i]) + '</option>')
+                }
+            }
+        });
+
+        $('#Course').change(function() {
+            courseSelected = $(this).val()
+            if(courseSelected===""){ 
+                $('.course-title-select').addClass("text-body-secondary")
+            }
+            else{
+                $('.course-title-select').removeClass("text-body-secondary")
+            }
+        });
+
+
+    $("#Description").on('input propertychange paste',function(event){
+        $("#charcount").html(500 - this.value.length);
+        });
+
+});
+
+function cut(str){
+    if (str.length  > 55){
+        str = str.substring(0, 55) + "..."
+    }
+    return str
+
+}
+</script>
+<script src='https://www.google.com/recaptcha/api.js'></script>
+
+{% endblock %}

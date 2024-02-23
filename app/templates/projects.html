@@ -1,312 +1,921 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="container">
+<div class="container">
+    <div id="el" v-cloak >
+        <div class="head fixed-top bg-white" style="z-index: 3;">
+            <nav class="navbar navbar-expand navbar-light shadow-sm px-sm-5 px-0 ">
+                <a 
+                class="navbar-brand" 
+                style="font-size: 1.65rem !important; 
+                font-weight:200 !important;" 
+                href="{{ url_for('index') }}"
+                >
+                  DHDKey!
+                </a>
 
-{% if author %}
-      <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item {% if not author %} active  {% endif %}"><a href="{{ url_for('projects') }}">Projects</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ name }}</li>
-          </ol>
- {% endif %} 
-
-        
-    <div id="el" v-cloak style="margin-top: 30px;">
-    <div class="row mt-5">
-        <div class="col-lg-6">
-          {% if author %} 
-          <h2>{{ name }}</h2> 
-          <h5  class="d-none d-md-block" style="word-break:break-all;"><a href="mailto:{{ mail }}"  style="word-break:break-all;">{{ mail }}</a></h5>
-          <h6  class="d-block d-md-none"style="word-break:break-all;"><a href="mailto:{{ mail }}"  style="word-break:break-all;">{{ mail }}</a></h6>
-            {% else %}
-                        <form>
-                                <div class="form-group row">
-                                        <div class="col-10 pr-0">
-                                <select id="author_selector" class="form-control form-control-lg" name="id" required style="width:100%; height:100%">
-                                        <option value=""></option>
-                                </select>
-                            </div>
-                            <div class="col-2 pl-0">
-                                    <button type="submit" class="btn btn-primary" style="width:100%; height: 35px !important;  border-radius: 0px 4px 4px 0px !important"><i class="fas fa-search"></i></button>
-
-                            </div>
-                        </div>
-                        </form>
-              {% endif %}
-            </div>
-              <div class="col-lg-6">    </div>
-    </div>
-
-           <button type="button" class="btn-block btn btn-secondary d-block d-sm-block d-md-none text-left mt-3"  data-toggle="modal" data-target="#modal_filter">
-               Refine Search<i class="pt-1 float-right fas fa-tasks"></i>
-                 </button>
-        
-          <div class="d-block d-md-none"  style="margin-top: 20px;">
-            <h5>[[ searchResult.pagination.total ]] Item<span v-if="searchResult.pagination.total != 1">s</span> Found</h5>
-          </div>      
-          
-         <div class="row" style="margin-top: 20px;">
-             <div class="col-6">
-               <h5 class="d-none d-md-block">[[ searchResult.pagination.total ]] Item<span v-if="searchResult.pagination.total != 1">s</span> Found</h5>
-             </div>
-
-         
-             <div class="col-6">
-         <!-- div for pagination block -->
-               <div class="pagination-bar  float-right">
-                 <paginate
-                            v-model="page"
-                           :page-count="Math.ceil(searchResult.pagination.total / searchResult.pagination.per_page)"
-                           :page-range="3"
-                           :click-handler="goToPage"
-                           :prev-text="'Prev'"
-                           :next-text="'Next'"
-                           :container-class="'pagination'"
-                           :page-class="'page-item'"
-                           :page-link-class="'page-link'"
-                           :prev-class="'page-item'"
-                           :next-class="'page-item'"
-                           :prev-link-class="'page-link'"
-                           :next-link-class="'page-link'"
-                           :active-class="'active'">
-                 </paginate>
-               </div>
-             </div>
-         </div>
-     
-         <div class="row">
-             <div class="modal" id="modal_filter" tabindex="-1" role="dialog" data-backdrop="static">
-                 <div class="modal-dialog" role="document">
-                     <div class="modal-content">
-                       <div class="modal-header">
-                         <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-tasks"></i> Refine Search</h5>
-                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                           <span aria-hidden="true">&times;</span>
-                         </button>
-                       </div>
-                         <div class="modal-body">
-                   <div v-for="facet in searchResult.data.aggregations">
-                     <h5 style="margin-bottom: 5px;"><strong style="color: #337ab7;">[[ facet.title ]]</strong></h5>
-           
-                     <ul class="browse-list list-unstyled long-list" style="margin-bottom: 0;">
-                       <li v-for="bucket in facet.buckets">
-                       <div class="checkbox block" style="margin-top: 0; margin-bottom: 0;">
-                         <label>
-                           <input class="checkbox"  @click="goToPage(1)" type="checkbox" v-model="filters[facet.name]" v-bind:value="bucket.key">
-                           [[ bucket.key ]] ([[ bucket.doc_count ]]) 
-                 </label>
-               </div>
-               </li>
-             </ul>
-           </div>
-         </div>
-         <div class="modal-footer">
-             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-           </div>
-       </div></div></div>
-
-
-
-           <div class="col-3">
-           <div class="d-none d-sm-none d-md-block">
-           <div v-for="facet in searchResult.data.aggregations">
-               <h5 style="margin-bottom: 5px;"><strong style="color: #337ab7;">[[ facet.title ]]</strong></h5>
-     
-               <ul class="browse-list list-unstyled long-list" style="margin-bottom: 0;">
-                 <li v-for="bucket in facet.buckets">
-                 <div class="checkbox block" style="margin-top: 0; margin-bottom: 0;">
-                   <label>
-                     <input class="checkbox" @click="goToPage(1)" type="checkbox" v-model="filters[facet.name]" v-bind:value="bucket.key">
-                     [[ bucket.key ]] ([[ bucket.doc_count ]]) 
-                   </label>
-                 </div>
-                 </li>
-               </ul>
-             </div>
-           
-           
-           </div>
-
-           </div>
-     
-           <div class="col-md-9">
-             <div class="breadcrumbs"></div>
-             <div class="clearfix"></div>
-             <div>
-               <div class="proj-item" v-for="item of searchResult.data.items">
-                   <h3 class="mt-3" style="word-wrap: break-word;">[[ item.title ]]</h3>
-                   <div class="mb-3">
-                    <h5><a class="badge badge-info mr-2 mt-2" v-for="(aut, index) in item.authors" v-bind:href= "'{{ url_for('projects', id="") }}' + [[getId(index,item.ids)]]">[[ aut ]]</a></h5>
-                   </div>
-                   <div>
-                    <b>Academic Year:</b> [[ item.year ]]
+                {% if title != "Confirmation" %}
+                <button 
+                class="navbar-toggler" 
+                type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target="#navbarSupportedContent" 
+                aria-controls="navbarSupportedContent" 
+                aria-expanded="false" 
+                aria-label="Toggle navigation"
+                >
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            
+                <div class="pt-1 collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav">
+                        <li class="nav-item {% if title == 'Home' %}active{% endif %}">
+                            <a class="text-nowrap nav-link" href="{{ url_for('index') }}">Home</a>
+                        </li>
+                        <li class="nav-item {% if title == 'Projects' %}active{% endif %}">
+                            <a class="text-nowrap nav-link" href="{{ url_for('projects') }}">Projects</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="text-nowrap nav-link {% if title == 'Upload' %}active{% endif %}" href="{{ url_for('upload') }}">Upload</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a 
+                            id="tooltip-guide-4-p" 
+                            class="text-nowrap nav-link {% if title == 'Info' %}active{% endif %}" 
+                            href="{{ url_for('info') }}"
+                            data-bs-trigger="manual" 
+                            data-bs-selector="true"
+                            data-bs-toggle="tooltip" 
+                            data-bs-custom-class="custom-tooltip" 
+                            data-bs-html="true" 
+                            data-bs-title="
+                                <div class='d-flex flex-column gap-1'>
+                                        <div>4/4</div>
+                                        <div>Having some questions?</div>
+                                        <div>Find here some useful info and contacts!</div>
+                                        <div><a id='guide-ok-button-4-p' href='#' class='text-white'>OK</a></div>
+                                </div>"
+                            data-bs-placement="bottom"
+                            >
+                              Info
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div style="width: 1rem; height: 100%;"></div>
+                <div class="row pt-1 gap-0 col-lg-7 col-xl-8 col-md-6">
+                  <div class="my-0 mr-0 col-11 col-md-7 reverse d-none pr-0">
+                    <input id="search-input" type="text" v-model="query" oninput="processChange()"
+                      class="form-control pr-0" placeholder="Search">
                   </div>
-                   <div>
-                     <b>Course:</b>  <a v-bind:href="item.courseurl" target="_blank">[[ item.course ]] <i class="fas fa-external-link-alt fa-xs"></i></a>
-                   </div>
-                   <div class="mt-3 mb-3">
-                    [[ item.description ]]
-                   </div>
-                   <div class="mb-3">
-                     <div   v-if="item.homepage">
-                    <a v-bind:href="item.homepage" target="_blank"><i class="fas fa-arrow-alt-circle-right"></i> Project Website <i class="fas fa-external-link-alt fa-xs"></i></a>
-                     </div>
-                    <a v-bind:href="item.repository" target="_blank"><i class="fab fa-github"></i> Github<!-- DH.arc--> Repository <i class="fas fa-external-link-alt fa-xs"></i></a>
-                   </div>
-
+                  <div class="ml-0 col-3 d-none d-md-flex py-1 flex-row flex-nowrap gap-1 justify-content-start pl-0">
+                    <a href="#" data-bs-target="#sidebar-left" data-bs-toggle="collapse"  onclick="toggleFiltersSidebar()" class="btn btn-secondary rounded-3 reverse d-none pl-0 ml-0"><i class="fas fa-filter text-light"></i></a>
+                    <a href="#" data-bs-target="#sidebar-right" data-bs-toggle="collapse" class="btn btn-warning rounded-3 reverse d-none"><i class="fas fa-chart-pie text-black-50"></i></a>
+                    <a href="{{ url_for('projects') }}" class="btn btn-primary rounded-3 reverse d-none"><i class="fas fa-arrow-rotate-left text-light"></i></a>
                   </div>
                 </div>
-             <div class="clearfix"></div>
-           </div>
-     
-           <div class="clearfix" style="margin-bottom: 100px;"></div>
-         </div>
+                <div class="flex-fill"></div>
+                <div id="tooltip-help-p"
+                data-bs-trigger="click"
+                data-bs-toggle="tooltip" 
+                data-bs-custom-class="custom-tooltip" 
+                data-bs-html="true" 
+                data-bs-title="
+                    <div class='d-flex flex-column gap-1'>
+                            <div><a href='#' id='need-help-link-p' class='text-white'>Need help?</a></div>
+                            <div><a href='mailto:dhdkeymail@gmail.com' class='text-white'>Report a problem</a></div>
+                            <div><a href='#' id='show-modal-link' class='text-white' type='button' data-bs-toggle='modal' data-bs-target='#myProjectsModal'>My projects' status</a></div>
+                    </div>"
+                data-bs-template='
+                    <div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>
+                '
+                data-bs-placement="bottom"
+                class="text-dark text-decoration-none" 
+                style="cursor: pointer;"
+                >
+                  <i class="far fa-question-circle bg-white text-secondary icon fa-2x"></i>
+                </div>
 
-
-         <div class="pagination-bar  float-right mt-5">
-          <paginate
-                     v-model="page"
-                    :page-count="Math.ceil(searchResult.pagination.total / searchResult.pagination.per_page)"
-                    :page-range="3"
-                    :click-handler="goToPage"
-                    :prev-text="'Prev'"
-                    :next-text="'Next'"
-                    :container-class="'pagination'"
-                    :page-class="'page-item'"
-                    :page-link-class="'page-link'"
-                    :prev-class="'page-item'"
-                    :next-class="'page-item'"
-                    :prev-link-class="'page-link'"
-                    :next-link-class="'page-link'"
-                    :active-class="'active'">
-          </paginate>
+                {% endif %}
+            </nav>
         </div>
 
 
-     </div>
+        <div class="modal fade" id="myProjectsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Check out suspended projects</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form>
+                        <div class="modal-body">
+                            <div class="mb-3">Here you can request to see all your projects that were uploaded but not controlled by the moderators yet</div>
+                            <div class="mb-3">We will send you the project' info on your email address:</div>
+                            <div class="form-floating">
+                                <input 
+                                type="mail" 
+                                class="form-control" 
+                                id="mail" 
+                                name="mail" 
+                                pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(unibo|studio.unibo)\.it$" 
+                                placeholder="Enter Author&#39;s Unibo Mail" 
+                                title="Only Unibo Mail accepted (@unibo.it or @studio.unibo.it)" 
+                                required="true"
+                                >
+                                <label for="mail" class="col-sm-4 col-form-label">
+                                  UniboMail
+                                </label>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex flex-row justify-content-start">
+                            <input type="submit" class="btn btn-primary" name="action" value="Check my projects">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 mb-1">
+            <nav class="row my-0 mx-0 navbar navbar-expand navbar-light">
+                <div class="col-3 py-0">
+                    {% if author %}
+                    <h4 class="mb-0">
+                        <a href="mailto:{{ mail }}" style=" text-decoration: none;" class="text-dark">
+                          {{ name }} 
+                        </a>
+                    </h4>
+                    {% endif %}
+                    <h5 class="text-secondary mt-0">
+                        [[ searchResult.pagination.total ]] Item<span v-if="searchResult.pagination.total != 1">s</span> 
+                        Found
+                    </h5>
+                </div>
+                <div class="col-6 my-0 px-0 row">
+                    <div 
+                    class="col-12"
+                    id="tooltip-guide-1-p"
+                    data-bs-trigger="manual" 
+                    data-bs-selector="true"
+                    data-bs-toggle="tooltip" 
+                    data-bs-custom-class="custom-tooltip" 
+                    data-bs-html="true" 
+                    data-bs-title="
+                        <div class='d-flex flex-column gap-1'>
+                                <div>1/4</div>
+                                <div>Here you can search among all the DHDKey projects</div>
+                                <div>You can search by title, description and authors' names</div>
+                                <div><a id='guide-ok-button-1-p' href='#' class='text-white'>OK</a></div>
+                        </div>"
+                    data-bs-placement="bottom"
+                    >
+                        <input 
+                        id="search-input" 
+                        type="text" 
+                        v-model="query" 
+                        oninput="processChange()"
+                        class="form-control" 
+                        placeholder="Search"
+                        >
+                    </div>
+                </div>
+                <div class="col-3 d-flex flex-row flex-nowrap gap-1">
+                    <span   
+                        id="tooltip-guide-2-p" 
+                        data-bs-trigger="manual" 
+                        data-bs-selector="true"
+                        data-bs-toggle="tooltip" 
+                        data-bs-custom-class="custom-tooltip" 
+                        data-bs-html="true" 
+                        data-bs-title="
+                            <div class='d-flex flex-column gap-1'>
+                                    <div>2/4</div>
+                                    <div>Here you can refine your search with filters</div>
+                                    <div>The filters include authors' names, years of publication and the names of the subjects</div>
+                                    <div><a id='guide-ok-button-2-p' href='#' class='text-white'>OK</a></div>
+                            </div>"
+                        data-bs-placement="right"    
+                        >
+                          <a 
+                          href="#" 
+                          data-bs-target="#sidebar-left" 
+                          data-bs-toggle="collapse" 
+                          onclick="toggleFiltersSidebar()" 
+                          class="btn btn-secondary rounded-3">
+                            <i class="fas fa-filter text-light"></i>
+                          </a>
+                    </span>
+
+
+                    <span  
+                    id="tooltip-guide-3-p"
+                    data-bs-trigger="manual" 
+                    data-bs-selector="true"
+                    data-bs-toggle="tooltip" 
+                    data-bs-custom-class="custom-tooltip" 
+                    data-bs-html="true" 
+                    data-bs-title="
+                        <div class='d-flex flex-column gap-1'>
+                                <div>3/4</div>
+                                <div>With this button you can open/close the statistics charts.</div>
+                                <div>The charts visualize the tendencies in the students' projects.</div>
+                                <div>These charts are aggregated by year and subject</div>
+                                <div><a id='guide-ok-button-3-p' href='#' class='text-white'>OK</a></div>
+                        </div>"
+                    data-bs-placement="left"
+                    >
+                        <a 
+                        href="#" 
+                        data-bs-target="#sidebar-right" 
+                        data-bs-toggle="collapse"  
+                        class="btn btn-warning rounded-3">
+                            <i class="fas fa-chart-pie text-black-50"></i>
+                        </a>
+                    </span>
+                    <a 
+                    href="{{ url_for('projects') }}" 
+                    class="btn btn-primary rounded-3"
+                    >
+                      <i class="fas fa-arrow-rotate-left text-light"></i>
+                    </a>
+                </div>  
+            </nav>
+        </div>
+
+     
+
+        <div class="projects-page-main-content row d-flex justify-content-center mb-3">
+            <div id="sidebar-left"  class="col-lg-3 col-10 ml-0 collapse collapse-horizontal vh-100">
+                <form class="d-md-none d-block">
+                    <div class="form-group px-0">
+                        <select 
+                        id="author_selector"
+                        class="form-control form-control-lg rounded" 
+                        name="id" 
+                        required 
+                        style="width:100%; height:100%;"
+                        >
+                          <option value></option>
+                        </select>
+                    </div>
+                </form>
+                <div class="d-block d-md-none">
+                    <div v-for="facet in searchResult.data.aggregations">
+                        <h5 style="margin-bottom: 5px;">
+                          <strong style="color: #337ab7;">
+                            [[ facet.title ]]
+                          </strong>
+                        </h5>
+                        <ul 
+                        class="browse-list list-unstyled long-list"
+                        style="margin-bottom: 0;"
+                        >
+                            <li v-for="bucket in facet.buckets">
+                                <div 
+                                class="checkbox block"
+                                style="margin-top: 0; margin-bottom: 0;"
+                                >
+                                    <label>
+                                        <input 
+                                        class="checkbox" @click="goToPage(1)"
+                                        type="checkbox" 
+                                        v-model="filters[facet.name]"
+                                        v-bind:value="bucket.key">
+                                        [[ bucket.key ]] ([[ bucket.doc_count ]])
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div 
+            id="sidebar-left-fixed"  
+            class="d-none d-md-block position-fixed col-3 ml-0 bg-white border-end shadow-sm" 
+            style="z-index: 2; 
+                  padding-top: 5rem; 
+                  padding-bottom: 5rem; 
+                  bottom: 0; 
+                  top: 0; 
+                  overflow-y:scroll; 
+                  left: 0;"
+            >
+                <form>
+                    <div class="form-group px-0">
+                        <select 
+                        id="author_selector_fixed"
+                        class="form-control form-control-lg rounded" 
+                        name="id" 
+                        required 
+                        style="width:100%; height:100%;"
+                        >
+                            <option value></option>
+                        </select>
+                    </div>
+                </form>
+                <div class="d-block">
+                    <div v-for="facet in searchResult.data.aggregations">
+                        <h5 style="margin-bottom: 5px;">
+                          <strong style="color: #337ab7;">
+                            [[ facet.title ]]
+                          </strong>
+                        </h5>
+                        <ul 
+                        class="browse-list list-unstyled long-list"
+                        style="margin-bottom: 0;"
+                        >
+                            <li v-for="bucket in facet.buckets">
+                                <div 
+                                class="checkbox block"
+                                style="margin-top: 0; margin-bottom: 0;"
+                                >
+                                    <label>
+                                      <input 
+                                      class="checkbox" @click="goToPage(1)"
+                                      type="checkbox" 
+                                      v-model="filters[facet.name]"
+                                      v-bind:value="bucket.key"
+                                      >
+                                      [[ bucket.key ]] ([[ bucket.doc_count ]])
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="projects-list" class="col-md-10 col-lg-6 main-projects-section">
+                <div class="clearfix"></div>
+                <div class="proj-item" v-for="item of searchResult.data.items">
+                    <form v-bind:action="'{{ url_for('update', id="") }}' + [[item.graph]]" method="POST">
+                        <div class="d-flex flex-row justify-content-between mt-3">
+                            <h3 style="word-wrap: break-word;">[[ item.title ]]</h3>
+                            <div class="btn-group">
+                              <form>
+                                <button 
+                                type="submit" 
+                                class="btn rounded-3"
+                                value="Edit project"
+                                name="action"
+                                >
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="mb-3 ">
+                            <p class="d-flex gap-3">
+                                <a class=" text-dark fw-light"
+                                v-for="(aut, index) in item.authors"
+                                v-bind:href="'{{ url_for('projects', id="") }}' + [[getId(index,item.ids)]]"
+                                >
+                                    [[ aut ]]
+                                </a>
+                            </p>
+                        </div>
+                        <div>
+                            <b>Academic Year:</b> [[ item.year ]]
+                        </div>
+                        <div>
+                            <b>Course:</b> 
+                            <a v-bind:href="item.courseurl" target="_blank">
+                                [[ item.course ]] 
+                                <i class="fas fa-external-link-alt fa-xs">
+                                </i>
+                            </a>
+                        </div>
+                        <div class="mt-3 mb-3">
+                            [[ item.description ]]
+                        </div>
+                        <div class="mb-3">
+                            <div v-if="item.homepage">
+                                <a v-bind:href="item.homepage" target="_blank">
+                                    <i class="fas fa-arrow-alt-circle-right"></i> 
+                                        Project Website
+                                    <i class="fas fa-external-link-alt fa-xs"></i>
+                                </a>
+                            </div>
+                            <a v-bind:href="item.repository" target="_blank">
+                                <i class="fab fa-github"></i> 
+                                    Github<!-- DH.arc--> Repository
+                                <i class="fas fa-external-link-alt fa-xs"></i>
+                            </a>
+                        </div>
+                    </form>  
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="pagination-bar float-right mt-5" style="z-index: 1;">
+                    <paginate
+                      v-model="page"
+                      :page-count="Math.ceil(searchResult.pagination.total / searchResult.pagination.per_page)"
+                      :page-range="3"
+                      :click-handler="goToPage"
+                      :prev-text="'Prev'"
+                      :next-text="'Next'"
+                      :container-class="'pagination'"
+                      :page-class="'page-item'"
+                      :page-link-class="'page-link'"
+                      :prev-class="'page-item'"
+                      :next-class="'page-item'"
+                      :prev-link-class="'page-link'"
+                      :next-link-class="'page-link'"
+                      :active-class="'active'"
+                      >
+                    </paginate>
+                </div>
+            </div>
+            <div 
+            id="sidebar-right" 
+            class="col-10 col-lg-3 collapse collapse-horizontal show px-0"
+            >
+                <div 
+                class="d-flex flex-column justify-content-start align-items-center gap-3" 
+                style="height: 100%; min-height: fit-content;" 
+                >
+                    <div 
+                    id="carouselExample" 
+                    class="carousel carousel-dark slide" 
+                    data-bs-interval="false"
+                    >
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div 
+                                class="d-flex flex-column justify-content-center align-items-center gap-2 pt-4" 
+                                style="height: 25rem;"
+                                >
+                                    <canvas id="myChart"></canvas>
+                                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked onclick="updateChartAggregations('course')">
+                                        <label class="btn btn-outline-primary" for="btnradio1">Course</label>
+                                        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" onclick="updateChartAggregations('year')">
+                                        <label class="btn btn-outline-primary" for="btnradio2">Year</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                              <div class="d-flex flex-column justify-content-center px-4 mx-1 py-4" style="height: 25rem;">
+                                <canvas id="myBarChart"></canvas>
+                              </div>
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix">
+            </div>
+        </div>
     </div>
+</div>
 
+<script src="https://unpkg.com/itemsjs@1.0.37/dist/itemsjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+<script src="https://unpkg.com/vuejs-paginate@2.1.0/dist/index.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/minisearch@6.1.0/dist/umd/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
 
-     <script src="https://unpkg.com/itemsjs@1.0.37/dist/itemsjs.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
-    <script src="https://unpkg.com/vuejs-paginate@2.1.0/dist/index.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-    
-    <script>
+    const tooltipTriggerList1 = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList1 = [...tooltipTriggerList1].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
-rows = {{ data | tojson | safe}};
-$(document).ready(function() {
-    var author_select_dta = {{ autdata | tojson | safe}};
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl, {
+      trigger: 'focus'
+    }))
 
-    $('#author_selector').select2({
-        data:author_select_dta,
-    placeholder: "Select an Author",
-    allowClear: true,
-    templateResult: formatAut
-});
+</script>
 
-  function formatAut (aut) {
-    if (!aut.id) {
-      return aut.text;
-    }
-    var $aut = $(
-      '<span>' + aut.text + ' </span> <span class="text-secondary pl-3 d-none d-md-inline"> ' + aut.id + '</span>'
+<script>
+
+  rows = {{ data | tojson | safe}};
+  var rowsData = rows
+  var coursesUnique = []
+  var yearsUnique = []
+  function onlyUnique(value, index, array) {
+          return array.indexOf(value) === index;
+        }
+
+  search_input = '{{ search | safe }}';
+  if (search_input === 'None') {
+    search_input = null
+  }
+
+  $( window ).on( "load", function() { 
+      const helpButtonWithTooltipP = document.getElementById('tooltip-help-p')
+      var tooltipFromHelpButtonP = bootstrap.Tooltip.getOrCreateInstance(helpButtonWithTooltipP)
+      const searchInputWihTooltipP = document.getElementById('tooltip-guide-1-p')
+      var tooltipFromSearchInputP = bootstrap.Tooltip.getOrCreateInstance(searchInputWihTooltipP)
+      const filterButtonWithTooltipP = document.getElementById('tooltip-guide-2-p')
+      var tooltipFromFilterButtonP = bootstrap.Tooltip.getOrCreateInstance(filterButtonWithTooltipP)
+      const chartsButtonWithTooltipP = document.getElementById('tooltip-guide-3-p')
+      var tooltipFromChartsButtonP = bootstrap.Tooltip.getOrCreateInstance(chartsButtonWithTooltipP)
+      const infoLinkWithTooltipP = document.getElementById('tooltip-guide-4-p')
+      var tooltipFromInfoLinkP = bootstrap.Tooltip.getOrCreateInstance(infoLinkWithTooltipP)
+
+      helpButtonWithTooltipP.addEventListener('shown.bs.tooltip', () => {
+          $('#need-help-link-p').click(
+              function(e){
+                  tooltipFromHelpButtonP.hide()
+                  tooltipFromSearchInputP.show()
+              }
+          );
+          $('#show-modal-link').click(
+            function(e){
+                let myProjectsModal = new bootstrap.Modal(document.getElementById('myProjectsModal'), {});
+                myProjectsModal.show();
+              }
+          )
+      });
+      searchInputWihTooltipP.addEventListener('shown.bs.tooltip', () => {
+          $('#guide-ok-button-1-p').click(
+              function(e){
+                  tooltipFromFilterButtonP.show()
+                  tooltipFromSearchInputP.hide()
+              }
+          );
+      });
+      filterButtonWithTooltipP.addEventListener('shown.bs.tooltip', () => {
+          $('#guide-ok-button-2-p').click(
+              function(e){
+                  tooltipFromChartsButtonP.show()
+                  tooltipFromFilterButtonP.hide()
+              }
+          );
+      });
+      chartsButtonWithTooltipP.addEventListener('shown.bs.tooltip', () => {
+          $('#guide-ok-button-3-p').click(
+              function(e){
+                  tooltipFromInfoLinkP.show()
+                  tooltipFromChartsButtonP.hide()
+              }
+          );
+      });
+      infoLinkWithTooltipP.addEventListener('shown.bs.tooltip', () => {
+          $('#guide-ok-button-4-p').click(
+              function(e){
+                  tooltipFromInfoLinkP.hide()
+              }
+          );
+      });
+  })
+
+  $(document).ready(function() {
+    var body = document.body,
+    html = document.documentElement;
+    var height = Math.max( 
+      body.scrollHeight, 
+      body.offsetHeight, 
+      html.clientHeight, 
+      html.scrollHeight, 
+      html.offsetHeight 
     );
-    return $aut;
-  };
 
-  $('#author_selector').on('select2:select', function (e) {
-    $(this).parents('form').submit();
+    $(window).scroll(function(){
+        $('.reverse').removeClass('d-none')
+        $('.reverse').css('transform', 'translate3d(0,' + (Math.min(0, -100 + $(this).scrollTop()*2)) + 'px, 0)'); 
+        
+        if (Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - $(this).scrollTop() - 10 <= window.innerHeight) {
+            $('#sidebar-left-fixed').css('bottom', '5rem')
+        } else {
+            $('#sidebar-left-fixed').css('bottom', '0')
+        }
+    }).scroll();
+
+    if ((search_input !== null) && (search_input !== NaN) && (search_input !== 'None')  && (search_input !== '')) {
+        document.getElementById("search-input").value = search_input
+    }
+
+    var author_select_dta = {{ autdata | tojson | safe}};
+    $('#author_selector').select2({
+        data: author_select_dta,
+        placeholder: "Select an Author",
+        allowClear: true,
+        templateResult: formatAut
+    });
+
+    $('#author_selector_fixed').select2({
+        data: author_select_dta,
+        placeholder: "Select an Author",
+        allowClear: true,
+        templateResult: formatAut
+    });
+
+    function formatAut (aut) {
+      if (!aut.id) {
+        return aut.text;
+      }
+      var $aut = $(
+        '<span>' + aut.text + ' </span> <span class="text-secondary pl-3 d-none d-md-inline"> ' + aut.id + '</span>'
+      );
+      return $aut;
+    };
+
+    $('#author_selector').on('select2:select', function (e) {
+      $(this).parents('form').submit();
+    });
+
+    $('#author_selector_fixed').on('select2:select', function (e) {
+      $(this).parents('form').submit();
+    });
   });
 
-});
 
 
 
- var configuration = {
- sortings: { name_asc: {field: 'title', order: 'asc'}},
- aggregations: {
-   year: {
-     title: 'Academic Year',
-     size: 10
-   },
-   course: {
-     title: 'Course',
-     size: 10
-   },
- }
-}
-
-
-itemsjs = itemsjs(rows, configuration);
-// add vue component for pagination
-Vue.component('paginate', VuejsPaginate)
-
-var vm = new Vue({
- el: '#el',
- delimiters: ['[[', ']]'],
- data: function () {
-
-   // making it more generic
-   var filters = {};
-   Object.keys(configuration.aggregations).map(function(v) {
-     filters[v] = [];
-   })
-   
-   // adding pagination variables
-   var page = this.page || 1;
-   var per_page = this.per_page || 6;
-
-   return {
-     query: '',
-     // initializing filters with empty arrays
-     filters: filters,
-     // setting pagination variables
-     page: page,
-     per_page: per_page,
-   }
- },
- methods: {
-    getId: function (index, array) {
-      return array[index]
-    },
-   reset: function () {
-     var filters = {};
-     Object.keys(configuration.aggregations).map(function(v) {
-       filters[v] = [];
-     })
-
-     this.filters = filters;
-     this.page = 1;
-     this.query = '';
-   },
-   goToPage: function (page) {
-     this.page = page;
-     return page;
-   },
- },
- watch: {
-     query: function () {
-      this.page = 1;
+  function toggleFiltersSidebar() {
+    $('#sidebar-left-fixed').toggleClass('shown');
+    if ($('#sidebar-left-fixed').hasClass('shown')) {
+      $('#sidebar-left-fixed').removeClass('hidden')
+    } else {
+      $('#sidebar-left-fixed').addClass('hidden')
     }
- },
- computed: {
-   searchResult: function () {
+  }
+  rows = rows.sort((x, y) => x.title > y.title)
+  for (let i = 0; i < rows.length; i++) {
+    rows[i].id = i+1 ;
+  }
 
-     var result = itemsjs.search({
-       query: this.query,
-       page: this.page,
-       per_page: 6,
-       filters: this.filters
-     })
-     return result
-   }
- }
-});
+  let miniSearch = new MiniSearch({
+    fields: ['title', 'description', 'authors']
+  })
+  miniSearch.addAll(rows);
+  var configuration = {
+    native_search_enabled: false,
+    custom_id_field: 'id',
+    aggregations: {
+      year: {
+        title: 'Academic Year',
+        size: 10,
+        conjunction: false
+      },
+      course: {
+        title: 'Course',
+        size: 10,
+        conjunction: false
+      },
+    },
+  }
 
-     </script>
+  itemsjs = itemsjs(rows, configuration);
+  var searchResultData = []
+  // add vue component for pagination
+  Vue.component('paginate', VuejsPaginate)
+  var vm = new Vue({
+    el: '#el',
+    delimiters: ['[[', ']]'],
+    data: function () {
+      var filters = {};
+      Object.keys(configuration.aggregations).map(function(v) {
+        filters[v] = [];
+      })
+      // adding pagination variables
+      var page = this.page || 1;
+      var per_page = this.per_page || 6;
+      return {
+        query: search_input,
+        // initializing filters with empty arrays
+        filters: filters,
+        // setting pagination variables
+        page: page,
+        per_page: per_page,
+      }
+    },
+    methods: {
+        getId: function (index, array) {
+          return array[index]
+        },
+        reset: function () {
+          var filters = {};
+          Object.keys(configuration.aggregations).map(function(v) {
+            filters[v] = [];
+          })
+          this.filters = filters;
+          this.page = 1;
+          this.query = '';
+        },
+        goToPage: function (page) {
+          this.page = page;
+          return page;
+        },
+    },
+    watch: {
+        query: function () {
+          this.page = 1;
+        }, 
+    },
+    computed: {
+      searchResult: function () {
+        var search_results = []
+        if (this.query && this.query.length) {
+          search_results = miniSearch.search(this.query, {prefix: true, boost: { title: 5 }, fuzzy: 0.2})
+          rowsUpdated = rows.filter(v => search_results.map(v => v.id).includes(v.id));
+          rowsUpdated = rowsUpdated.sort((x,y) => search_results.map(v => v.id).indexOf(x.id) > search_results.map(v => v.id).indexOf(y.id))
+          itemsjs.reindex(rowsUpdated)
+          rowsData = rowsUpdated
+        } else {
+          itemsjs.reindex(rows)
+          rowsData = rows
+        }
+        coursesUnique = rowsData.map(v => v.course).filter(onlyUnique)
+        yearsUnique = rowsData.map(v => v.year).filter(onlyUnique).sort((a,b) => 
+          {
+            if (a>b) return 1;
+            if (a<b) return -1;
+            if (a==b) return 0;
+          }
+        )
+        var result = itemsjs.search({
+          ids: search_results.map(v => v.id),
+          page: this.page,
+          per_page: 6,
+          filters: this.filters
+        })
+        searchResultData = itemsjs.search({
+          ids: search_results.map(v => v.id),
+          filters: this.filters
+        }) 
+        result.data.aggregations.year.buckets = result.data.aggregations.year.buckets.sort((a,b)=> {
+          if (a.key<b.key) return 1
+          else return -1
+        })
+        result.data.aggregations.course.buckets = result.data.aggregations.course.buckets.sort((a,b)=> {
+          if (a.key>b.key) return 1
+          else return -1
+        })
+        return result
+      }
+    }
+  });
+
+  const ctx = document.getElementById('myChart');
+  var chart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: searchResultData.data.aggregations.course.buckets.map(v => v.key),
+      datasets: [{
+        label: 'Number of projects',
+        data: searchResultData.data.aggregations.course.buckets/*.filter(v => searchResultData.data.items.map(e => e.course).includes(v.key))*/.map(v => v.doc_count),
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      radius: '75%'
+    }
+  });
+  var chartAggregation = 'course'
+  function updateChartAggregations(aggregationName) {
+    if (aggregationName === 'course') {
+      chartAggregation = 'course'
+    } else if (aggregationName === 'year') {
+      chartAggregation = 'year'
+    }
+  }
+  function updateChartData() {
+    setTimeout(function() {
+      chart.data.labels = searchResultData.data.aggregations[chartAggregation].buckets.map(v => v.key);
+      chart.data.datasets.forEach((dataset) => {
+          dataset.data = searchResultData.data.aggregations[chartAggregation].buckets/*.filter(v => searchResultData.data.items.map(e => e[chartAggregation]).includes(v.key))*/.map(v => v.doc_count)
+      });
+      chart.update()
+    }, 10);
+  }
+
+  const ctl = document.getElementById('myBarChart');
+  ds = []
+  counter = 0
+  for (course of coursesUnique) {
+    courseData = []
+    for (year of yearsUnique) {
+      courseCountInYear = 0
+      for (row of rowsData) {
+        if (
+          (row.course == course) && (row.year == year)
+        ) {
+          courseCountInYear += 1
+          counter += 1
+        }
+      }
+      courseData.push(courseCountInYear)
+    }
+    ds.push(
+      {
+        label: course,
+        data: courseData
+      }
+    )
+  }
+
+  var barChart = new Chart(ctl, {
+    type: 'bar',
+    data: {
+      labels: yearsUnique, 
+      datasets: ds
+    },
+    options: {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      animation: false,
+      scales: {
+        x: {
+            stacked: true
+        },
+        y: {
+            stacked: true
+        }
+      }
+    }
+  });
+
+  function debounce(func, timeout = 100){
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+  }
+
+  const processChange = debounce(() => {updateChartData()});
+
+  $(document).click(function() {
+    processChange()
+  });
+
+
+
+</script>
+    
+<style>
+    .custom-tooltip {
+        --bs-tooltip-bg: var(--bs-dark);
+        --bs-tooltip-color: var(--bs-white);
+    }
+    .reverse {
+      transform: translateY(-4rem);
+      transform: translateZ(-1rem);
+    }
+    .fixed {
+      position: fixed;
+    }
+    .active {
+      z-index: 1 ;
+    }
+    #sidebar-left-fixed {
+      transform: translateX(-100%);
+    }
+    #sidebar-left-fixed.shown {
+      transform: translateX(0);
+      transition-duration: 0.1s;
+      transition-timing-function: linear;
+    }
+    #sidebar-left-fixed.hidden {
+      transform: translateX(-100%);
+      transition-duration: 0.1s;
+      transition-timing-function: linear;
+    }
+
+
+    @media only screen and (min-width : 480px) {
+      
+    }
+
+    /* Small Devices, Tablets */
+    @media only screen and (min-width : 768px) {
+
+    }
+
+    /* Medium Devices, Desktops */
+    @media only screen and (min-width : 992px) {
+      #sidebar-right {
+        border-left: 1px solid rgba(0,0,0,0.2);
+      }
+    }
+
+    /* Large Devices, Wide Screens */
+    @media only screen and (min-width : 1200px) {
+
+    }
+</style>
 
 {% endblock %}
-
