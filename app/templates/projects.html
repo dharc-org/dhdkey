@@ -245,7 +245,7 @@
      
 
         <div class="projects-page-main-content row d-flex justify-content-center mb-3">
-            <div id="sidebar-left"  class="col-lg-3 col-10 ml-0 collapse collapse-horizontal vh-100">
+            <div id="sidebar-left"  class="col-lg-3 col-10 ml-0 collapse collapse-horizontal show vh-100">
                 <form class="d-md-none d-block">
                     <div class="form-group px-0">
                         <select 
@@ -292,7 +292,7 @@
 
             <div 
             id="sidebar-left-fixed"  
-            class="d-none d-md-block position-fixed col-3 ml-0 bg-white border-end shadow-sm" 
+            class="d-none shown d-md-block position-fixed col-3 ml-0 bg-white border-end shadow-sm" 
             style="z-index: 2; 
                   padding-top: 5rem; 
                   padding-bottom: 5rem; 
@@ -636,6 +636,7 @@
 
 
   function toggleFiltersSidebar() {
+      // $('#sidebar-left-fixed').addClass('hidden')
     $('#sidebar-left-fixed').toggleClass('shown');
     if ($('#sidebar-left-fixed').hasClass('shown')) {
       $('#sidebar-left-fixed').removeClass('hidden')
@@ -882,7 +883,7 @@
       z-index: 1 ;
     }
     #sidebar-left-fixed {
-      transform: translateX(-100%);
+      transform: translateX(0);
     }
     #sidebar-left-fixed.shown {
       transform: translateX(0);
