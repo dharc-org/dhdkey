@@ -68,10 +68,46 @@
                     <input id="search-input" type="text" v-model="query" oninput="processChange()"
                       class="form-control pr-0" placeholder="Search">
                   </div>
+
                   <div class="ml-0 col-3 d-none d-md-flex py-1 flex-row flex-nowrap gap-1 justify-content-start pl-0">
-                    <a href="#" data-bs-target="#sidebar-left" data-bs-toggle="collapse"  onclick="toggleFiltersSidebar()" class="btn btn-secondary rounded-3 reverse d-none pl-0 ml-0"><i class="fas fa-filter text-light"></i></a>
-                    <a href="#" data-bs-target="#sidebar-right" data-bs-toggle="collapse" class="btn btn-warning rounded-3 reverse d-none"><i class="fas fa-chart-pie text-black-50"></i></a>
-                    <a href="{{ url_for('projects') }}" class="btn btn-primary rounded-3 reverse d-none"><i class="fas fa-arrow-rotate-left text-light"></i></a>
+                    <button
+                      data-bs-toggle="tooltip" 
+                      data-bs-title="Filter projects"
+                      data-bs-placement="bottom"
+                      data-bs-trigger="hover"
+                      class="text-dark text-decoration-none btn  reverse d-none p-0"
+                    >
+                    <a href="#" data-bs-target="#sidebar-left" data-bs-toggle="collapse"  onclick="toggleFiltersSidebar()" class="btn btn-secondary rounded-3 filter-button">
+                      <i class="fas fa-filter text-light">
+                      </i>
+                    </a>
+                  </button>
+
+                  <button
+                      data-bs-toggle="tooltip" 
+                      data-bs-title="Hide/open charts"
+                      data-bs-placement="bottom"
+                      data-bs-trigger="hover"
+                      class="text-dark text-decoration-none btn reverse d-none p-0"
+                    >
+                    <a href="#" data-bs-target="#sidebar-right" data-bs-toggle="collapse" onclick="toggleChartsSidebar()"
+                    class="btn btn-warning rounded-3 charts-button">
+                      <i class="fas fa-chart-pie text-black-50"></i>
+                    </a>
+                    </button>
+
+                    <button
+                      data-bs-toggle="tooltip" 
+                      data-bs-title="Reload page"
+                      data-bs-placement="bottom"
+                      data-bs-trigger="hover"
+                      class="text-dark text-decoration-none btn reverse d-none p-0"
+                    >
+                    <a href="{{ url_for('projects') }}" 
+                    class="btn btn-primary rounded-3">
+                      <i class="fas fa-arrow-rotate-left text-light"></i>
+                    </a>
+                    </button>
                   </div>
                 </div>
                 <div class="flex-fill"></div>
@@ -196,14 +232,23 @@
                             </div>"
                         data-bs-placement="right"    
                         >
+                        <button
+                          data-bs-toggle="tooltip" 
+                          data-bs-trigger="hover"
+                          data-bs-title="Filter projects"
+                          data-bs-placement="bottom"
+                          class="text-dark text-decoration-none btn p-0"
+                        >
                           <a 
-                          href="#" 
-                          data-bs-target="#sidebar-left" 
-                          data-bs-toggle="collapse" 
-                          onclick="toggleFiltersSidebar()" 
-                          class="btn btn-secondary rounded-3">
+                            href="#"
+                            data-bs-target="#sidebar-left" 
+                            data-bs-toggle="collapse"  
+                            onclick="toggleFiltersSidebar()" 
+                            class="btn btn-secondary rounded-3 filter-button"
+                          >
                             <i class="fas fa-filter text-light"></i>
                           </a>
+                        </button>
                     </span>
 
 
@@ -224,20 +269,37 @@
                         </div>"
                     data-bs-placement="left"
                     >
-                        <a 
-                        href="#" 
-                        data-bs-target="#sidebar-right" 
-                        data-bs-toggle="collapse"  
-                        class="btn btn-warning rounded-3">
+                      <button
+                        data-bs-toggle="tooltip" 
+                        data-bs-trigger="hover"
+                        data-bs-title="Hide/show charts"
+                        data-bs-placement="bottom"
+                        class="text-dark text-decoration-none btn p-0"
+                      >
+                        <a  
+                          href="#" 
+                          data-bs-target="#sidebar-right" 
+                          data-bs-toggle="collapse"  
+                          onclick="toggleChartsSidebar()"
+                          class="btn btn-warning rounded-3 charts-button">
                             <i class="fas fa-chart-pie text-black-50"></i>
                         </a>
+                      </button>
                     </span>
+                      <button
+                        data-bs-toggle="tooltip" 
+                        data-bs-trigger="hover"
+                        data-bs-title="Reload page"
+                        data-bs-placement="bottom"
+                        class="text-dark text-decoration-none btn p-0"
+                      >
                     <a 
                     href="{{ url_for('projects') }}" 
                     class="btn btn-primary rounded-3"
                     >
                       <i class="fas fa-arrow-rotate-left text-light"></i>
                     </a>
+                  </button>
                 </div>  
             </nav>
         </div>
@@ -245,7 +307,7 @@
      
 
         <div class="projects-page-main-content row d-flex justify-content-center mb-3">
-            <div id="sidebar-left"  class="col-lg-3 col-10 ml-0 collapse collapse-horizontal vh-100">
+            <div id="sidebar-left"  class="col-lg-3 col-10 ml-0 collapse collapse-horizontal show vh-100">
                 <form class="d-md-none d-block">
                     <div class="form-group px-0">
                         <select 
@@ -292,7 +354,7 @@
 
             <div 
             id="sidebar-left-fixed"  
-            class="d-none d-md-block position-fixed col-3 ml-0 bg-white border-end shadow-sm" 
+            class="d-none shown d-md-block position-fixed col-3 ml-0 bg-white border-end shadow-sm" 
             style="z-index: 2; 
                   padding-top: 5rem; 
                   padding-bottom: 5rem; 
@@ -355,11 +417,17 @@
                             <h3 style="word-wrap: break-word;">[[ item.title ]]</h3>
                             <div class="btn-group">
                               <form>
+                                
                                 <button 
                                 type="submit" 
                                 class="btn rounded-3"
                                 value="Edit project"
                                 name="action"
+
+                                data-bs-toggle="tooltip" 
+                                data-bs-title="Edit project data"
+                                data-bs-placement="bottom"
+                                class="text-dark text-decoration-none"
                                 >
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
@@ -633,16 +701,41 @@
   });
 
 
+  function toggleChartsSidebar() {
+    $('.charts-button').toggleClass('btn-warning');
+    $('.charts-button').toggleClass('btn-outline-warning');
 
+    $('.fa-chart-pie').toggleClass('text-black-50');
+    $('.fa-chart-pie').toggleClass('text-secondary');
+    
+  }
 
   function toggleFiltersSidebar() {
+      // $('#sidebar-left-fixed').addClass('hidden')
     $('#sidebar-left-fixed').toggleClass('shown');
     if ($('#sidebar-left-fixed').hasClass('shown')) {
       $('#sidebar-left-fixed').removeClass('hidden')
     } else {
       $('#sidebar-left-fixed').addClass('hidden')
     }
+
+    
+    $('.filter-button').toggleClass('btn-secondary');
+    $('.filter-button').toggleClass('btn-outline-secondary');
+
+    $('.fa-filter').toggleClass('text-light');
+
+    
+
+    // if ($('.filter-button').hasClass('btn-secondary')) {
+    //   $('.filter-button').removeClass('btn-secondary');
+    //   $('.filter-button').add('btn-outline-secondary');
+    // } else if ($('.filter-button').hasClass('btn-outline-secondary')){
+    //   $('.filter-button').removeClass('btn-outline-secondary');
+    //   $('.filter-button').add('btn-secondary');
+    // }
   }
+
   rows = rows.sort((x, y) => x.title > y.title)
   for (let i = 0; i < rows.length; i++) {
     rows[i].id = i+1 ;
@@ -882,7 +975,7 @@
       z-index: 1 ;
     }
     #sidebar-left-fixed {
-      transform: translateX(-100%);
+      transform: translateX(0);
     }
     #sidebar-left-fixed.shown {
       transform: translateX(0);
