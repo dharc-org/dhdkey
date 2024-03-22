@@ -1,3 +1,4 @@
+
 # DHDKey!
 
 DHDKey! (Digital Humanitites and Digital Knowledge Educational Yearbook) is an online database devoted to the collection and publication of metadata of all projects developed by students of the master course of [Digital Humanitites and Digital Knowledge at the University of Bologna](https://corsi.unibo.it/2cycle/DigitalHumanitiesKnowledge). DHDKey! is a platform developed and managed by students for students. 
@@ -60,7 +61,7 @@ All data published by DHDKey! are in RDF format with N-Quads serialization. The 
 
 As mentioned above, rdf data is serialized in N-Quads since the metadata of each project is stored in a corresponding graph. Each graph conforms to the following data model described by a [Graffoo](https://essepuntato.it/graffoo/) diagram:
 
-![DHDKey! data model diagram](https://github.com/dharc-org/dhdkey/blob/master/DHDM.jpg)
+![DHDKey! data model diagram](DHDM.jpg)
 
 In particular, the following ontologies are reused:
 - DCMI metadata terms (dct, http://purl.org/dc/terms)
